@@ -1,34 +1,30 @@
-# Compile of Endat_Controller_Firmware.vhd failed with 103 errors.
+# Compile of Baud_Rate_Generator.vhd was successful.
+# Compile of I2C_Driver.vhd was successful with warnings.
 # Compile of Main_Demux.vhd was successful.
 # Compile of Main_Mux.vhd was successful.
 # Compile of myfifo8.vhd was successful.
-# Compile of SPI_Analog_Handler.vhd was successful.
-# Compile of Timer_Controller.vhd was successful.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd was successful.
-# Compile of txt_util.vhd was successful.
-# Compile of Version_Reg.vhd was successful.
-# Compile of Version_RX_UASRT.vhd was successful.
-# Compile of Baud_Rate_Generator.vhd was successful.
-# Compile of Version_Logger.vhd was successful.
+# Compile of Real_Time_Clock_I2C_Handler.vhd was successful.
 # Compile of SPI_Analog_Driver.vhd was successful.
+# Compile of SPI_Analog_Handler.vhd was successful.
 # Compile of SPI_Input_Handler.vhd was successful.
 # Compile of SPI_IO_Driver.vhd was successful.
 # Compile of SPI_Output_Handler.vhd was successful.
-# Compile of test_bench_T.vhd was successful.
-# 17 compiles, 1 failed with 103 errors.
-vsim -gui work.endat_firmware_controller
-# vsim -gui work.endat_firmware_controller 
-# Start time: 09:42:37 on May 27,2021
-# ** Error: (vsim-3170) Could not find 'endat_firmware_controller'.
-#         Searched libraries:
-#             G:/My Drive/2021/FPGA Firmware/FPGA Firmware Code/Projects/Endat_FPGA_Firmware/Modelsim/work
-# Error loading design
-# End time: 09:42:40 on May 27,2021, Elapsed time: 0:00:03
-# Errors: 1, Warnings: 2
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd was successful.
-vsim -gui work.endat_firmware_controller_test_bench
-# vsim -gui work.endat_firmware_controller_test_bench 
-# Start time: 09:43:43 on May 27,2021
+# Compile of Version_Logger.vhd was successful.
+# Compile of Version_RX_UASRT.vhd was successful.
+# Compile of APE_Test_System_FPGA_Firmware_Test_Bench.vhd failed with 787 errors.
+# 14 compiles, 1 failed with 787 errors.
+# Compile of APE_Test_System_FPGA_Firmware_Test_Bench.vhd failed with 787 errors.
+# Compile of APE_Test_System_FPGA_Firmware_Test_Bench.vhd failed with 785 errors.
+# Compile of APE_Test_System_FPGA_Firmware_Test_Bench.vhd failed with 343 errors.
+# Compile of APE_Test_System_FPGA_Firmware_Test_Bench.vhd failed with 328 errors.
+# Compile of APE_Test_System_FPGA_Firmware_Test_Bench.vhd failed with 324 errors.
+# Compile of APE_Test_System_FPGA_Firmware_Test_Bench.vhd was successful.
+restart 
+# No Design Loaded!
+
+vsim -gui work.ape_test_system_fpga_firmware_test_bench
+# vsim -gui work.ape_test_system_fpga_firmware_test_bench 
+# Start time: 10:34:48 on Jun 24,2021
 # Loading std.standard
 # Loading std.textio(body)
 # Loading ieee.std_logic_1164(body)
@@ -38,8 +34,10 @@ vsim -gui work.endat_firmware_controller_test_bench
 # Loading work.txt_util(body)
 # Loading modelsim_lib.util(body)
 # Loading ieee.std_logic_signed(body)
-# Loading work.endat_firmware_controller_test_bench(archtest_bench)
+# Loading work.ape_test_system_fpga_firmware_test_bench(archtest_bench)
 # Loading work.test_bench_t(archtest_bench_t)
+# Loading work.i2c_driver(logic)
+# Loading work.real_time_clock_i2c_handler(arch_dut)
 # Loading work.version_logger(log_to_file)
 # Loading work.version_rx_uasrt(arch_dut)
 # Loading work.myfifo8(syn)
@@ -56,107 +54,149 @@ vsim -gui work.endat_firmware_controller_test_bench
 # Loading work.main_mux(arch_dut)
 # Loading work.baud_rate_generator(arch_dut)
 # Loading work.timer_controller(arch_dut)
-# ** Warning: Design size of 12910 statements exceeds ModelSim-Intel FPGA Starter Edition recommended capacity.
+# ** Warning: Design size of 14426 statements exceeds ModelSim-Intel FPGA Starter Edition recommended capacity.
 # Expect performance to be adversely affected.
-# Compile of SPI_Output_Handler.vhd was successful.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 5 errors.
-# Compile of Endat_Controller_Firmware.vhd failed with 45 errors.
-# Compile of SPI_Output_Handler.vhd was successful.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 5 errors.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 2 errors.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 2 errors.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 1 errors.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd was successful.
-# Compile of Endat_Controller_Firmware.vhd failed with 45 errors.
-# Compile of Endat_Controller_Firmware.vhd failed with 44 errors.
-# Compile of Endat_Controller_Firmware.vhd failed with 39 errors.
-# Compile of Endat_Controller_Firmware.vhd failed with 38 errors.
-# Compile of Endat_Controller_Firmware.vhd failed with 39 errors.
-# Compile of Endat_Controller_Firmware.vhd failed with 33 errors.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd was successful.
-# Compile of Endat_Controller_Firmware.vhd failed with 17 errors.
-# Compile of Endat_Controller_Firmware.vhd failed with 18 errors.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 11 errors.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 11 errors.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 3 errors.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 2 errors.
-# Compile of SPI_Output_Handler.vhd was successful.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 2 errors.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd was successful.
-# Compile of Endat_Controller_Firmware.vhd failed with 26 errors.
-# Compile of Endat_Controller_Firmware.vhd failed with 16 errors.
-# Compile of Endat_Controller_Firmware.vhd failed with 14 errors.
-# Compile of Endat_Controller_Firmware.vhd failed with 14 errors.
-# Compile of Main_Demux.vhd was successful.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 2 errors.
-# Compile of Main_Mux.vhd failed with 2 errors.
-# Compile of myfifo8.vhd was successful.
-# Compile of SPI_Analog_Handler.vhd was successful.
-# Compile of Timer_Controller.vhd was successful.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 2 errors.
-# Compile of txt_util.vhd was successful.
-# Compile of Version_Reg.vhd was successful.
-# Compile of Version_RX_UASRT.vhd was successful.
-# Compile of Baud_Rate_Generator.vhd was successful.
-# Compile of Version_Logger.vhd was successful.
-# Compile of SPI_Analog_Driver.vhd was successful.
-# Compile of SPI_Input_Handler.vhd was successful.
-# Compile of SPI_IO_Driver.vhd was successful.
-# Compile of SPI_Output_Handler.vhd was successful.
-# Compile of test_bench_T.vhd was successful.
-# 17 compiles, 3 failed with 18 errors.
-# Compile of Main_Mux.vhd was successful.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 19 errors.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 19 errors.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 12 errors.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 11 errors.
-# Compile of Version_Logger.vhd failed with 6 errors.
-# Compile of Version_Logger.vhd failed with 5 errors.
-# Compile of Version_Logger.vhd was successful.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 9 errors.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 5 errors.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 5 errors.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 5 errors.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 3 errors.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 2 errors.
-# Compile of Main_Mux.vhd failed with 2 errors.
-# Compile of Main_Mux.vhd was successful.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd failed with 1 errors.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd was successful.
-# Compile of Endat_Controller_Firmware.vhd failed with 17 errors.
-# Compile of Endat_Controller_Firmware.vhd failed with 17 errors.
-# Compile of Endat_Controller_Firmware.vhd failed with 15 errors.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd was successful.
-# Compile of Endat_Controller_Firmware.vhd failed with 7 errors.
-# Compile of Endat_Controller_Firmware.vhd failed with 4 errors.
-# Compile of Endat_Controller_Firmware.vhd failed with 2 errors.
-# Compile of Endat_Controller_Firmware.vhd failed with 8 errors.
-# Compile of Endat_Controller_Firmware.vhd failed with 6 errors.
-# Compile of Main_Mux.vhd failed with 23 errors.
-# Compile of Main_Mux.vhd was successful.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd was successful.
-# Compile of Endat_Controller_Firmware.vhd failed with 2 errors.
-# Compile of Endat_Controller_Firmware.vhd failed with 2 errors.
-# Compile of Endat_Controller_Firmware.vhd failed with 2 errors.
-# Compile of Main_Demux.vhd was successful.
-# Compile of Main_Mux.vhd was successful.
-# Compile of myfifo8.vhd was successful.
-# Compile of SPI_Analog_Handler.vhd was successful.
-# Compile of Timer_Controller.vhd was successful.
-# Compile of Endat_Firmware_Controller_Test_Bench.vhd was successful.
-# Compile of txt_util.vhd was successful.
-# Compile of Version_Reg.vhd was successful.
-# Compile of Version_RX_UASRT.vhd was successful.
-# Compile of Baud_Rate_Generator.vhd was successful.
-# Compile of Version_Logger.vhd was successful.
-# Compile of SPI_Analog_Driver.vhd was successful.
-# Compile of SPI_Input_Handler.vhd was successful.
-# Compile of SPI_IO_Driver.vhd was successful.
-# Compile of SPI_Output_Handler.vhd was successful.
-# Compile of test_bench_T.vhd was successful.
-# 17 compiles, 1 failed with 2 errors.
-# Compile of Main_Mux.vhd was successful.
-# Compile of Version_Reg.vhd was successful.
-# 3 compiles, 1 failed with 2 errors.
-# End time: 18:22:34 on May 27,2021, Elapsed time: 8:38:51
-# Errors: 0, Warnings: 66
+do C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/Modelsim/Endat_Firmware_Controller_Test_Bench.do
+# ** Warning: (vsim-WLF-5000) WLF file currently in use: vsim.wlf
+#           File in use by: User  Hostname: MMANZINI  ProcessID: 10924
+#           Attempting to use alternate WLF file "./wlft4q1knj".
+# ** Warning: (vsim-WLF-5001) Could not open WLF file: vsim.wlf
+#           Using alternate file: ./wlft4q1knj
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/CLK_I_i'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 4
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/RST_I_i'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 5
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Demux_1/Dig_Outputs_Ready'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 7
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Demux_1/Noise_Diode_Ready'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 8
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Demux_1/Time_Stamp_Ready'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 9
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Demux_1/Valon_Data_Ready'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 10
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Demux_1/Version_Data_Ready'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 11
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/SPI_Output_Handler_1/SPI_Outport_1'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 13
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/SPI_Output_Handler_1/SPI_Outport_2'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 14
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/SPI_Output_Handler_1/SPI_Inport_1'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 16
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/SPI_Output_Handler_1/SPI_Inport_2'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 17
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/SPI_Analog_Driver_1/AD_data'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 19
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/SPI_Analog_Driver_1/Address'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 20
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/SPI_Analog_Driver_1/convert'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 21
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/SPI_Analog_Driver_1/CS1'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 22
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/SPI_Analog_Driver_1/CS2'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 23
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/SPI_Analog_Driver_1/CS3'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 24
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/SPI_Analog_Driver_1/CS4'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 25
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/SPI_Analog_Handler_1/CH0'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 26
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/SPI_Analog_Handler_1/CH1'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 27
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/SPI_Analog_Handler_2/CH0'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 28
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/SPI_Analog_Handler_2/CH1'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 29
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/Alg_Card1_1'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 31
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/Alg_Card1_2'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 32
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/Alg_Card1_3'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 33
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/All_Data_Ready'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 34
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/All_Modules_Ready'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 35
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/All_Modules_Trig'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 36
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/Ana_In_Request'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 37
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/Analog_Input_Ready'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 38
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/Analog_Input_Ready_1'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 39
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/Analog_Input_Ready_2'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 40
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/Analog_Input_Ready_bi'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 41
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/Analog_Input_Ready_mono'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 42
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/Analog_Input_Valid_1'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 43
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/Analog_Input_Valid_2'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 44
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/Dig_In_Request'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 45
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/Dig_Out_Request'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 46
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/Digital_Input_Ready'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 47
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/Digital_Input_Valid'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 48
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/Digital_Output_Ready'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 49
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/Digital_Output_Valid'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 50
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/Send_Operation'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 51
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/Send_Valon_Data'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 52
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/Send_Version_Data'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 53
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/UART_TXD'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 54
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/data2send'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 55
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/Valon_Data'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 56
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Main_Mux_1/Valon_Data_Ready'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 57
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Noise_Diode_1/DBBC_Source'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 59
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Noise_Diode_1/Freq_Source'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 60
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Noise_Diode_1/Freq_Source_Out'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 61
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Noise_Diode_1/Input_Source'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 62
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Noise_Diode_1/Noise_Diode_A'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 63
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Noise_Diode_1/Noise_Diode_B'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 64
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Noise_Diode_1/Noise_Diode_C'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 65
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Noise_Diode_1/Noise_Diode_D'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 66
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Noise_Diode_1/Noise_Valid'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 67
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Noise_Diode_1/Roach_Source'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 68
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Valon_TX_UASRT_1/UART_TXD'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 70
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Valon_RX_UASRT_1/UART_RXD'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 71
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Quad_Serial_Driver_1/CS_1_out'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 72
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Quad_Serial_Driver_1/CS_2_out'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 73
+# ** UI-Msg: (vish-4014) No objects found matching '/a0212_0003_007_rf_controller_test_bench/Valon_TX_UASRT_1/Valon_Data'.
+# Executing ONERROR command at macro C:\Users\User\Documents\GitHub\Work\APE_Test_System_FPGA_Firmware\Modelsim\Endat_Firmware_Controller_Test_Bench.do line 74
+write format wave -window .main_pane.wave.interior.cs.body.pw.wf C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/Modelsim/APE_Test_System_FPGA_Firmware_Test_Bench.do
+# Compile of APE_Test_System_FPGA_Firmware_Test_Bench.vhd was successful.
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.ape_test_system_fpga_firmware_test_bench(archtest_bench)
+# ** Warning: Design size of 18357 statements exceeds ModelSim-Intel FPGA Starter Edition recommended capacity.
+# Expect performance to be adversely affected.
+write format wave -window .main_pane.wave.interior.cs.body.pw.wf C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/Modelsim/APE_Test_System_FPGA_Firmware_Test_Bench.do
+# End time: 10:56:16 on Jun 24,2021, Elapsed time: 0:21:28
+# Errors: 0, Warnings: 2
