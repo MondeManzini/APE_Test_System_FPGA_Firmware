@@ -209,8 +209,6 @@ signal Version_Number_i                             : std_logic_vector(63 downto
 signal Endat_Firmware_Controller_Version_Ready_i    : std_logic;
 signal Endat_Firmware_Controller_Version_Name_i     : std_logic_vector(255 downto 0);
 signal Endat_Firmware_Controller_Version_Number_i   : std_logic_vector(63 downto 0);
-signal Version_Endat_Firmware_controller            : std_logic_vector(7 downto 0);  
-signal Endat_Firmware_Controller_Version_Request_i  : std_logic;
 signal Endat_Firmware_Controller_Version_Load_i     : std_logic;
 
 component Version_Logger is
@@ -331,40 +329,41 @@ component Real_Time_Clock_I2C_Handler IS
   );                   
 END component Real_Time_Clock_I2C_Handler;
 
-signal Get_Sample_i           : std_logic;
-signal Sync_i                 : std_logic;
-signal Enable_in_i            : std_logic;
-signal PPS_in_i               : std_logic;
-signal Enable_i               : std_logic;
-signal Address_i              : std_logic_vector(6 downto 0);
-signal RnW_i                  : std_logic;
-signal Data_WR_i              : std_logic_vector(7 downto 0);
-signal Ready_i                : std_logic;
-signal Seconds_out_i          : std_logic_vector(7 downto 0);         
-signal Minutes_out_i          : std_logic_vector(7 downto 0);     
-signal Hours_out_i            : std_logic_vector(7 downto 0);
-signal Day_out_i              : std_logic_vector(7 downto 0);         
-signal Date_out_i             : std_logic_vector(7 downto 0);     
-signal Month_Century_out_i    : std_logic_vector(7 downto 0);
-signal Year_out_i             : std_logic_vector(7 downto 0);
-signal Seconds_in_i           : std_logic_vector(7 downto 0);         
-signal Minutes_in_i           : std_logic_vector(7 downto 0);     
-signal Hours_in_i             : std_logic_vector(7 downto 0);
-signal Day_in_i               : std_logic_vector(7 downto 0);         
-signal Date_in_i              : std_logic_vector(7 downto 0);     
-signal Month_Century_in_i     : std_logic_vector(7 downto 0);
-signal Year_in_i              : std_logic_vector(7 downto 0);
-signal Ack_Error_i            : std_logic;
-signal SDA_i                  : std_logic;
-signal SCL_i                  : std_logic;  
-signal lock_Out_i             : std_logic;
-signal lock_Out2_i            : std_logic;
-signal Busy_i                 : std_logic;
-signal Data_RD_i              : std_logic_vector(7 downto 0);
-signal Start_i                : std_logic;
-signal lockout_i              : std_logic;
-signal initialation_Status_i  : std_logic;
-
+signal Get_Sample_i             : std_logic;
+signal Sync_i                   : std_logic;
+signal Enable_in_i              : std_logic;
+signal PPS_in_i                 : std_logic;
+signal Enable_i                 : std_logic;
+signal Address_i                : std_logic_vector(6 downto 0);
+signal RnW_i                    : std_logic;
+signal Data_WR_i                : std_logic_vector(7 downto 0);
+signal Ready_i                  : std_logic;
+signal Seconds_out_i            : std_logic_vector(7 downto 0);         
+signal Minutes_out_i            : std_logic_vector(7 downto 0);     
+signal Hours_out_i              : std_logic_vector(7 downto 0);
+signal Day_out_i                : std_logic_vector(7 downto 0);         
+signal Date_out_i               : std_logic_vector(7 downto 0);     
+signal Month_Century_out_i      : std_logic_vector(7 downto 0);
+signal Year_out_i               : std_logic_vector(7 downto 0);
+signal Seconds_in_i             : std_logic_vector(7 downto 0);         
+signal Minutes_in_i             : std_logic_vector(7 downto 0);     
+signal Hours_in_i               : std_logic_vector(7 downto 0);
+signal Day_in_i                 : std_logic_vector(7 downto 0);         
+signal Date_in_i                : std_logic_vector(7 downto 0);     
+signal Month_Century_in_i       : std_logic_vector(7 downto 0);
+signal Year_in_i                : std_logic_vector(7 downto 0);
+signal Ack_Error_i              : std_logic;
+signal SDA_i                    : std_logic;
+signal SCL_i                    : std_logic;  
+signal lock_Out_i               : std_logic;
+signal lock_Out2_i              : std_logic;
+signal Busy_i                   : std_logic;
+signal Data_RD_i                : std_logic_vector(7 downto 0);
+signal Start_i                  : std_logic;
+signal lockout_i                : std_logic;
+signal initialation_Status_i    : std_logic;
+signal Real_Time_Clock_Ready_i  : std_logic;
+signal One_mSEC_Pulse_i         : std_logic;
 ----------------------------------------------------------------------
 -- SPI Driver ignals and Component
 ----------------------------------------------------------------------
@@ -373,7 +372,6 @@ signal Data_In_Ready_i  : std_logic;
 signal SPI_Outport_i    : std_logic_vector(15 downto 0);
 signal Data_Out_Ready_i : std_logic;
 signal SPI_Inport_i     : std_logic_vector(15 downto 0);
-signal Busy_i           : std_logic;
 signal SPI_IO_Driver_Version_Request_i  : std_logic;
 signal SPI_IO_Driver_Version_Name_1_i   : std_logic_vector(255 downto 0); 
 signal SPI_IO_Driver_Version_Number_1_i : std_logic_vector(63 downto 0);
@@ -870,9 +868,6 @@ signal Main_Mux_Version_Name_i            : std_logic_vector(255 downto 0);
 signal Main_Mux_Version_Number_i          : std_logic_vector(63 downto 0);
 signal Main_Mux_Version_Ready_i           : std_logic; 
 signal Main_Mux_Version_Request_i         : std_logic;
-signal Version_Name_i                     : std_logic_vector(255 downto 0);
-signal Version_Number_i                   : std_logic_vector(63 downto 0);
-signal Version_Data_Ready_i               : std_logic; 
 
 component Main_Mux is
     port (
@@ -1019,7 +1014,8 @@ signal SPI_Inpor_i     : std_logic_vector(15 downto 0);
 signal Data_Out_Ready  : std_logic;
 signal PC_Comms_TX     : std_logic;
 
-signal One_Milli       : std_logic;
+signal One_Milli        : std_logic;
+signal SET_Timer_i      : std_logic;
 
 -------------------------------------------------------------------------------
 -- Code Start
@@ -1399,8 +1395,6 @@ port map (
   CLK_I                                     => CLK_I_i,
   RST_I                                     => RST_I_i,
   UART_RXD                                  => Software_to_Controller_UART_RXD_i,
-  Timer_Sec_Reg                             => Timer_Sec_Reg_i,
-  Timer_mSec_Reg                            => Timer_mSec_Reg_i,
   Dig_Card1_1_B0                            => Dig_Card1_1_B0_i,
   Dig_Card1_1_B1                            => Dig_Card1_1_B1_i,
   Dig_Card1_1_B2                            => Dig_Card1_1_B2_i,
@@ -1418,7 +1412,6 @@ port map (
   SPI_Analog_Handler_Version_Request        => SPI_Analog_Handler_Version_Request_i,
   Main_Mux_Version_Request                  => Main_Mux_Version_Request_i, 
   Baud_Rate_Generator_Version_Request       => Baud_Rate_Generator_Version_Request_i,
-  Timer_Controller_Version_Request          => Timer_Controller_Version_Request_i,
   Endat_Firmware_Controller_Version_Request => Endat_Firmware_Controller_Version_Request_i,  
   Module_Number                             => Module_Number_i,
   Main_Demux_Version_Name                   => Main_Demux_Version_Name_i, 
@@ -1542,27 +1535,6 @@ port map (
   Baud_Rate_Generator_Version_Name    => Baud_Rate_Generator_Version_Name_1_i,
   Baud_Rate_Generator_Version_Number  => Baud_Rate_Generator_Version_Number_1_i,
   Baud_Rate_Generator_Version_Ready   => Baud_Rate_Generator_Version_Ready_1_i  
-  );
-
--------------------------------------------------------------------------------
--- Timer Controller
--------------------------------------------------------------------------------
-Timer_Controller_1: entity work.Timer_Controller
-port map (
-  RST_I                            => RST_I_i,
-  CLK_I                            => CLK_I_i,
-  PPS_In                           => PPS_In_i,
-  SET_Timer                        => SET_Timer_i,
-  Timer_Sec_Reg                    => Timer_Sec_Reg_i,
-  Timer_mSec_Reg                   => Timer_mSec_Reg_i,
-  Timer_Sec_Reg_1                  => Timer_Sec_Reg_1_i,
-  Timer_mSec_Reg_1                 => Timer_mSec_Reg_1_i,
-  Timer_Controller_Version_Name    => Timer_Controller_Version_Name_i,
-  Timer_Controller_Version_Number  => Timer_Controller_Version_Number_i,
-  Timer_Controller_Version_Ready   => Timer_Controller_Version_Ready_i,
-  Timer_Controller_Version_Request => Timer_Controller_Version_Request_i,
-  Module_Number                    => Module_Number_i,
-  One_mSEC_Pulse                   => One_mSEC_Pulse_i
   );
 
 -------------------------------------------------------------------------------

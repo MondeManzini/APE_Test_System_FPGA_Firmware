@@ -362,7 +362,7 @@ set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name NOMINAL_CORE_SUPPLY_VOLTAGE 1.2V
 set_global_assignment -name PRE_FLOW_SCRIPT_FILE "quartus_sh:GenBuildNumber_1.tcl"
-set_global_assignment -name POST_FLOW_SCRIPT_FILE "quartus_sh:generate_jic_file_isc.tcl"
+set_global_assignment -name POST_FLOW_SCRIPT_FILE "quartus_sh:generate_jic_file_ape.tcl"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
 set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (VHDL)"
@@ -375,13 +375,14 @@ set_global_assignment -name VHDL_FILE ../scr/SPI_Analog_Handler.vhd
 set_global_assignment -name VHDL_FILE ../scr/SPI_Input.vhd
 set_global_assignment -name VHDL_FILE ../scr/SPI_Output.vhd
 set_global_assignment -name VHDL_FILE ../scr/Main_Demux.vhd
-set_global_assignment -name VHDL_FILE ../scr/Timer_Controller.vhd
+set_global_assignment -name VHDL_FILE ../scr/I2C_Driver.vhd
 set_global_assignment -name VHDL_FILE ../scr/Main_Mux.vhd
-set_global_assignment -name VHDL_FILE ../scr/Endat_Controller_Firmware.vhd
+set_global_assignment -name VHDL_FILE ../scr/APE_Test_System_FPGA_Firmware.vhd
 set_global_assignment -name VHDL_FILE Version_Reg.vhd
 set_global_assignment -name VHDL_FILE ../scr/Version_Logger.vhd
 set_global_assignment -name VHDL_FILE ../scr/SPI_Output_Handler.vhd
 set_global_assignment -name VHDL_FILE ../scr/SPI_IO_Driver.vhd
 set_global_assignment -name VHDL_FILE ../scr/SPI_Input_Handler.vhd
 set_global_assignment -name VHDL_FILE ../scr/SPI_Analog_Driver.vhd
+set_global_assignment -name VHDL_FILE ../scr/Real_Time_Clock_I2C_Handler.vhd
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

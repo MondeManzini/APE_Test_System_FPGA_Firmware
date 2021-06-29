@@ -847,6 +847,10 @@ begin
                Stack_RTC_Data       <= '0';
                Lockout              <= '1';      
             end if;
+         else
+            Send_100mS_Data         <= '0';
+            Send_All_Modules        <= '0';
+            All_Data_Ready          <= '0';
          end if;   
          
          if busy = '1' and Lockout = '1' then

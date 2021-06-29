@@ -100,8 +100,8 @@ add wave -noupdate -divider {I2C Driver}
 add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Real_Time_Clock_I2C_Driver_1/scl
 add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Real_Time_Clock_I2C_Driver_1/sda
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {1781897700 ps} 0} {{Cursor 2} {603225450000 ps} 0}
-quietly wave cursor active 1
+WaveRestoreCursors {{Cursor 1} {13297930000 ps} 0} {{Cursor 2} {25683712252 ps} 0}
+quietly wave cursor active 2
 configure wave -namecolwidth 242
 configure wave -valuecolwidth 96
 configure wave -justifyvalue left
@@ -116,4 +116,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ms
 update
-WaveRestoreZoom {6379300650 ps} {10739173650 ps}
+WaveRestoreZoom {0 ps} {55052067 ns}
