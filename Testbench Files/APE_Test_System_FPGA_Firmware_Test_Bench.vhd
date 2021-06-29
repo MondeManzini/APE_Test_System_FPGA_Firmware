@@ -99,7 +99,6 @@ component Real_Time_Clock_I2C_Handler IS
   Slave_read_nWrite    : out std_logic;
   Slave_Data_Out       : out std_logic_vector(7 downto 0);  
   -- Inputs
-  Start                : in std_logic;
   Get_Sample           : in std_logic;
   Sync                 : in std_logic;
   Enable_in            : in std_logic;
@@ -123,7 +122,6 @@ component Real_Time_Clock_I2C_Handler IS
   Ready                : out std_logic
   );                   
 END component Real_Time_Clock_I2C_Handler;
-
 
 signal Get_Sample_i           : std_logic;
 signal Sync_i                 : std_logic;
@@ -199,7 +197,6 @@ component Version_Logger is
     SPI_Analog_Driver_Version_Ready_1             : in  std_logic;
     SPI_Analog_Handler_Version_Ready_1            : in  std_logic;
     Main_Demux_Version_Ready                      : in  std_logic; 
-    Timer_Controller_Version_Ready                : in  std_logic; 
     Main_Mux_Version_Ready                        : in  std_logic; 
     Endat_Firmware_Controller_Version_Ready       : in  std_logic; 
     Main_Mux_Version_Name                         : in  std_logic_vector(255 downto 0); 
@@ -216,8 +213,6 @@ component Version_Logger is
     SPI_Analog_Driver_Version_Number              : in  std_logic_vector(63 downto 0);
     SPI_Analog_Handler_Version_Name               : in  std_logic_vector(255 downto 0); 
     SPI_Analog_Handler_Version_Number             : in  std_logic_vector(63 downto 0);
-    Timer_Controller_Version_Name                 : in  std_logic_vector(255 downto 0);
-    Timer_Controller_Version_Number               : in  std_logic_vector(63 downto 0);
     Baud_Rate_Generator_Version_Name              : in  std_logic_vector(255 downto 0);
     Baud_Rate_Generator_Version_Number            : in  std_logic_vector(63 downto 0);
     Endat_Firmware_Controller_Version_Name        : in  std_logic_vector(255 downto 0);
@@ -661,30 +656,7 @@ signal Timer_Sec_Reg_i                    : std_logic_vector(31 downto 0);
 signal Timer_mSec_Reg_i                   : std_logic_vector(15 downto 0);
 signal Timer_Sec_Reg_1_i                  : std_logic_vector(31 downto 0);
 signal Timer_mSec_Reg_1_i                 : std_logic_vector(15 downto 0);
-signal Version_Timer_Controller_i         : std_logic_vector(7 downto 0);
-signal Timer_Controller_Version_Name_i    : std_logic_vector(255 downto 0);
-signal Timer_Controller_Version_Number_i  : std_logic_vector(63 downto 0);
-signal Timer_Controller_Version_Ready_i   : std_logic; 
-signal Timer_Controller_Version_Request_i : std_logic;
 
-component Timer_Controller is
-  port (
-    RST_I                            : in  std_logic;
-    CLK_I                            : in  std_logic;
-    PPS_In                           : in  std_logic;
-    SET_Timer                        : in  std_logic;
-    Timer_Sec_Reg                    : in  std_logic_vector(31 downto 0);
-    Timer_mSec_Reg                   : in  std_logic_vector(15 downto 0);
-    Timer_Sec_Reg_1                  : out std_logic_vector(31 downto 0);
-    Timer_mSec_Reg_1                 : out std_logic_vector(15 downto 0);
-    One_mSEC_Pulse                   : out std_logic;
-    Timer_Controller_Version_Name    : out std_logic_vector(255 downto 0);
-    Timer_Controller_Version_Number  : out std_logic_vector(63 downto 0);
-    Timer_Controller_Version_Ready   : out std_logic; 
-    Timer_Controller_Version_Request : in  std_logic;
-    Module_Number                    : in  std_logic_vector(7 downto 0)
-    );
-end component Timer_Controller;
 
 ----------------------------------------------------------------------
 -- Demux Signals and Component
@@ -727,7 +699,6 @@ component Main_Demux is
     SPI_Input_Handler_Version_Request   : out std_logic; 
     SPI_Analog_Driver_Version_Request   : out std_logic;
     SPI_Analog_Handler_Version_Request  : out std_logic; 
-    Timer_Controller_Version_Request    : out std_logic;
     Main_Mux_Version_Request            : out std_logic; 
     Baud_Rate_Generator_Version_Request : out std_logic; 
     Endat_Controller_Version_Request    : out std_logic; 
@@ -760,6 +731,8 @@ signal Watchdog_Reset_i                   : std_logic;
 signal Watchdog_Status_in_i               : std_logic_vector(15 downto 0);
 signal Mux_watchdog_i                     : std_logic;
 signal Ana_In_Request_i                   : std_logic;
+signal Real_Time_Clock_Ready_i            : std_logic;
+
 signal Dig_Out_1_B0_i                     : std_logic_vector(7 downto 0);
 signal Dig_Out_1_B1_i                     : std_logic_vector(7 downto 0);
 signal Dig_Out_1_B2_i                     : std_logic_vector(7 downto 0);
@@ -787,12 +760,13 @@ component Main_Mux is
         RST_I                   : in  std_logic;
         UART_TXD                : out std_logic;
         Message_Length          : in  std_logic_vector(7 downto 0);
-        Time_Stamp_Byte_3       : in  std_logic_vector(7 downto 0);
-        Time_Stamp_Byte_2       : in  std_logic_vector(7 downto 0);
-        Time_Stamp_Byte_1       : in  std_logic_vector(7 downto 0);
-        Time_Stamp_Byte_0       : in  std_logic_vector(7 downto 0);
-        Dig_MilliSecond_B1      : in  std_logic_vector(7 downto 0);
-        Dig_MilliSecond_B0      : in  std_logic_vector(7 downto 0);
+        Seconds_out             : in std_logic_vector(7 downto 0); 
+        Minutes_out             : in std_logic_vector(7 downto 0); 
+        Hours_out               : in std_logic_vector(7 downto 0); 
+        Day_out                 : in std_logic_vector(7 downto 0); 
+        Date_out                : in std_logic_vector(7 downto 0); 
+        Month_Century_out       : in std_logic_vector(7 downto 0); 
+        Year_out                : in std_logic_vector(7 downto 0); 
         Dig_Card1_1_B0          : in  std_logic_vector(7 downto 0);
         Dig_Card1_1_B1          : in  std_logic_vector(7 downto 0);
         Dig_Card1_1_B2          : in  std_logic_vector(7 downto 0);
@@ -866,6 +840,7 @@ component Main_Mux is
         Baud_Rate_Enable        : in  std_logic;
         SYCN_Pulse              : out std_logic;
         Version_Data_Ready      : in  std_logic;
+        Real_Time_Clock_Ready   : in std_logic;
         Data_Ready              : in  std_logic;
         Watchdog_Reset          : in  std_logic;
         Mux_watchdog            : out std_logic;
@@ -1253,7 +1228,6 @@ Real_Time_Clock_I2C_Handler_1: entity work.Real_Time_Clock_I2C_Handler
     Slave_Address_Out   => Address_i,   
     Slave_read_nWrite   => RnW_i,       
     Slave_Data_Out      => Data_WR_i,   
-    Start               => Start_i,    
     Get_Sample          => Get_Sample_i,
     Sync                => Sync_i,
     Enable_in           => Enable_in_i,
@@ -1272,7 +1246,7 @@ Real_Time_Clock_I2C_Handler_1: entity work.Real_Time_Clock_I2C_Handler
     Date_out            => Date_out_i,
     Month_Century_out   => Month_Century_out_i,    
     Year_out            => Year_out_i,   
-    Ready               => Ready_i   
+    Ready               => Real_Time_Clock_Ready_i   
     );   
     
 ---------------------------------
@@ -1291,9 +1265,6 @@ port map (
   SPI_Analog_Handler_Version_Ready_1        => SPI_Analog_Handler_Version_Ready_i,
   Endat_Firmware_Controller_Version_Ready   => Endat_Firmware_Controller_Version_Ready_i,
   Version_Data_Ready                        => Version_Data_Ready_i,
-  Timer_Controller_Version_Name             => Timer_Controller_Version_Name_i,
-  Timer_Controller_Version_Number           => Timer_Controller_Version_Number_i,
-  Timer_Controller_Version_Ready            => Timer_Controller_Version_Ready_i,
   Main_Demux_Version_Name                   => Main_Demux_Version_Name_i, 
   Main_Demux_Version_Number                 => Main_Demux_Version_Number_i,
   Main_Demux_Version_Ready                  => Main_Demux_Version_Ready_i, 
@@ -1332,11 +1303,11 @@ Ver_Dat_1: entity work.Version_RX_UASRT
     );    
 ------------------------------------------------------------
 -- Version Register Instance
-    Ver_Reg_1: entity work.Version_Reg
-        port map (
-            RST_I             => RST_I_i,
-            CLK_I             => CLK_I_i,
-            Version_Timestamp => Version_Timestamp_i
+Ver_Reg_1: entity work.Version_Reg
+    port map (
+        RST_I             => RST_I_i,
+        CLK_I             => CLK_I_i,
+        Version_Timestamp => Version_Timestamp_i
         );    
     
 -------------------------------------------------------------------------------                      
@@ -1414,7 +1385,7 @@ port map (
   SPI_Outport                   => Output_SPI_Data_out_i,     
   Data_Out_Ready                => Data_Out_Ready_i,
   SPI_Inport                    => SPI_Inport,
-  Busy                          => busy_i,
+  Busy                          => Busy_Out_i,
   Module_Number                 => Module_Number_i,
   SPI_IO_Driver_Version_Request => SPI_IO_Driver_Version_Request_i,
   SPI_IO_Driver_Version_Name    => SPI_IO_Driver_Version_Name_2_i, 
@@ -1425,7 +1396,7 @@ port map (
 ---------------------------------------------------------------------------------- 
 -- SPI Digital Output Handler Instance [Box 1 Card 1 = 10 Card 2 = 11] - Module 3
 ----------------------------------------------------------------------------------       
-SPI_Output_Handler_1: SPI_Output_Handler
+SPI_Output_Handler_1: entity work.SPI_Output_Handler
 port map (
   RST_I                                 => RST_I_i,
   CLK_I                                 => CLK_I_i,
@@ -1451,7 +1422,7 @@ port map (
   Output_Card_Select                    => Output_Card_Select_i,
   busy                                  => Busy_Out_i,
   Dig_Out_Request                       => Dig_Out_Request_i,
-  SPI_Data_in                           => SPI_Inport_i,
+  SPI_Data_in                           => SPI_Inport,
   Input_Ready                           => Data_Out_Ready_i,
   Module_Number                         => Module_Number_i,
   SPI_Output_Handler_Version_Request    => SPI_Output_Handler_Version_Request_i,
@@ -1589,7 +1560,6 @@ port map (
   SPI_Analog_Handler_Version_Request        => SPI_Analog_Handler_Version_Request_i,
   Main_Mux_Version_Request                  => Main_Mux_Version_Request_i, 
   Baud_Rate_Generator_Version_Request       => Baud_Rate_Generator_Version_Request_i,
-  Timer_Controller_Version_Request          => Timer_Controller_Version_Request_i,
   Endat_Firmware_Controller_Version_Request => Endat_Firmware_Controller_Version_Request_i,  
   Module_Number                             => Module_Number_i,
   Main_Demux_Version_Name                   => Main_Demux_Version_Name_i, 
@@ -1605,8 +1575,6 @@ port map (
   CLK_I                      => CLK_I_i,
   RST_I                      => RST_I_i,
   UART_TXD                   => Controller_to_Software_UART_TXD_i,
-  Timer_Sec_Reg_1            => Timer_Sec_Reg_1_i,
-  Timer_mSec_Reg_1           => Timer_mSec_Reg_1_i,
   Dig_Out_1_B0               => Dig_Card1_1_B0_i,
   Dig_Out_1_B1               => Dig_Card1_1_B1_i,
   Dig_Out_1_B2               => Dig_Card1_1_B2_i,
@@ -1675,10 +1643,18 @@ port map (
   Alg_Card1_48               => CH48_o_i, 
   Analog_Input_Valid         => Analog_Input_Valid_i,
   Ana_In_Request             => Ana_In_Request_i,
+  Seconds_out                => Seconds_out_i,          
+  Minutes_out                => Minutes_out_i,           
+  Hours_out                  => Hours_out_i,           
+  Day_out                    => Day_out_i,           
+  Date_out                   => Date_out_i,
+  Month_Century_out          => Month_Century_out_i,    
+  Year_out                   => Year_out_i,
   Dig_In_Request             => Dig_In_Request_i,                
   Dig_Out_Request            => Dig_Out_Request_i,               
   Baud_Rate_Enable           => Mux_Baud_Rate_Enable_i,
   Data_Ready                 => Data_Ready_i,
+  Real_Time_Clock_Ready      => Real_Time_Clock_Ready_i,
   Watchdog_Reset             => Watchdog_Reset_i,
   Mux_watchdog               => Mux_watchdog_i,
   One_mS                     => OnemS_sStrobe,
@@ -1925,15 +1901,6 @@ begin
                             if Start_Detected = '1' then
                                 Delay_Count             <= 0;
                                 Test_I2C_Config_State   <= WriteData;
-                                --Test_Byte_i             <= x"68";
-                                -- Load Test Data
-                                --Seconds_TestData_i        <= Seconds_TestData_i;
-                                --Minutes_TestData_i        <= Minutes_TestData_i;
-                                --Hours_TestData_i          <= Hours_TestData_i;
-                                --Days_TestData_i           <= Days_TestData_i;
-                                --Dates_TestData_i          <= Dates_TestData_i;
-                                --Months_Century_TestData_i <= Months_Century_TestData_i;
-                                --Years_TestData_i          <= Years_TestData_i;
                             end if;
                         else
                             Test_I2C_Config_State      <= StartFallingEdge;
@@ -2054,13 +2021,6 @@ begin
                             if Start_Detected = '1' then
                               Delay_Count               <= 0;
                               Test_I2C_Read_State       <= WriteData;
-                              --Seconds_TestData_i        <= Seconds_TestData_i;
-                              --Minutes_TestData_i        <= Minutes_TestData_i;
-                              --Hours_TestData_i          <= Hours_TestData_i;
-                              --Days_TestData_i           <= Days_TestData_i;
-                              --Dates_TestData_i          <= Dates_TestData_i;
-                              --Months_Century_TestData_i <= Months_Century_TestData_i;
-                              --Years_TestData_i          <= Years_TestData_i;
                             end if;
                         elsif Busy_i = '0' then
                             Test_I2C_Read_State     <= StartEdge;

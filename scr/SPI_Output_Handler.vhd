@@ -2,71 +2,31 @@
 -- DESCRIPTION
 -- ===========
 --
--- Kutunse SPI Addressable Port for AD7888 ADC
---
--- The firmware performs the following functions:
---
--- IConfiguration of the device.
--- The user can read the channels at any time, the data is only valid for
--- The method would be to place the address in the ADR_I register and issue a WE_
--- I signal for one ckl cycle only,one clock later the DAT_O will have the four
--- channel As below.
---
--- Signals and registers
--- Bit_Rate_Enable:  this signal is used for the 2Mhz clock for the SPI driver
---
--- Written by  : Raphael van Rensburg
--- Tested      : 13/02/2012 Simulation only - Initialiation. SPI read and writes,
---               data
---             : Test do file is SPI_Output.do
--- Last update : 14/02/2012 - Initial release  Version 1.0
--- Edited By   : Glen Taylor
---             : 28/06/2013 - Removed Test LED signal
---                            Commented the SPI_data_o as this is not used in
---                            this module, but should you required this module
---                            to be an I/O remove the commented three line and add the
---                            data out to the Entity.
--- Tested      : 28/06/2013 Simulation only - Initialiation. SPI read and writes,
---               data
---             : Test do file is ASC_SPI_Output.do
--- Outstanding : None
+-- Last update : 29/06/2021 - Monde Manzini
+
+--              - Testbench: SPI_Output_Handler_Test_Bench located at
+--                https://katfs.kat.ac.za/svnAfricanArray/SoftwareRepository/CommonCode/ScrCommon
+--              - Main_Mux_Test_Bench.do file located at
+--                https://katfs.kat.ac.za/svnAfricanArray/SoftwareRepository/CommonCode/Modelsim/ 
+-- Version : 0.1
 
 ---------------------
 ---------------------
--- Last update          : Monde Manzini 06/02/2017  
---                      : Updated Header
---                      : Added Version Control
--- Version              : 1.1 
--- Change Note          : None
 
----------------------
----------------------
--- Last update          : Monde Manzini 22/08/2018  
---                      : Changed all the wait counters with 5 from 5 to 50
--- Version              : 1.2 
--- Change Note          : None
-
--- Updated By           : Monde Manzini
--- Version              : 1.3 24/08/2018 
---                      : Added 'nots' on the SPI Output Data Ports for reply to software
--- Version              : 1.4 15/11/2018 
---                      : Added Dig_Out Request from Mux 
--- Tested               : 22/08/2018
--- Type of Test         : (Simulation only).
+-- Edited By            : Monde Manzini
+--                      : 
+--                      : Updated version
+-- Version              : 0.1 
+-- Change Note          : 
+-- Tested               : 07/05/2021
 -- Test Bench file Name : SPI_Output_Handler_Test_Bench
 -- located at           : (https://katfs.kat.ac.za/svnAfricanArray/Software
 --                        Repository/CommonCode/ScrCommon)
--- Test do file         : SPI_Output_Handler_Test_Bench.do
+-- Test do file         : Main_Mux_Test_Bench.do
 -- located at            (https://katfs.kat.ac.za/svnAfricanArray/Software
 --                        Repository/CommonCode/Modelsim)
--- Outstanding          : Integrated testing with RF Controller Lab Standalone Rev.2
---                        and RF Controller ATP Rev.2
--- Outstanding          : Integrated testing with RF Controller Lab Standalone Rev.2
---                        and RF Controller ATP Rev.2
 
--- Edited by            : Monde Manzini
--- Version              : 1.1 19/11/2018  
---                      : Replaced Sample Rate with Request signal from Mux
+-- Outstanding          : Integration ATP and Approval
 -------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
@@ -696,6 +656,7 @@ signal SPI_Output_Handler_Version_Number_i : std_logic_vector(63 downto 0);
           Output_Ready   <= '1';
        else
           Output_Data_Ready_i <= '0';
+          Output_Ready        <= '0';
           if wait_cnt = 0 then
              lock       <= '0';
           else

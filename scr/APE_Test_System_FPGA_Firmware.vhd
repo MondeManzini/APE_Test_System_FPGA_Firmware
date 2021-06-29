@@ -17,7 +17,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity APE_FPGA_Firmware is
+entity APE_Test_System_FPGA_Firmware is
 
   port (
 
@@ -62,9 +62,9 @@ entity APE_FPGA_Firmware is
     GPIO_1                              : inout   std_logic_vector(33 downto 0);
     GPIO_1_IN                           : in      std_logic_vector(1 downto 0)
     );
-end APE_FPGA_Firmware;
+end APE_Test_System_FPGA_Firmware;
 
-architecture Arch_DUT of APE_FPGA_Firmware is
+architecture Arch_DUT of APE_Test_System_FPGA_Firmware is
   
 -- Accelerometer and EEPROM
 signal I2C_SCLK_i                       : std_logic;  
@@ -199,7 +199,60 @@ constant Null_i                 : STD_LOGIC_VECTOR(7 downto 0) := x"00";  -- ter
 signal Version_Register_i       : STD_LOGIC_VECTOR(199 downto 0);
 signal Module_Number_i          : std_logic_vector(7 downto 0);
 signal Endat_Firmware_Controller_Version_Request_i : std_logic;
+
+----------------------------------------------------------------------
+-- Version Logger
+----------------------------------------------------------------------
+signal Version_Data_Ready_i                         : std_logic;
+signal Version_Name_i                               : std_logic_vector(255 downto 0); 
+signal Version_Number_i                             : std_logic_vector(63 downto 0);
+signal Endat_Firmware_Controller_Version_Ready_i    : std_logic;
+signal Endat_Firmware_Controller_Version_Name_i     : std_logic_vector(255 downto 0);
+signal Endat_Firmware_Controller_Version_Number_i   : std_logic_vector(63 downto 0);
+signal Version_Endat_Firmware_controller            : std_logic_vector(7 downto 0);  
+signal Endat_Firmware_Controller_Version_Request_i  : std_logic;
+signal Endat_Firmware_Controller_Version_Load_i     : std_logic;
+
+component Version_Logger is
+  port (
+    CLK_I                                         : in  std_logic;
+    RST_I                                         : in  std_logic;
+    SPI_IO_Driver_Version_Ready_1                 : in  std_logic;
+    SPI_IO_Driver_Version_Ready_2                 : in  std_logic;
+    SPI_Input_Handler_Version_Ready               : in  std_logic;
+    SPI_Output_Handler_Version_Ready              : in  std_logic;
+    SPI_Analog_Driver_Version_Ready_1             : in  std_logic;
+    SPI_Analog_Handler_Version_Ready_1            : in  std_logic;
+    Main_Demux_Version_Ready                      : in  std_logic; 
+    Main_Mux_Version_Ready                        : in  std_logic; 
+    Endat_Firmware_Controller_Version_Ready       : in  std_logic; 
+    Main_Mux_Version_Name                         : in  std_logic_vector(255 downto 0); 
+    Main_Mux_Version_Number                       : in  std_logic_vector(63 downto 0);
+    Main_Demux_Version_Name                       : in  std_logic_vector(255 downto 0); 
+    Main_Demux_Version_Number                     : in  std_logic_vector(63 downto 0);
+    SPI_IO_Driver_Version_Name                    : in  std_logic_vector(255 downto 0); 
+    SPI_IO_Driver_Version_Number                  : in  std_logic_vector(63 downto 0);
+    SPI_Input_Handler_Version_Name                : in  std_logic_vector(255 downto 0); 
+    SPI_Input_Handler_Version_Number              : in  std_logic_vector(63 downto 0);
+    SPI_Output_Handler_Version_Name               : in  std_logic_vector(255 downto 0); 
+    SPI_Output_Handler_Version_Number             : in  std_logic_vector(63 downto 0);
+    SPI_Analog_Driver_Version_Name                : in  std_logic_vector(255 downto 0); 
+    SPI_Analog_Driver_Version_Number              : in  std_logic_vector(63 downto 0);
+    SPI_Analog_Handler_Version_Name               : in  std_logic_vector(255 downto 0); 
+    SPI_Analog_Handler_Version_Number             : in  std_logic_vector(63 downto 0);
+    Baud_Rate_Generator_Version_Name              : in  std_logic_vector(255 downto 0);
+    Baud_Rate_Generator_Version_Number            : in  std_logic_vector(63 downto 0);
+    Endat_Firmware_Controller_Version_Name        : in  std_logic_vector(255 downto 0);
+    Endat_Firmware_Controller_Version_Number      : in  std_logic_vector(63 downto 0);
+    Version_Data_Ready                            : out std_logic;
+    Module_Number                                 : in  std_logic_vector(7 downto 0);
+    Version_Name                                  : out std_logic_vector(255 downto 0);
+    Version_Number                                : out std_logic_vector(63 downto 0));
+end component Version_Logger;
+
+--------------------------------
 -- Version Signals and Component
+--------------------------------
 component Version_Reg is
     generic(
         log_file   : string   --:= "Firmware Version Log File.txt"
@@ -211,8 +264,110 @@ component Version_Reg is
     );
 end component Version_Reg; 
 
--- SPI Driver
--- SPI In-Out Signals and Component
+
+----------------------------------------------------------------------
+-- RTC I2C Driver Component and Signals
+----------------------------------------------------------------------
+component I2C_Driver IS
+  GENERIC(
+    input_clk : INTEGER := 50_000_000;               --input clock speed from user logic in Hz
+    bus_clk   : INTEGER := 400_000);   --speed the i2c bus (scl) will run at in Hz
+    PORT(
+    clk       : IN     STD_LOGIC;                    --system clock
+    reset_n   : IN     STD_LOGIC;                    --active low reset
+    ena       : IN     STD_LOGIC;                    --latch in command
+    addr      : IN     STD_LOGIC_VECTOR(6 DOWNTO 0); --address of target slave
+    rw        : IN     STD_LOGIC;                    --'0' is write, '1' is read
+    data_wr   : IN     STD_LOGIC_VECTOR(7 DOWNTO 0); --data to write to slave
+    busy      : OUT    STD_LOGIC;                    --indicates transaction in progress
+    data_rd   : OUT    STD_LOGIC_VECTOR(7 DOWNTO 0); --data read from slave
+    ack_error : BUFFER STD_LOGIC;                    --flag if improper acknowledge from slave
+    sda       : INOUT  STD_LOGIC;                    --serial data output of i2c bus
+    scl       : INOUT  STD_LOGIC                     --serial clock output of i2c bus
+    );                   
+END component I2C_Driver;
+
+
+----------------------------------------------------------------------
+-- RTC I2C Handler Test Bench Component and Signals
+----------------------------------------------------------------------
+component Real_Time_Clock_I2C_Handler IS
+  PORT(
+-- General Signals
+  RST_I                : in  std_logic;
+  CLK_I 	            : in  std_logic;
+  -- Inputs from I2C Driver
+  Busy                 : in  std_logic;
+  data_read            : in  std_logic_vector(7 downto 0);
+  ack_error            : in std_logic;
+  -- Outputs to I2C Driver
+  initialation_Status  : out std_logic;
+  Enable               : out std_logic;
+  Slave_Address_Out    : out std_logic_vector(6 downto 0);
+  Slave_read_nWrite    : out std_logic;
+  Slave_Data_Out       : out std_logic_vector(7 downto 0);  
+  -- Inputs
+  Get_Sample           : in std_logic;
+  Sync                 : in std_logic;
+  Enable_in            : in std_logic;
+  PPS_in               : in std_logic;
+  -- Inputs from DeMux
+  Seconds_in           : in std_logic_vector(7 downto 0); 
+  Minutes_in           : in std_logic_vector(7 downto 0); 
+  Hours_in             : in std_logic_vector(7 downto 0); 
+  Day_in               : in std_logic_vector(7 downto 0); 
+  Date_in              : in std_logic_vector(7 downto 0); 
+  Month_Century_in     : in std_logic_vector(7 downto 0); 
+  Year_in              : in std_logic_vector(7 downto 0); 
+  -- Outputs for Mux
+  Seconds_out          : out std_logic_vector(7 downto 0); 
+  Minutes_out          : out std_logic_vector(7 downto 0); 
+  Hours_out            : out std_logic_vector(7 downto 0); 
+  Day_out              : out std_logic_vector(7 downto 0); 
+  Date_out             : out std_logic_vector(7 downto 0); 
+  Month_Century_out    : out std_logic_vector(7 downto 0); 
+  Year_out             : out std_logic_vector(7 downto 0); 
+  Ready                : out std_logic
+  );                   
+END component Real_Time_Clock_I2C_Handler;
+
+signal Get_Sample_i           : std_logic;
+signal Sync_i                 : std_logic;
+signal Enable_in_i            : std_logic;
+signal PPS_in_i               : std_logic;
+signal Enable_i               : std_logic;
+signal Address_i              : std_logic_vector(6 downto 0);
+signal RnW_i                  : std_logic;
+signal Data_WR_i              : std_logic_vector(7 downto 0);
+signal Ready_i                : std_logic;
+signal Seconds_out_i          : std_logic_vector(7 downto 0);         
+signal Minutes_out_i          : std_logic_vector(7 downto 0);     
+signal Hours_out_i            : std_logic_vector(7 downto 0);
+signal Day_out_i              : std_logic_vector(7 downto 0);         
+signal Date_out_i             : std_logic_vector(7 downto 0);     
+signal Month_Century_out_i    : std_logic_vector(7 downto 0);
+signal Year_out_i             : std_logic_vector(7 downto 0);
+signal Seconds_in_i           : std_logic_vector(7 downto 0);         
+signal Minutes_in_i           : std_logic_vector(7 downto 0);     
+signal Hours_in_i             : std_logic_vector(7 downto 0);
+signal Day_in_i               : std_logic_vector(7 downto 0);         
+signal Date_in_i              : std_logic_vector(7 downto 0);     
+signal Month_Century_in_i     : std_logic_vector(7 downto 0);
+signal Year_in_i              : std_logic_vector(7 downto 0);
+signal Ack_Error_i            : std_logic;
+signal SDA_i                  : std_logic;
+signal SCL_i                  : std_logic;  
+signal lock_Out_i             : std_logic;
+signal lock_Out2_i            : std_logic;
+signal Busy_i                 : std_logic;
+signal Data_RD_i              : std_logic_vector(7 downto 0);
+signal Start_i                : std_logic;
+signal lockout_i              : std_logic;
+signal initialation_Status_i  : std_logic;
+
+----------------------------------------------------------------------
+-- SPI Driver ignals and Component
+----------------------------------------------------------------------
 signal Card_Select_i    : std_logic;
 signal Data_In_Ready_i  : std_logic;
 signal SPI_Outport_i    : std_logic_vector(15 downto 0);
@@ -274,7 +429,6 @@ signal SPI_Input_Handler_Version_Request_i : std_logic;
 signal SPI_Input_Handler_Version_Name_i    : std_logic_vector(255 downto 0); 
 signal SPI_Input_Handler_Version_Number_i  : std_logic_vector(63 downto 0);
 signal SPI_Input_Handler_Version_Ready_i   : std_logic; 
-
 
 component SPI_Input_Handler is
     port (
@@ -622,44 +776,6 @@ component SPI_Analog_Handler is
       SPI_Analog_Handler_Version_Ready   : out std_logic 
       );
   end component SPI_Analog_Handler;
-
-----------------------------------------------------------------------
--- Timer Signals and Component
-----------------------------------------------------------------------
-signal One_mS_Enable_i                    : std_logic;
-signal One_Sec_Enable_i                   : std_logic;
-signal One_mS_Cnt_i                       : integer range 0 to 1024;
-signal PPS_In_i                           : std_logic;
-signal SET_Timer_i                        : std_logic;
-signal One_mSEC_Pulse_i                   : std_logic;
-signal Timer_Sec_Reg_i                    : std_logic_vector(31 downto 0);
-signal Timer_mSec_Reg_i                   : std_logic_vector(15 downto 0);
-signal Timer_Sec_Reg_1_i                  : std_logic_vector(31 downto 0);
-signal Timer_mSec_Reg_1_i                 : std_logic_vector(15 downto 0);
-signal Version_Timer_Controller_i         : std_logic_vector(7 downto 0);
-signal Timer_Controller_Version_Name_i    : std_logic_vector(255 downto 0);
-signal Timer_Controller_Version_Number_i  : std_logic_vector(63 downto 0);
-signal Timer_Controller_Version_Ready_i   : std_logic; 
-signal Timer_Controller_Version_Request_i : std_logic;
-
-component Timer_Controller is
-  port (
-    RST_I                            : in  std_logic;
-    CLK_I                            : in  std_logic;
-    PPS_In                           : in  std_logic;
-    SET_Timer                        : in  std_logic;
-    Timer_Sec_Reg                    : in  std_logic_vector(31 downto 0);
-    Timer_mSec_Reg                   : in  std_logic_vector(15 downto 0);
-    Timer_Sec_Reg_1                  : out std_logic_vector(31 downto 0);
-    Timer_mSec_Reg_1                 : out std_logic_vector(15 downto 0);
-    One_mSEC_Pulse                   : out std_logic;
-    Timer_Controller_Version_Name    : out std_logic_vector(255 downto 0);
-    Timer_Controller_Version_Number  : out std_logic_vector(63 downto 0);
-    Timer_Controller_Version_Ready   : out std_logic; 
-    Timer_Controller_Version_Request : in  std_logic;
-    Module_Number                    : in  std_logic_vector(7 downto 0)
-    );
-end component Timer_Controller;
 
 ----------------------------------------------------------------------
 -- Demux Signals and Component
@@ -1318,8 +1434,13 @@ port map (
   CLK_I                      => CLK_I_i,
   RST_I                      => RST_I_i,
   UART_TXD                   => Controller_to_Software_UART_TXD_i,
-  Timer_Sec_Reg_1            => Timer_Sec_Reg_1_i,
-  Timer_mSec_Reg_1           => Timer_mSec_Reg_1_i,
+  Seconds_out                => Seconds_out_i,          
+  Minutes_out                => Minutes_out_i,           
+  Hours_out                  => Hours_out_i,           
+  Day_out                    => Day_out_i,           
+  Date_out                   => Date_out_i,
+  Month_Century_out          => Month_Century_out_i,    
+  Year_out                   => Year_out_i,
   Dig_Out_1_B0               => Dig_Card1_1_B0_i,
   Dig_Out_1_B1               => Dig_Card1_1_B1_i,
   Dig_Out_1_B2               => Dig_Card1_1_B2_i,
@@ -1392,6 +1513,7 @@ port map (
   Dig_Out_Request            => Dig_Out_Request_i,               
   Baud_Rate_Enable           => Mux_Baud_Rate_Enable_i,
   Data_Ready                 => Data_Ready_i,
+  Real_Time_Clock_Ready      => Real_Time_Clock_Ready_i,
   Watchdog_Reset             => Watchdog_Reset_i,
   Mux_watchdog               => Mux_watchdog_i,
   One_mS                     => One_mS_i,
@@ -1409,7 +1531,7 @@ port map (
 -------------------------------------------------------------------------------
 -- Baud Instance for Mux  
 -------------------------------------------------------------------------------     
-Endat_Firmware_Controller_Baud_1: entity work.Baud_Rate_Generator
+APE_Test_System_FPGA_Firmware_Baud_1: entity work.Baud_Rate_Generator
 port map (
   Clk                                 => CLK_I_i,
   RST_I                               => RST_I_i,

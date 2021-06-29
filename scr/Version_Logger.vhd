@@ -44,7 +44,6 @@ entity Version_Logger is
        SPI_Analog_Handler_Version_Ready_1         : in  std_logic;
        Main_Demux_Version_Ready                   : in  std_logic; 
        Main_Mux_Version_Ready                     : in  std_logic; 
-       Timer_Controller_Version_Ready             : in  std_logic; 
        Baud_Rate_Generator_Version_Ready          : in  std_logic; 
        Endat_Firmware_Controller_Version_Ready    : in  std_logic; 
        SPI_IO_Driver_Version_Name                 : in  std_logic_vector(255 downto 0); 
@@ -61,8 +60,6 @@ entity Version_Logger is
        Main_Demux_Version_Number                  : in  std_logic_vector(63 downto 0);
        Main_Mux_Version_Name                      : in  std_logic_vector(255 downto 0); 
        Main_Mux_Version_Number                    : in  std_logic_vector(63 downto 0);
-       Timer_Controller_Version_Name              : in  std_logic_vector(255 downto 0);
-       Timer_Controller_Version_Number            : in  std_logic_vector(63 downto 0);
        Baud_Rate_Generator_Version_Name           : in  std_logic_vector(255 downto 0);
        Baud_Rate_Generator_Version_Number         : in  std_logic_vector(63 downto 0);
        Endat_Firmware_Controller_Version_Name     : in  std_logic_vector(255 downto 0);
@@ -155,14 +152,7 @@ elsif (CLK_I'event and CLK_I = '1') then
                            Version_Reader_State <= Read_Modules;
                            Version_Name_i       <= Main_Mux_Version_Name;
                            Version_Number_i     <= Main_Mux_Version_Number;
-                        end if;       
-
-                   when X"09" =>
-                        if Timer_Controller_Version_Ready = '1' then
-                           Version_Reader_State <= Read_Modules;
-                           Version_Name_i       <= Timer_Controller_Version_Name;
-                           Version_Number_i     <= Timer_Controller_Version_Number;
-                        end if;    
+                        end if;         
 
                    when X"0a" =>
                         if Baud_Rate_Generator_Version_Ready = '1' then

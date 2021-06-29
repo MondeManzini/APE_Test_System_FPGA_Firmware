@@ -2,7 +2,7 @@
 <cof>
 	<eprom_name>EPCS16</eprom_name>
 	<flash_loader_device>EP4CE22</flash_loader_device>
-	<output_filename>A0212_0002_007_Infrastructure_Controller.jic</output_filename>
+	<output_filename>APE_Test_System_FPGA_Firmware.jic</output_filename>
 	<n_pages>1</n_pages>
 	<width>1</width>
 	<mode>7</mode>
@@ -10,7 +10,7 @@
 		<user_name>Page_0</user_name>
 		<page_flags>1</page_flags>
 		<bit0>
-			<sof_filename>./output_files/A0212_0002_007_Infrastructure_Controller.sof</sof_filename> 
+			<sof_filename>./output_files/APE_Test_System_FPGA_Firmware.sof</sof_filename> 
 		</bit0>
 	</sof_data>
 	<version>10</version>

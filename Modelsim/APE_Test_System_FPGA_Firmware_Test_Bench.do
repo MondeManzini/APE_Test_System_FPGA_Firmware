@@ -44,6 +44,41 @@ add wave -noupdate -radix hexadecimal /ape_test_system_fpga_firmware_test_bench/
 add wave -noupdate -radix hexadecimal /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Handler_1/CH8_o
 add wave -noupdate -divider -height 30 Mux
 add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/UART_TXD
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/request_send_state
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/gen_tx_ser_data/Request_Data_cnt
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/gen_tx_ser_data/Real_Time_Clock_Request_200mS_cnt
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/gen_tx_ser_data/Real_Time_Clock_Request_50mS_cnt
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Ana_In_Request_i
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Dig_In_Request_i
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Dig_Out_Request_i
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/SPI_Output_Handler_1/Input_Ready
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/SPI_Input_Handler_1/Input_Ready
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Digital_Output_Valid
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Digital_Input_Valid
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Analog_Input_Valid
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Digital_Output_Ready
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Analog_Input_Ready
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Digital_Input_Ready
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/All_Modules_Ready
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/All_Modules_Trig
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Send_100mS_Data
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Send_All_Modules
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/All_Data_Ready
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Request_Data_Strobe
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Send_Data_Strobe
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/RTC_Ready
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Send_Version_Data_Mess
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Send_Version_Data_Ready
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Send_Version_Data
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Stack_Version_Data
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Version_Data_Request
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Send_RTC_Mess
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Send_RTC_Operation
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Stack_RTC_Data
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Get_RTC
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Send_RTC_Data
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Real_Time_Clock_Ready
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Version_Data_Ready
 add wave -noupdate -divider -height 30 Endat
 TreeUpdate [SetDefaultTree]
 quietly WaveActivateNextPane
@@ -62,10 +97,10 @@ add wave -noupdate /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Driver_1
 add wave -noupdate /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Driver_1/Mosi
 add wave -noupdate /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Driver_1/Miso
 add wave -noupdate -divider {I2C Driver}
-add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Real_Time_Clock_I2C_Driver_1/sda
 add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Real_Time_Clock_I2C_Driver_1/scl
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Real_Time_Clock_I2C_Driver_1/sda
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {5892267284 ps} 0} {{Cursor 2} {603225450000 ps} 0}
+WaveRestoreCursors {{Cursor 1} {1781897700 ps} 0} {{Cursor 2} {603225450000 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 242
 configure wave -valuecolwidth 96
@@ -81,4 +116,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ms
 update
-WaveRestoreZoom {0 ps} {14405727 ns}
+WaveRestoreZoom {6379300650 ps} {10739173650 ps}

@@ -2,6 +2,7 @@ import fpyga
 from fpyga import *
 from . import *
 
+# Key Value Pairs
 def ascii_lookup(char):
     A = 0x41
     B = 0x42
@@ -32,6 +33,8 @@ def ascii_lookup(char):
 
 Space = 0x20
 Dot   = 0x0e
+
+print(Main_Mux_Version_Name)
 
 """ 
 --------------

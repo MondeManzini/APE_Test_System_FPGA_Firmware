@@ -38,7 +38,6 @@ entity Real_Time_Clock_I2C_Handler is
    Slave_read_nWrite    : out std_logic;
    Slave_Data_Out       : out std_logic_vector(7 downto 0);  
 -- Inputs
-   Start                : in std_logic;
    Get_Sample           : in std_logic;
    Sync                 : in std_logic;
    Enable_in            : in std_logic;
@@ -130,7 +129,6 @@ signal i2c_ReadData_State : i2c_ReadData_States;
 -- i2C Controller Wires
 Enable              <= Enable_i;                  
 Get_Sample_i        <= Get_Sample; 
-Start_i             <= Start;
 slave_Data_Out      <= Slave_Data_i;
 Seconds_out         <= Seconds_out_i;                
 Minutes_out         <= Minutes_out_i;             
@@ -170,13 +168,6 @@ begin
       Month_Century_out_i     <= X"00";
       Year_out_i              <= X"00";
    elsif CLK_I'event and CLK_I = '1' then
-
-      if Start_i = '1' and lockout_i = '0' then
-         lockout_i  <= '1';
-      end if;  
-      if Start_i = '0' then
-         lockout_i  <= '0';
-      end if;
 
       case i2c_Controller_State is           
          when Initialization =>

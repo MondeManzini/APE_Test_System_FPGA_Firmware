@@ -1,26 +1,32 @@
 -------------------------------------------------------------------------------
+
 -- DESCRIPTION
 -- ===========
---
--- Kutunse SPI Input
---
--- The firmware performs the following functions:
---
--- IConfiguration of the device.
--- Performing a read of each channel 
---
--- Signals and registers
--- Bit_Rate_Enable:  this signal is used for the 2Mhz clock for the SPI driver
--- 
---
--- Written by  : Raphael van Rensburg
--- Edited By   : Norah  
--- Tested      : 13/02/2012 Simulation only - Initialiation. SPI read and writes,
---               data
---             : Test do file is SPI_Input.do
--- Last update : 14/02/2012 - Initial release  Version 1.0
---             : 27/06/2013 - Changed File Name from BMO_SPI_Input to ASC_SPI_Input
--- Outstanding : 
+-- Last update : 29/06/2021 - Monde Manzini
+
+--              - Testbench: SPI_Input_Handler_Test_Bench located at
+--                https://katfs.kat.ac.za/svnAfricanArray/SoftwareRepository/CommonCode/ScrCommon
+--              - Main_Mux_Test_Bench.do file located at
+--                https://katfs.kat.ac.za/svnAfricanArray/SoftwareRepository/CommonCode/Modelsim/ 
+-- Version : 0.1
+
+---------------------
+---------------------
+
+-- Edited By            : Monde Manzini
+--                      : 
+--                      : Updated version
+-- Version              : 0.1 
+-- Change Note          : 
+-- Tested               : 07/05/2021
+-- Test Bench file Name : SPI_Input_Handler_Test_Bench
+-- located at           : (https://katfs.kat.ac.za/svnAfricanArray/Software
+--                        Repository/CommonCode/ScrCommon)
+-- Test do file         : Main_Mux_Test_Bench.do
+-- located at            (https://katfs.kat.ac.za/svnAfricanArray/Software
+--                        Repository/CommonCode/Modelsim)
+
+-- Outstanding          : Integration ATP and Approval
 -------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
@@ -201,9 +207,9 @@ signal SPI_Input_Handler_Version_Number_i : std_logic_vector(63 downto 0);
          end if; 
 
          if Dig_In_Request = '1' then
-             Trigger     <= '1';
-          else
-             Trigger     <= '0';               
+            Trigger     <= '1';        -- Latch
+         -- else
+         --   Trigger     <= '0';               
           end if;   
 -------------------------------------------------------------------------------
 -- Configuration Card 1
@@ -694,7 +700,7 @@ signal SPI_Input_Handler_Version_Number_i : std_logic_vector(63 downto 0);
        elsif int_cnt = 62 and busy = '0' and Lock = '0' then          
           SPI_Inport_8          <= not SPI_data_o(7 downto 0);  --DC
           Delay_cnt             := 0;
-	      Input_Ready           <= '1';
+	       Input_Ready           <= '1';
           int_cnt               := 40;
           
        else
