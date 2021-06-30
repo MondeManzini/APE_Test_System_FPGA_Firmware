@@ -19,13 +19,13 @@
 #
 # Quartus Prime
 # Version 20.1.1 Build 720 11/11/2020 SJ Lite Edition
-# Date created = 15:15:44  May 27, 2021
+# Date created = 15:24:31  June 29, 2021
 #
 # -------------------------------------------------------------------------- #
 
 QUARTUS_VERSION = "20.1"
-DATE = "15:15:44  May 27, 2021"
+DATE = "15:24:31  June 29, 2021"
 
 # Revisions
 
-PROJECT_REVISION = "Endat_Controller_Firmware"
+PROJECT_REVISION = "APE_Test_System_FPGA_Firmware"

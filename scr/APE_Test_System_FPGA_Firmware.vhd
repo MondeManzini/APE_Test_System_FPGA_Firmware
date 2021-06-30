@@ -1,15 +1,15 @@
 
 -- ===========
 --
--- Endat Controller Firmware Top Module
+-- APE Test System FPGA Firmware Top Module
 --
 -- 
--- Written by       : Glen Taylor, Monde Manzini
+-- Written by       : Monde Manzini
 -- Tested           : 
--- Last update      : 19/05/2021 
+-- Last update      : 09/06/2021 
 -- Version          :  
 
--- Last update      : 19/05/2021 
+-- Last update      : 29/06/2021 
 --                  : Removed RF Controller Modules
 
 -------------------------------------------------------------------------------

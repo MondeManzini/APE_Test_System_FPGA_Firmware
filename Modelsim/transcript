@@ -8586,3 +8586,253 @@ write format wave -window .main_pane.wave.interior.cs.body.pw.wf C:/Users/User/D
 # Compile of APE_Test_System_FPGA_Firmware.vhd failed with 23 errors.
 # Compile of APE_Test_System_FPGA_Firmware.vhd failed with 4 errors.
 # Compile of APE_Test_System_FPGA_Firmware.vhd failed with 2 errors.
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Warning: (vsim-7) Failed to open VHDL file "results.txt" in r+ mode.
+# Invalid argument. (errno = EINVAL)
+#    Time: 0 ps  Iteration: 0  Instance: /ape_test_system_fpga_firmware_test_bench/T1
+# Loading work.main_mux(arch_dut)
+# ** Warning: Design size of 17681 statements exceeds ModelSim-Intel FPGA Starter Edition recommended capacity.
+# Expect performance to be adversely affected.
+run 100 ms
+# GetModuleFileName: The specified module could not be found.
+# 
+# 
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 0 ps  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_In_1
+# ** Note: The version number of SPI_Input_Handler is 1.1.
+#    Time: 0 ps  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Input_Handler_1
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 0 ps  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Out_1
+# ** Note: The version number of SPI_Analog is 1.0.
+#    Time: 0 ps  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Driver_1
+# ** Note: The version number of SPI_Analog_Handler is 1.0.
+#    Time: 0 ps  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Handler_1
+# ** Note: The version number of Main_Demux is 1.2.
+#    Time: 0 ps  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Demux_1
+# ** Note: The version number of Main_Mux is 1.3.
+#    Time: 0 ps  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Mux_1
+# ** Note: The version number of Baud_Rate_Generator is 1.1.
+#    Time: 0 ps  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/APE_Test_System_FPGA_Firmware_Baud_1
+# ** Note: The version number of A0212-0003-007 Endat_Firmware Controller is 2.17.
+#    Time: 0 ps  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 0 ps  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_In_1
+# ** Note: The version number of SPI_Input_Handler is 1.1.
+#    Time: 0 ps  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Input_Handler_1
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 0 ps  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Out_1
+# ** Note: The version number of SPI_Analog is 1.0.
+#    Time: 0 ps  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Driver_1
+# ** Note: The version number of SPI_Analog_Handler is 1.0.
+#    Time: 0 ps  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Handler_1
+# ** Note: The version number of Main_Demux is 1.2.
+#    Time: 0 ps  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Demux_1
+# ** Note: The version number of Main_Mux is 1.3.
+#    Time: 0 ps  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Mux_1
+# ** Note: The version number of Baud_Rate_Generator is 1.1.
+#    Time: 0 ps  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/APE_Test_System_FPGA_Firmware_Baud_1
+# ** Note: The version number of A0212-0003-007 Endat_Firmware Controller is 2.17.
+#    Time: 0 ps  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 10 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_In_1
+# ** Note: The version number of SPI_Input_Handler is 1.1.
+#    Time: 10 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Input_Handler_1
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 10 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Out_1
+# ** Note: The version number of SPI_Analog is 1.0.
+#    Time: 10 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Driver_1
+# ** Note: The version number of SPI_Analog_Handler is 1.0.
+#    Time: 10 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Handler_1
+# ** Note: The version number of Main_Demux is 1.2.
+#    Time: 10 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Demux_1
+# ** Note: The version number of Main_Mux is 1.3.
+#    Time: 10 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Mux_1
+# ** Note: The version number of Baud_Rate_Generator is 1.1.
+#    Time: 10 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/APE_Test_System_FPGA_Firmware_Baud_1
+# ** Note: The version number of A0212-0003-007 Endat_Firmware Controller is 2.17.
+#    Time: 10 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 20 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_In_1
+# ** Note: The version number of SPI_Input_Handler is 1.1.
+#    Time: 20 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Input_Handler_1
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 20 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Out_1
+# ** Note: The version number of SPI_Analog is 1.0.
+#    Time: 20 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Driver_1
+# ** Note: The version number of SPI_Analog_Handler is 1.0.
+#    Time: 20 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Handler_1
+# ** Note: The version number of Main_Demux is 1.2.
+#    Time: 20 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Demux_1
+# ** Note: The version number of Main_Mux is 1.3.
+#    Time: 20 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Mux_1
+# ** Note: The version number of Baud_Rate_Generator is 1.1.
+#    Time: 20 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/APE_Test_System_FPGA_Firmware_Baud_1
+# ** Note: The version number of A0212-0003-007 Endat_Firmware Controller is 2.17.
+#    Time: 20 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 30 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_In_1
+# ** Note: The version number of SPI_Input_Handler is 1.1.
+#    Time: 30 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Input_Handler_1
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 30 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Out_1
+# ** Note: The version number of SPI_Analog is 1.0.
+#    Time: 30 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Driver_1
+# ** Note: The version number of SPI_Analog_Handler is 1.0.
+#    Time: 30 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Handler_1
+# ** Note: The version number of Main_Demux is 1.2.
+#    Time: 30 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Demux_1
+# ** Note: The version number of Main_Mux is 1.3.
+#    Time: 30 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Mux_1
+# ** Note: The version number of Baud_Rate_Generator is 1.1.
+#    Time: 30 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/APE_Test_System_FPGA_Firmware_Baud_1
+# ** Note: The version number of A0212-0003-007 Endat_Firmware Controller is 2.17.
+#    Time: 30 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 40 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_In_1
+# ** Note: The version number of SPI_Input_Handler is 1.1.
+#    Time: 40 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Input_Handler_1
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 40 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Out_1
+# ** Note: The version number of SPI_Analog is 1.0.
+#    Time: 40 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Driver_1
+# ** Note: The version number of SPI_Analog_Handler is 1.0.
+#    Time: 40 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Handler_1
+# ** Note: The version number of Main_Demux is 1.2.
+#    Time: 40 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Demux_1
+# ** Note: The version number of Main_Mux is 1.3.
+#    Time: 40 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Mux_1
+# ** Note: The version number of Baud_Rate_Generator is 1.1.
+#    Time: 40 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/APE_Test_System_FPGA_Firmware_Baud_1
+# ** Note: The version number of A0212-0003-007 Endat_Firmware Controller is 2.17.
+#    Time: 40 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 50 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_In_1
+# ** Note: The version number of SPI_Input_Handler is 1.1.
+#    Time: 50 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Input_Handler_1
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 50 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Out_1
+# ** Note: The version number of SPI_Analog is 1.0.
+#    Time: 50 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Driver_1
+# ** Note: The version number of SPI_Analog_Handler is 1.0.
+#    Time: 50 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Handler_1
+# ** Note: The version number of Main_Demux is 1.2.
+#    Time: 50 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Demux_1
+# ** Note: The version number of Main_Mux is 1.3.
+#    Time: 50 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Mux_1
+# ** Note: The version number of Baud_Rate_Generator is 1.1.
+#    Time: 50 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/APE_Test_System_FPGA_Firmware_Baud_1
+# ** Note: The version number of A0212-0003-007 Endat_Firmware Controller is 2.17.
+#    Time: 50 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 60 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_In_1
+# ** Note: The version number of SPI_Input_Handler is 1.1.
+#    Time: 60 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Input_Handler_1
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 60 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Out_1
+# ** Note: The version number of SPI_Analog is 1.0.
+#    Time: 60 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Driver_1
+# ** Note: The version number of SPI_Analog_Handler is 1.0.
+#    Time: 60 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Handler_1
+# ** Note: The version number of Main_Demux is 1.2.
+#    Time: 60 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Demux_1
+# ** Note: The version number of Main_Mux is 1.3.
+#    Time: 60 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Mux_1
+# ** Note: The version number of Baud_Rate_Generator is 1.1.
+#    Time: 60 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/APE_Test_System_FPGA_Firmware_Baud_1
+# ** Note: The version number of A0212-0003-007 Endat_Firmware Controller is 2.17.
+#    Time: 60 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 70 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_In_1
+# ** Note: The version number of SPI_Input_Handler is 1.1.
+#    Time: 70 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Input_Handler_1
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 70 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Out_1
+# ** Note: The version number of SPI_Analog is 1.0.
+#    Time: 70 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Driver_1
+# ** Note: The version number of SPI_Analog_Handler is 1.0.
+#    Time: 70 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Handler_1
+# ** Note: The version number of Main_Demux is 1.2.
+#    Time: 70 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Demux_1
+# ** Note: The version number of Main_Mux is 1.3.
+#    Time: 70 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Mux_1
+# ** Note: The version number of Baud_Rate_Generator is 1.1.
+#    Time: 70 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/APE_Test_System_FPGA_Firmware_Baud_1
+# ** Note: The version number of A0212-0003-007 Endat_Firmware Controller is 2.17.
+#    Time: 70 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 80 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_In_1
+# ** Note: The version number of SPI_Input_Handler is 1.1.
+#    Time: 80 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Input_Handler_1
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 80 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Out_1
+# ** Note: The version number of SPI_Analog is 1.0.
+#    Time: 80 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Driver_1
+# ** Note: The version number of SPI_Analog_Handler is 1.0.
+#    Time: 80 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Handler_1
+# ** Note: The version number of Main_Demux is 1.2.
+#    Time: 80 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Demux_1
+# ** Note: The version number of Main_Mux is 1.3.
+#    Time: 80 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Mux_1
+# ** Note: The version number of Baud_Rate_Generator is 1.1.
+#    Time: 80 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/APE_Test_System_FPGA_Firmware_Baud_1
+# ** Note: The version number of A0212-0003-007 Endat_Firmware Controller is 2.17.
+#    Time: 80 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 90 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_In_1
+# ** Note: The version number of SPI_Input_Handler is 1.1.
+#    Time: 90 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Input_Handler_1
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 90 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Out_1
+# ** Note: The version number of SPI_Analog is 1.0.
+#    Time: 90 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Driver_1
+# ** Note: The version number of SPI_Analog_Handler is 1.0.
+#    Time: 90 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Handler_1
+# ** Note: The version number of Main_Demux is 1.2.
+#    Time: 90 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Demux_1
+# ** Note: The version number of Main_Mux is 1.3.
+#    Time: 90 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Mux_1
+# ** Note: The version number of Baud_Rate_Generator is 1.1.
+#    Time: 90 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/APE_Test_System_FPGA_Firmware_Baud_1
+# ** Note: The version number of A0212-0003-007 Endat_Firmware Controller is 2.17.
+#    Time: 90 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 100 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_In_1
+# ** Note: The version number of SPI_Input_Handler is 1.1.
+#    Time: 100 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Input_Handler_1
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 100 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Out_1
+# ** Note: The version number of SPI_Analog is 1.0.
+#    Time: 100 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Driver_1
+# ** Note: The version number of SPI_Analog_Handler is 1.0.
+#    Time: 100 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Handler_1
+# ** Note: The version number of Main_Demux is 1.2.
+#    Time: 100 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Demux_1
+# ** Note: The version number of Main_Mux is 1.3.
+#    Time: 100 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Mux_1
+# ** Note: The version number of Baud_Rate_Generator is 1.1.
+#    Time: 100 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench/APE_Test_System_FPGA_Firmware_Baud_1
+# ** Note: The version number of A0212-0003-007 Endat_Firmware Controller is 2.17.
+#    Time: 100 ns  Iteration: 2  Instance: /ape_test_system_fpga_firmware_test_bench
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 110 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_In_1
+# ** Note: The version number of SPI_Input_Handler is 1.1.
+#    Time: 110 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Input_Handler_1
+# ** Note: The version number of SPI_In_Output is 1.1.
+#    Time: 110 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Out_1
+# ** Note: The version number of SPI_Analog is 1.0.
+#    Time: 110 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Driver_1
+# ** Note: The version number of SPI_Analog_Handler is 1.0.
+#    Time: 110 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/SPI_Analog_Handler_1
+# ** Note: The version number of Main_Demux is 1.2.
+#    Time: 110 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Demux_1
+# ** Note: The version number of Main_Mux is 1.3.
+#    Time: 110 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Mux_1
+# ** Note: The version number of Baud_Rate_Generator is 1.1.
+#    Time: 110 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/APE_Test_System_FPGA_Firmware_Baud_1
+# ** Note: The version number of A0212-0003-007 Endat_Firmware Controller is 2.17.
+#    Time: 110 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench
+# ** Note: Version build number is 5246430030302E32302E323032313035323731353234313600h
+#    Time: 150 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 267110 ns  Iteration: 1  Instance: /ape_test_system_fpga_firmware_test_bench/Main_Demux_1
