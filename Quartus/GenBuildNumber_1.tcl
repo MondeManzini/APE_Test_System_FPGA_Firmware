@@ -57,9 +57,9 @@ proc generate_vhdl { hex_value } {
 
                               $timestamp_b Monde Manzini
                               Version_Reg VHDL file generated succesfully and stored at \n
-                              G:/Users/Monde/Documents/AVN 2018/2018 CAM/FPGA Firmware/FPGA Firmware Code/Projects/Hybrid_FPGA_Firmware/Quartus\n
+                              https://github.com/MondeManzini/APE_Test_System_FPGA_Firmware/tree/master/Quartus\n
                               1. Please make sure the version of the top-level is updated.
-                              2. Please make sure all .vhd files are checked in in SVN."
+                              2. Please make sure all .vhd files are checked in in github."
 
 
 # Store Hexadecimal values in VHDL file

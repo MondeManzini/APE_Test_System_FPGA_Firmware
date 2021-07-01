@@ -2,14 +2,16 @@
 -- DESCRIPTION
 -- ===========
 --
--- Controller for the Push Button Switch Driver.
+-- Real Time Clock handle for the DS3231 device.
 --
 -- The firmware performs the following functions:
--- 
--- Written by: Glen Taylor
+--    Writes slave address 0x68
+--    Reads slave address 0x68
+--       Seconds, Minutes, Hours, Days, Date, Months and Years
+-- Written by: Glen Taylor, Monde Manzini
 -- Tested      : ??/??/20?? Simulation only - Initialization.
 --             : Test do file is wave.do
--- Last update : 11/01/2012 Initial release  Version 1.0
+-- Last update : 29/06/2021 
 -- Last update : ??/??/20?? - ??
 -- Outstanding : 
 -------------------------------------------------------------------------------
@@ -36,11 +38,12 @@ entity Real_Time_Clock_I2C_Handler is
    Enable               : out std_logic;
    Slave_Address_Out    : out std_logic_vector(6 downto 0);
    Slave_read_nWrite    : out std_logic;
-   Slave_Data_Out       : out std_logic_vector(7 downto 0);  
--- Inputs
+   Slave_Data_Out       : out std_logic_vector(7 downto 0); 
+-- Outputs to Mem Device   
+   Get_Sample_mem       : out std_logic;
+   Clear_mem            : out std_logic;
+-- Inputs from Mux
    Get_Sample           : in std_logic;
-   Sync                 : in std_logic;
-   Enable_in            : in std_logic;
    PPS_in               : in std_logic;
 -- Inputs from DeMux
    Seconds_in           : in std_logic_vector(7 downto 0); 
@@ -123,6 +126,7 @@ type   i2c_Intialization_States is (i2c_Idle, LoadData, WaitnBusy, Wait_Byte_Wri
 signal i2c_Intialization_State : i2c_Intialization_States;
 type   i2c_ReadData_States is (Idle, Wait_Address, Wait_Read, Wait_Data, TestStop);
 signal i2c_ReadData_State : i2c_ReadData_States;
+
 ------------------------------------------------------------------------------- 
 
   begin
@@ -174,7 +178,7 @@ begin
             case i2c_Intialization_State is
                when i2c_Idle =>         
                   if Busy_i = '0' then
-                     Slave_Address_Out       <= Slave_Address_i;     
+                     Slave_Address_Out       <= Slave_Address_i; -- 0x68 for DS3231    
                      Slave_read_nWrite       <= '0';   
                      Slave_Data_i            <= Slave_Register_i;
                      Enable_i                <= '1';
@@ -349,7 +353,7 @@ begin
          end case;
 
    -----------------------------
-   -- Timestamp Process
+   -- Writing/reading the EEPROM
    -----------------------------
 
    end if;

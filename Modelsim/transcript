@@ -15,3 +15,52 @@
 # Compile of Version_Ascii.vhd was successful.
 # Compile of APE_Test_System_FPGA_Firmware.vhd failed with 2 errors.
 # 16 compiles, 1 failed with 2 errors.
+vsim -gui work.ape_test_system_fpga_firmware_test_bench
+# vsim -gui work.ape_test_system_fpga_firmware_test_bench 
+# Start time: 10:00:12 on Jul 01,2021
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.std_logic_arith(body)
+# Loading ieee.numeric_std(body)
+# Loading ieee.std_logic_unsigned(body)
+# Loading work.txt_util(body)
+# Loading modelsim_lib.util(body)
+# Loading ieee.std_logic_signed(body)
+# Loading work.version_ascii
+# Loading work.ape_test_system_fpga_firmware_test_bench(archtest_bench)
+# Loading work.test_bench_t(archtest_bench_t)
+# Loading work.i2c_driver(logic)
+# Loading work.real_time_clock_i2c_handler(arch_dut)
+# Loading work.version_logger(log_to_file)
+# Loading work.version_rx_uasrt(arch_dut)
+# Loading work.myfifo8(syn)
+# Loading lpm.lpm_components
+# Loading lpm.lpm_common_conversion(body)
+# Loading lpm.lpm_shiftreg(lpm_syn)
+# Loading work.version_reg(rtl)
+# Loading work.spi_io_driver(arch_dut)
+# Loading work.spi_input_handler(arch_dut)
+# Loading work.spi_output_handler(arch_dut)
+# Loading work.spi_analog_driver(arch_dut)
+# Loading work.spi_analog_handler(arch_dut)
+# Loading work.main_demux(arch_dut)
+# Loading work.main_mux(arch_dut)
+# Loading work.baud_rate_generator(arch_dut)
+# ** Warning: Design size of 14164 statements exceeds ModelSim-Intel FPGA Starter Edition recommended capacity.
+# Expect performance to be adversely affected.
+do C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/Modelsim/APE_Test_System_FPGA_Firmware_Test_Bench.do
+# ** Warning: (vsim-WLF-5000) WLF file currently in use: vsim.wlf
+#           File in use by: User  Hostname: MMANZINI  ProcessID: 10924
+#           Attempting to use alternate WLF file "./wlft8shgkd".
+# ** Warning: (vsim-WLF-5001) Could not open WLF file: vsim.wlf
+#           Using alternate file: ./wlft8shgkd
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Compile of Real_Time_Clock_I2C_Handler.vhd was successful.
+# Compile of Real_Time_Clock_Memory.vhd failed with 85 errors.
+# Compile of Real_Time_Clock_Memory.vhd failed with 82 errors.
+# Compile of Real_Time_Clock_Memory.vhd failed with 68 errors.
+# Compile of Real_Time_Clock_Memory.vhd failed with 53 errors.
+# Compile of Real_Time_Clock_Memory.vhd failed with 46 errors.
+# Compile of Real_Time_Clock_Memory.vhd failed with 24 errors.
