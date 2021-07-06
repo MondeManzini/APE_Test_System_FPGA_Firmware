@@ -57,6 +57,14 @@ Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 
 -- Compiling entity Baud_Rate_Generator
 -- Compiling architecture Arch_DUT of Baud_Rate_Generator
 
+} {} {}} C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/scr/Version_Ascii.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/scr/Version_Ascii.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Compiling package Version_Ascii
+
 } {} {}} C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/scr/Main_Mux.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/scr/Main_Mux.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
 -- Loading package STANDARD
@@ -68,14 +76,6 @@ Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 
 -- Loading package Version_Ascii
 -- Compiling entity Main_Mux
 -- Compiling architecture Arch_DUT of Main_Mux
-
-} {} {}} C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/scr/Version_Ascii.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/scr/Version_Ascii.vhd
-Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package std_logic_arith
--- Compiling package Version_Ascii
 
 } {} {}} C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/scr/SPI_IO_Driver.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/scr/SPI_IO_Driver.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
@@ -135,32 +135,7 @@ Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 
 -- Loading entity Baud_Rate_Generator
 ** Note: C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/scr/APE_Test_System_FPGA_Firmware.vhd(1654): VHDL Compiler exiting
 
-} {16.0 18.0} {}} {C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/Testbench Files/APE_Test_System_FPGA_Firmware_Test_Bench.vhd} {1 {vcom -work work -2002 -explicit -stats=none {C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/Testbench Files/APE_Test_System_FPGA_Firmware_Test_Bench.vhd}
-Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package std_logic_arith
--- Loading package NUMERIC_STD
--- Loading package STD_LOGIC_UNSIGNED
--- Loading package txt_util
--- Loading package util
--- Compiling entity APE_Test_System_FPGA_Firmware_Test_Bench
--- Compiling architecture Archtest_bench of APE_Test_System_FPGA_Firmware_Test_Bench
--- Loading entity I2C_Driver
--- Loading entity Real_Time_Clock_I2C_Handler
--- Loading package STD_LOGIC_SIGNED
--- Loading entity Version_Logger
--- Loading entity Version_RX_UASRT
--- Loading entity Version_Reg
--- Loading entity SPI_IO_Driver
--- Loading entity SPI_Output_Handler
--- Loading entity Main_Demux
--- Loading package Version_Ascii
--- Loading entity Main_Mux
--- Loading entity Baud_Rate_Generator
-
-} {} {}} C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/scr/Version_RX_UASRT.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/scr/Version_RX_UASRT.vhd
+} {16.0 18.0} {}} C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/scr/Version_RX_UASRT.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/scr/Version_RX_UASRT.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
 -- Loading package STANDARD
 -- Loading package TEXTIO
@@ -170,5 +145,16 @@ Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 
 -- Loading package STD_LOGIC_UNSIGNED
 -- Compiling entity Version_RX_UASRT
 -- Compiling architecture Arch_DUT of Version_RX_UASRT
+
+} {} {}} C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/scr/Real_Time_Clock_I2C_Handler.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/scr/Real_Time_Clock_I2C_Handler.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package NUMERIC_STD
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity Real_Time_Clock_I2C_Handler
+-- Compiling architecture Arch_DUT of Real_Time_Clock_I2C_Handler
 
 } {} {}}

@@ -27,41 +27,60 @@ entity Real_Time_Clock_I2C_Handler is
   
    port (
 -- General Signals
-   RST_I                : in  std_logic;
-   CLK_I 	            : in  std_logic;
+   RST_I                      : in  std_logic;
+   CLK_I 	                  : in  std_logic;
 -- Inputs from I2C Driver
-   Busy                 : in  std_logic;
-   data_read            : in  std_logic_vector(7 downto 0);
-   ack_error            : in std_logic;
+   Busy                       : in  std_logic;
+   data_read                  : in  std_logic_vector(7 downto 0);
+   ack_error                  : in std_logic;
 -- Outputs to I2C Driver
-   initialation_Status  : out std_logic;
-   Enable               : out std_logic;
-   Slave_Address_Out    : out std_logic_vector(6 downto 0);
-   Slave_read_nWrite    : out std_logic;
-   Slave_Data_Out       : out std_logic_vector(7 downto 0); 
+   initialation_Status        : out std_logic;
+   Enable                     : out std_logic;
+   Slave_Address_Out          : out std_logic_vector(6 downto 0);
+   Slave_read_nWrite          : out std_logic;
+   Slave_Data_Out             : out std_logic_vector(7 downto 0); 
 -- Outputs to Mem Device   
-   Get_Sample_mem       : out std_logic;
-   Clear_mem            : out std_logic;
+   Get_Sample_mem             : out std_logic;
+   Clear_mem                  : out std_logic;
 -- Inputs from Mux
-   Get_Sample           : in std_logic;
-   PPS_in               : in std_logic;
+   Get_Sample                 : in std_logic;
+   PPS_in                     : in std_logic;
 -- Inputs from DeMux
-   Seconds_in           : in std_logic_vector(7 downto 0); 
-   Minutes_in           : in std_logic_vector(7 downto 0); 
-   Hours_in             : in std_logic_vector(7 downto 0); 
-   Day_in               : in std_logic_vector(7 downto 0); 
-   Date_in              : in std_logic_vector(7 downto 0); 
-   Month_Century_in     : in std_logic_vector(7 downto 0); 
-   Year_in              : in std_logic_vector(7 downto 0); 
+   Seconds_in                 : in std_logic_vector(7 downto 0); 
+   Minutes_in                 : in std_logic_vector(7 downto 0); 
+   Hours_in                   : in std_logic_vector(7 downto 0); 
+   Day_in                     : in std_logic_vector(7 downto 0); 
+   Date_in                    : in std_logic_vector(7 downto 0); 
+   Month_Century_in           : in std_logic_vector(7 downto 0); 
+   Year_in                    : in std_logic_vector(7 downto 0); 
 -- Outputs for Mux
-   Seconds_out          : out std_logic_vector(7 downto 0); 
-   Minutes_out          : out std_logic_vector(7 downto 0); 
-   Hours_out            : out std_logic_vector(7 downto 0); 
-   Day_out              : out std_logic_vector(7 downto 0); 
-   Date_out             : out std_logic_vector(7 downto 0); 
-   Month_Century_out    : out std_logic_vector(7 downto 0); 
-   Year_out             : out std_logic_vector(7 downto 0); 
-   Ready                : out std_logic
+   Seconds_out                : out std_logic_vector(7 downto 0); 
+   Minutes_out                : out std_logic_vector(7 downto 0); 
+   Hours_out                  : out std_logic_vector(7 downto 0); 
+   Day_out                    : out std_logic_vector(7 downto 0); 
+   Date_out                   : out std_logic_vector(7 downto 0); 
+   Month_Century_out          : out std_logic_vector(7 downto 0); 
+   Year_out                   : out std_logic_vector(7 downto 0); 
+   Ready                      : out std_logic;
+----------------------------------------------------------------
+-- Memory Port
+----------------------------------------------------------------
+-- Outputs for Mux
+   Seconds_out_mem_hi         : out std_logic_vector(7 downto 0);
+   Seconds_out_mem_lo         : out std_logic_vector(7 downto 0);
+   Minutes_out_mem_hi         : out std_logic_vector(7 downto 0);
+   Minutes_out_mem_lo         : out std_logic_vector(7 downto 0);
+   Hours_out_mem_hi           : out std_logic_vector(7 downto 0);
+   Hours_out_mem_lo           : out std_logic_vector(7 downto 0);
+   Day_out_mem_hi             : out std_logic_vector(7 downto 0);
+   Day_out_mem_lo             : out std_logic_vector(7 downto 0);
+   Date_out_mem_hi            : out std_logic_vector(7 downto 0);
+   Date_out_mem_lo            : out std_logic_vector(7 downto 0);
+   Month_Century_out_mem_hi   : out std_logic_vector(7 downto 0);
+   Month_Century_out_mem_lo   : out std_logic_vector(7 downto 0);
+   Year_out_mem_hi            : out std_logic_vector(7 downto 0);
+   Year_out_mem_lo            : out std_logic_vector(7 downto 0);
+   Ready_mem                  : out std_logic
    );
 end Real_Time_Clock_I2C_Handler;
 
@@ -89,6 +108,29 @@ signal Month_Century_register_conf_i   : std_logic_vector(7 downto 0):= X"00"; -
 signal Year_register_i                 : std_logic_vector(7 downto 0):= X"06"; -- 06H -- Initialize as 00 
 signal Year_register_conf_i            : std_logic_vector(7 downto 0):= X"00"; -- 06H -- Initialize as 00 
 
+-- Read_Write Memory Time Keeping Registers Allocation
+signal Seconds_register_conf_lo_i         : std_logic_vector(7 downto 0):= X"00"; -- 00H -- Initialize as 00 
+signal Seconds_register_conf_hi_i         : std_logic_vector(15 downto 8):= X"00"; -- 00H -- Initialize as 00 
+
+signal Minutes_register_conf_lo_i         : std_logic_vector(23 downto 16):= X"00"; -- 00H -- Initialize as 00 
+signal Minutes_register_conf_hi_i         : std_logic_vector(31 downto 24):= X"00"; -- 00H -- Initialize as 00 
+
+signal Hours_register_conf_lo_i           : std_logic_vector(39 downto 32):= X"00"; -- 00 -- Initialize as 00 
+signal Hours_register_conf_hi_i           : std_logic_vector(47 downto 40):= X"00"; -- 00 -- Initialize as 00 
+
+signal Day_register_conf_lo_i             : std_logic_vector(55 downto 48):= X"00"; -- 00H -- Initialize as 00
+signal Day_register_conf_hi_i             : std_logic_vector(63 downto 56):= X"00"; -- 00H -- Initialize as 00 
+
+signal Date_register_conf_lo_i            : std_logic_vector(71 downto 64):= X"00"; -- 00H -- Initialize as 00    
+signal Date_register_conf_hi_i            : std_logic_vector(79 downto 72):= X"00"; -- 00H -- Initialize as 00    
+
+signal Month_Century_register_conf_lo_i   : std_logic_vector(87 downto 80):= X"00"; -- 05H -- Initialize as 00 
+signal Month_Century_register_conf_hi_i   : std_logic_vector(95 downto 88):= X"00"; -- 05H -- Initialize as 00 
+
+signal Year_register_conf_lo_i            : std_logic_vector(103 downto 96):= X"00"; -- 06H -- Initialize as 00 
+signal Year_register_conf_hi_i            : std_logic_vector(111 downto 104):= X"00"; -- 06H -- Initialize as 00 
+
+
 -- Special Function Registers
 signal CTL_Reg_i                       : std_logic_vector(7 downto 0):= X"0e";  
 signal CTL_Status_i                    : std_logic_vector(7 downto 0):= X"0f";  
@@ -97,6 +139,8 @@ signal CTL_Status_conf_i               : std_logic_vector(7 downto 0):= X"00";
 -- 
 signal Enable_i                        : std_logic;
 signal Ready_i                         : std_logic;
+signal Ready_mem_i                     : std_logic;
+
 signal Get_Sample_i                    : std_logic;
 signal Start_i                         : std_logic;
 signal Busy_i                          : std_logic;
@@ -112,6 +156,48 @@ signal Date_out_i                      : std_logic_vector(7 downto 0) := X"00";
 signal Month_Century_out_i             : std_logic_vector(7 downto 0) := X"00";
 signal Year_out_i                      : std_logic_vector(7 downto 0) := X"00";
 
+----------------------------------------------------------------
+-- Memory Signals
+----------------------------------------------------------------
+-- Time Out
+signal Seconds_out_mem_i               : std_logic_vector(7 downto 0) := X"00";         
+signal Minutes_out_mem_i               : std_logic_vector(7 downto 0) := X"00";     
+signal Hours_out_mem_i                 : std_logic_vector(7 downto 0) := X"00";
+signal Day_out_mem_i                   : std_logic_vector(7 downto 0) := X"00";         
+signal Date_out_mem_i                  : std_logic_vector(7 downto 0) := X"00";     
+signal Month_Century_out_mem_i         : std_logic_vector(7 downto 0) := X"00";
+signal Year_out_mem_i                  : std_logic_vector(7 downto 0) := X"00";
+
+signal Seconds_mem_hi_i                : std_logic_vector(7 downto 0);
+signal Seconds_mem_lo_i                : std_logic_vector(7 downto 0);
+signal Minutes_mem_hi_i                : std_logic_vector(7 downto 0);
+signal Minutes_mem_lo_i                : std_logic_vector(7 downto 0);
+signal Hours_mem_hi_i                  : std_logic_vector(7 downto 0);
+signal Hours_mem_lo_i                  : std_logic_vector(7 downto 0);
+signal Day_mem_hi_i                    : std_logic_vector(7 downto 0);
+signal Day_mem_lo_i                    : std_logic_vector(7 downto 0);
+signal Date_mem_hi_i                   : std_logic_vector(7 downto 0);
+signal Date_mem_lo_i                   : std_logic_vector(7 downto 0);
+signal Month_Century_mem_hi_i          : std_logic_vector(7 downto 0);
+signal Month_Century_mem_lo_i          : std_logic_vector(7 downto 0);
+signal Year_mem_hi_i                   : std_logic_vector(7 downto 0);
+signal Year_mem_lo_i                   : std_logic_vector(7 downto 0);
+
+signal Seconds_out_mem_hi_i            : std_logic_vector(7 downto 0);
+signal Seconds_out_mem_lo_i            : std_logic_vector(7 downto 0);
+signal Minutes_out_mem_hi_i            : std_logic_vector(7 downto 0);
+signal Minutes_out_mem_lo_i            : std_logic_vector(7 downto 0);
+signal Hours_out_mem_hi_i              : std_logic_vector(7 downto 0);
+signal Hours_out_mem_lo_i              : std_logic_vector(7 downto 0);
+signal Day_out_mem_hi_i                : std_logic_vector(7 downto 0);
+signal Day_out_mem_lo_i                : std_logic_vector(7 downto 0);
+signal Date_out_mem_hi_i               : std_logic_vector(7 downto 0);
+signal Date_out_mem_lo_i               : std_logic_vector(7 downto 0);
+signal Month_Century_out_mem_hi_i      : std_logic_vector(7 downto 0);
+signal Month_Century_out_mem_lo_i      : std_logic_vector(7 downto 0);
+signal Year_out_mem_hi_i               : std_logic_vector(7 downto 0);
+signal Year_out_mem_lo_i               : std_logic_vector(7 downto 0);
+
 signal Slave_Address_i                 : std_logic_vector(6 downto 0);
 signal Slave_Register_i                : std_logic_vector(7 downto 0);
 signal lockout_i                       : std_logic;
@@ -122,7 +208,8 @@ signal Address_Lock_i                  : std_logic := '0';
 -- States
 type   i2c_Controller_States is (Idle, Initialization, ReadData);
 signal i2c_Controller_State : i2c_Controller_States;
-type   i2c_Intialization_States is (i2c_Idle, LoadData, WaitnBusy, Wait_Byte_Write, Wait_Busy_Low, StopInitialization, initialzation_Complete);
+type   i2c_Intialization_States is (i2c_Idle, LoadData, WaitnBusy, Wait_Byte_Write, Wait_Busy_Low, StopInitialization,
+       Config_Memory, Memory_Init, initialzation_Complete);
 signal i2c_Intialization_State : i2c_Intialization_States;
 type   i2c_ReadData_States is (Idle, Wait_Address, Wait_Read, Wait_Data, TestStop);
 signal i2c_ReadData_State : i2c_ReadData_States;
@@ -145,18 +232,18 @@ initialation_Status <= initialation_Status_i;
 busy_i              <= busy;
 Ready               <= Ready_i;
 -------------------------------------------------------------------------------
--- Maser i2C Controller
+-- i2C Controller
 -------------------------------------------------------------------------------
-Maser_i2c_Control :process (CLK_I,RST_I)
+I2C_Control :process (CLK_I,RST_I)
     --timing for clock generation
    Variable Count             : INTEGER RANGE 0 TO 150 := 0;
-   Variable Config_Count      : INTEGER RANGE 0 TO 9 := 0;
+   Variable Config_Count      : INTEGER RANGE 0 TO 12 := 0;
    Variable Read_Count        : INTEGER RANGE 0 TO 10 := 0;
 begin
    if RST_I = '0' then 
       Count                   := 0;
       Config_Count            := 0;
-      Slave_Address_i         <= "1101000";   -- 0xd0
+      Slave_Address_i         <= "1101000";   -- 0xd0 - RTC Chip Address
       Slave_Register_i        <= X"00";
       lockout_i               <= '0';         
       Enable_i                <= '0';
@@ -195,7 +282,11 @@ begin
                      Slave_Data_i             <= Config_i;
                      Count                    := 0;
                      Config_Count             := Config_Count + 1;
-                     i2c_Intialization_State  <= WaitnBusy;
+                     if Slave_Address_i = "1010000" then
+                        i2c_Intialization_State  <= Config_Memory;
+                     else
+                        i2c_Intialization_State  <= WaitnBusy;
+                     end if;
                   elsif Busy_i = '1' and Count < 100 then
                      Count := Count + 1;                     
                   end if; 
@@ -232,9 +323,10 @@ begin
                            Config_i          <= CTL_Status_conf_i;
                            Slave_Register_i  <= CTL_Status_i;
                         when 9 => 
-                           --Config_Count      := 0;
                            Config_i          <= x"00";  
                            Slave_Register_i  <= X"00";
+                        when others =>
+                        
                      end case; 
                   else   
                      i2c_Intialization_State <= WaitnBusy;                       
@@ -255,28 +347,87 @@ begin
                         Enable_i                <= '0';
                         i2c_Intialization_State <= StopInitialization;
                      else                  
-                        Count := Count + 1;
+                        Count                   := Count + 1;
                      end if;
                   end if; 
                       
                when StopInitialization =>                       
                   if Busy_i = '0'  then     
                      if Config_Count = 9 then
-                        i2c_Intialization_State  <= initialzation_Complete;
+                        --i2c_Intialization_State  <= initialzation_Complete;
                         i2c_Controller_State     <= Idle;
+                        i2c_Intialization_State  <= Memory_Init;
                         initialation_Status_i    <= '1';
                         Config_Count             := 0;
+                     elsif Config_Count = 12 then
+                        i2c_Intialization_State  <= initialzation_Complete;
                      else
                         i2c_Intialization_State  <= i2c_Idle;  
                      end if;   
+                  end if;
+                        -- Memory Initialization
+               when Memory_Init =>
+                  i2c_Intialization_State  <= LoadData;   
+                        
+               when Config_Memory =>
+                  i2c_Intialization_State  <= LoadData; 
+                  if Busy_i = '0' then
+                     i2c_Intialization_State <= Wait_Busy_Low;
+                     case Config_Count is
+                        when 0 => 
+                           Config_i          <= x"00";
+                           Slave_Register_i  <= Seconds_register_conf_hi_i;
+                        when 1 =>
+                           Config_i          <= x"00";
+                           Slave_Register_i  <= Seconds_register_conf_lo_i;
+                        when 2 =>
+                           Config_i          <= x"00";
+                           Slave_Register_i  <= Hours_register_conf_hi_i; 
+                        when 3 =>
+                           Config_i          <= x"00";
+                           Slave_Register_i  <= Hours_register_conf_lo_i; 
+                        when 4 =>
+                           Config_i          <= x"00";
+                           Slave_Register_i  <= Day_register_conf_hi_i;                                
+                        when 5 =>
+                           Config_i          <= x"00";
+                           Slave_Register_i  <= Day_register_conf_lo_i;                               
+                        when 6 =>
+                           Config_i          <= x"00";
+                           Slave_Register_i  <= Date_register_conf_hi_i;
+                        when 7 =>
+                           Config_i          <= x"00";
+                           Slave_Register_i  <= Date_register_conf_lo_i;
+                        when 8 =>
+                           Config_i          <= x"00";
+                           Slave_Register_i  <= Month_Century_register_conf_hi_i; 
+                        when 9 =>
+                           Config_i          <= x"00";
+                           Slave_Register_i  <= Month_Century_register_conf_lo_i;                             
+                        when 10 =>
+                           Config_i          <= x"00";
+                           Slave_Register_i  <= Year_register_conf_hi_i;
+                        when 11 =>
+                           Config_i          <= x"00";
+                           Slave_Register_i  <= Year_register_conf_lo_i;
+                        when 12 => 
+                           Config_i          <= x"00";  
+                           Slave_Register_i  <= X"00";
+                     end case; 
+                  else   
+                     i2c_Intialization_State <= WaitnBusy;                       
                   end if;
 
                when initialzation_Complete =>
                   initialation_Status_i    <= '1';               
             end case;
+            -- End of RTC Initialization
+            -- Start of Memory Initialization
+
 ----------------------------                            
 -- end of Initialization 
 ----------------------------
+
          when Idle =>
             initialation_Status_i    <= '0';
             if Get_Sample_i = '1' then
@@ -358,6 +509,6 @@ begin
 
    end if;
     
-  end process Maser_i2c_Control; 
+  end process I2C_Control; 
  
   end architecture Arch_DUT;    	      

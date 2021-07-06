@@ -13,6 +13,7 @@ library ieee;
     use ieee.std_logic_unsigned.all;
     use std.textio.all;
     use work.txt_util.all;
+    use work.Version_Ascii.all;
 
 library modelsim_lib;
     use modelsim_lib.util.all;
@@ -29,7 +30,7 @@ architecture Archtest_bench of APE_Test_System_FPGA_Firmware_Test_Bench is
       ClkPer     : time     := 20 ns;
       StimuFile  : string   := "data.txt";
       ResultFile : string   := "results.txt"
-  );
+  ); 
   
     port (
       oVec : out std_logic_vector(Vec_Width-1 downto 0);
@@ -56,108 +57,6 @@ constant Version_Minor_High_i   : STD_LOGIC_VECTOR(7 downto 0) := x"32";  -- 0x
 constant Version_Minor_Low_i    : STD_LOGIC_VECTOR(7 downto 0) := x"30";  -- x0
 -- Null Termination
 constant Null_i                 : STD_LOGIC_VECTOR(7 downto 0) := x"00";  -- termination
-
-----------------------------------------------------------------------
--- RTC I2C Driver Component and Signals
-----------------------------------------------------------------------
-component I2C_Driver IS
-  GENERIC(
-    input_clk : INTEGER := 50_000_000;               --input clock speed from user logic in Hz
-    bus_clk   : INTEGER := 400_000);   --speed the i2c bus (scl) will run at in Hz
-    PORT(
-    clk       : IN     STD_LOGIC;                    --system clock
-    reset_n   : IN     STD_LOGIC;                    --active low reset
-    ena       : IN     STD_LOGIC;                    --latch in command
-    addr      : IN     STD_LOGIC_VECTOR(6 DOWNTO 0); --address of target slave
-    rw        : IN     STD_LOGIC;                    --'0' is write, '1' is read
-    data_wr   : IN     STD_LOGIC_VECTOR(7 DOWNTO 0); --data to write to slave
-    busy      : OUT    STD_LOGIC;                    --indicates transaction in progress
-    data_rd   : OUT    STD_LOGIC_VECTOR(7 DOWNTO 0); --data read from slave
-    ack_error : BUFFER STD_LOGIC;                    --flag if improper acknowledge from slave
-    sda       : INOUT  STD_LOGIC;                    --serial data output of i2c bus
-    scl       : INOUT  STD_LOGIC                     --serial clock output of i2c bus
-    );                   
-END component I2C_Driver;
-
-
-----------------------------------------------------------------------
--- RTC I2C Handler Test Bench Component and Signals
-----------------------------------------------------------------------
-component Real_Time_Clock_I2C_Handler IS
-  PORT(
--- General Signals
-  RST_I                : in  std_logic;
-  CLK_I 	            : in  std_logic;
-  -- Inputs from I2C Driver
-  Busy                 : in  std_logic;
-  data_read            : in  std_logic_vector(7 downto 0);
-  ack_error            : in std_logic;
-  -- Outputs to I2C Driver
-  initialation_Status  : out std_logic;
-  Enable               : out std_logic;
-  Slave_Address_Out    : out std_logic_vector(6 downto 0);
-  Slave_read_nWrite    : out std_logic;
-  Slave_Data_Out       : out std_logic_vector(7 downto 0);  
-  -- Inputs
-  Get_Sample           : in std_logic;
-  Sync                 : in std_logic;
-  Enable_in            : in std_logic;
-  PPS_in               : in std_logic;
-  -- Inputs from DeMux
-  Seconds_in           : in std_logic_vector(7 downto 0); 
-  Minutes_in           : in std_logic_vector(7 downto 0); 
-  Hours_in             : in std_logic_vector(7 downto 0); 
-  Day_in               : in std_logic_vector(7 downto 0); 
-  Date_in              : in std_logic_vector(7 downto 0); 
-  Month_Century_in     : in std_logic_vector(7 downto 0); 
-  Year_in              : in std_logic_vector(7 downto 0); 
-  -- Outputs for Mux
-  Seconds_out          : out std_logic_vector(7 downto 0); 
-  Minutes_out          : out std_logic_vector(7 downto 0); 
-  Hours_out            : out std_logic_vector(7 downto 0); 
-  Day_out              : out std_logic_vector(7 downto 0); 
-  Date_out             : out std_logic_vector(7 downto 0); 
-  Month_Century_out    : out std_logic_vector(7 downto 0); 
-  Year_out             : out std_logic_vector(7 downto 0); 
-  Ready                : out std_logic
-  );                   
-END component Real_Time_Clock_I2C_Handler;
-
-signal Get_Sample_i           : std_logic;
-signal Sync_i                 : std_logic;
-signal Enable_in_i            : std_logic;
-signal PPS_in_i               : std_logic;
-signal Enable_i               : std_logic;
-signal Address_i              : std_logic_vector(6 downto 0);
-signal RnW_i                  : std_logic;
-signal Data_WR_i              : std_logic_vector(7 downto 0);
-signal Ready_i                : std_logic;
-signal Seconds_out_i          : std_logic_vector(7 downto 0);         
-signal Minutes_out_i          : std_logic_vector(7 downto 0);     
-signal Hours_out_i            : std_logic_vector(7 downto 0);
-signal Day_out_i              : std_logic_vector(7 downto 0);         
-signal Date_out_i             : std_logic_vector(7 downto 0);     
-signal Month_Century_out_i    : std_logic_vector(7 downto 0);
-signal Year_out_i             : std_logic_vector(7 downto 0);
-signal Seconds_in_i           : std_logic_vector(7 downto 0);         
-signal Minutes_in_i           : std_logic_vector(7 downto 0);     
-signal Hours_in_i             : std_logic_vector(7 downto 0);
-signal Day_in_i               : std_logic_vector(7 downto 0);         
-signal Date_in_i              : std_logic_vector(7 downto 0);     
-signal Month_Century_in_i     : std_logic_vector(7 downto 0);
-signal Year_in_i              : std_logic_vector(7 downto 0);
-signal Ack_Error_i            : std_logic;
-signal SDA_i                  : std_logic;
-signal SCL_i                  : std_logic;  
-signal lock_Out_i             : std_logic;
-signal lock_Out2_i            : std_logic;
-signal Busy_i                 : std_logic;
-signal Data_RD_i              : std_logic_vector(7 downto 0);
-signal Start_i                : std_logic;
-signal lockout_i              : std_logic;
-signal initialation_Status_i  : std_logic;
-signal TestData               : std_logic_vector(7 downto 0);
-
 
 -- Version Verification Signals and Component
   component Version_RX_UASRT is
@@ -234,7 +133,127 @@ component Version_Reg is
         Version_Timestamp  : out STD_LOGIC_VECTOR(111 downto 0)
     );
 end component Version_Reg; 
-  
+
+----------------------------------------------------------------------
+-- RTC I2C Driver Component and Signals
+----------------------------------------------------------------------
+component I2C_Driver IS
+  GENERIC(
+    input_clk : INTEGER := 50_000_000;               --input clock speed from user logic in Hz
+    bus_clk   : INTEGER := 400_000);   --speed the i2c bus (scl) will run at in Hz
+    PORT(
+    clk       : IN     STD_LOGIC;                    --system clock
+    reset_n   : IN     STD_LOGIC;                    --active low reset
+    ena       : IN     STD_LOGIC;                    --latch in command
+    addr      : IN     STD_LOGIC_VECTOR(6 DOWNTO 0); --address of target slave
+    rw        : IN     STD_LOGIC;                    --'0' is write, '1' is read
+    data_wr   : IN     STD_LOGIC_VECTOR(7 DOWNTO 0); --data to write to slave
+    busy      : OUT    STD_LOGIC;                    --indicates transaction in progress
+    data_rd   : OUT    STD_LOGIC_VECTOR(7 DOWNTO 0); --data read from slave
+    ack_error : BUFFER STD_LOGIC;                    --flag if improper acknowledge from slave
+    sda       : INOUT  STD_LOGIC;                    --serial data output of i2c bus
+    scl       : INOUT  STD_LOGIC                     --serial clock output of i2c bus
+    );                   
+END component I2C_Driver;
+
+----------------------------------------------------------------------
+-- RTC I2C Handler Test Bench Component and Signals
+----------------------------------------------------------------------
+component Real_Time_Clock_I2C_Handler IS
+  PORT(
+-- General Signals
+  RST_I                : in  std_logic;
+  CLK_I 	            : in  std_logic;
+  -- Inputs from I2C Driver
+  Busy                 : in  std_logic;
+  data_read            : in  std_logic_vector(7 downto 0);
+  ack_error            : in std_logic;
+  -- Outputs to I2C Driver
+  initialation_Status  : out std_logic;
+  Enable               : out std_logic;
+  Slave_Address_Out    : out std_logic_vector(6 downto 0);
+  Slave_read_nWrite    : out std_logic;
+  Slave_Data_Out       : out std_logic_vector(7 downto 0);  
+  -- Inputs
+  Get_Sample           : in std_logic;
+  Sync                 : in std_logic;
+  Enable_in            : in std_logic;
+  PPS_in               : in std_logic;
+  -- Inputs from DeMux
+  Seconds_in           : in std_logic_vector(7 downto 0); 
+  Minutes_in           : in std_logic_vector(7 downto 0); 
+  Hours_in             : in std_logic_vector(7 downto 0); 
+  Day_in               : in std_logic_vector(7 downto 0); 
+  Date_in              : in std_logic_vector(7 downto 0); 
+  Month_Century_in     : in std_logic_vector(7 downto 0); 
+  Year_in              : in std_logic_vector(7 downto 0); 
+  -- Outputs for Mux
+  Seconds_out          : out std_logic_vector(7 downto 0); 
+  Minutes_out          : out std_logic_vector(7 downto 0); 
+  Hours_out            : out std_logic_vector(7 downto 0); 
+  Day_out              : out std_logic_vector(7 downto 0); 
+  Date_out             : out std_logic_vector(7 downto 0); 
+  Month_Century_out    : out std_logic_vector(7 downto 0); 
+  Year_out             : out std_logic_vector(7 downto 0); 
+  Ready                : out std_logic;
+  ----------------------------------------------------------------
+  -- Memory Port
+  ----------------------------------------------------------------
+  -- Outputs for Mux
+  Seconds_out_mem_hi         : out std_logic_vector(7 downto 0);
+  Seconds_out_mem_lo         : out std_logic_vector(7 downto 0);
+  Minutes_out_mem_hi         : out std_logic_vector(7 downto 0);
+  Minutes_out_mem_lo         : out std_logic_vector(7 downto 0);
+  Hours_out_mem_hi           : out std_logic_vector(7 downto 0);
+  Hours_out_mem_lo           : out std_logic_vector(7 downto 0);
+  Day_out_mem_hi             : out std_logic_vector(7 downto 0);
+  Day_out_mem_lo             : out std_logic_vector(7 downto 0);
+  Date_out_mem_hi            : out std_logic_vector(7 downto 0);
+  Date_out_mem_lo            : out std_logic_vector(7 downto 0);
+  Month_Century_out_mem_hi   : out std_logic_vector(7 downto 0);
+  Month_Century_out_mem_lo   : out std_logic_vector(7 downto 0);
+  Year_out_mem_hi            : out std_logic_vector(7 downto 0);
+  Year_out_mem_lo            : out std_logic_vector(7 downto 0);
+  Ready_mem                  : out std_logic
+  );                   
+END component Real_Time_Clock_I2C_Handler;
+
+signal Get_Sample_i           : std_logic;
+signal Sync_i                 : std_logic;
+signal Enable_in_i            : std_logic;
+signal PPS_in_i               : std_logic;
+signal Enable_i               : std_logic;
+signal Address_i              : std_logic_vector(6 downto 0);
+signal RnW_i                  : std_logic;
+signal Data_WR_i              : std_logic_vector(7 downto 0);
+signal Ready_i                : std_logic;
+signal Seconds_out_i          : std_logic_vector(7 downto 0);         
+signal Minutes_out_i          : std_logic_vector(7 downto 0);     
+signal Hours_out_i            : std_logic_vector(7 downto 0);
+signal Day_out_i              : std_logic_vector(7 downto 0);         
+signal Date_out_i             : std_logic_vector(7 downto 0);     
+signal Month_Century_out_i    : std_logic_vector(7 downto 0);
+signal Year_out_i             : std_logic_vector(7 downto 0);
+signal Seconds_in_i           : std_logic_vector(7 downto 0);         
+signal Minutes_in_i           : std_logic_vector(7 downto 0);     
+signal Hours_in_i             : std_logic_vector(7 downto 0);
+signal Day_in_i               : std_logic_vector(7 downto 0);         
+signal Date_in_i              : std_logic_vector(7 downto 0);     
+signal Month_Century_in_i     : std_logic_vector(7 downto 0);
+signal Year_in_i              : std_logic_vector(7 downto 0);
+signal Ack_Error_i            : std_logic;
+signal SDA_i                  : std_logic;
+signal SCL_i                  : std_logic;  
+signal lock_Out_i             : std_logic;
+signal lock_Out2_i            : std_logic;
+signal Busy_i                 : std_logic;
+signal Data_RD_i              : std_logic_vector(7 downto 0);
+signal Start_i                : std_logic;
+signal lockout_i              : std_logic;
+signal initialation_Status_i  : std_logic;
+signal TestData               : std_logic_vector(7 downto 0);
+
+
 ----------------------------------------------------------------------
 -- SPI Driver ignals and Component
 ----------------------------------------------------------------------
@@ -977,48 +996,21 @@ constant start_bit          : std_logic := '0';
 constant stop_bit           : std_logic := '1';
 signal   bit_time           : time;
 
---------------
--- Ascii Codes
---------------   
-constant A        : std_logic_vector(7 downto 0) := X"41";
-constant B        : std_logic_vector(7 downto 0) := X"42";
-constant C        : std_logic_vector(7 downto 0) := X"43";
-constant D        : std_logic_vector(7 downto 0) := X"44";
-constant E        : std_logic_vector(7 downto 0) := X"45";
-constant F        : std_logic_vector(7 downto 0) := X"46";
-constant G        : std_logic_vector(7 downto 0) := X"47";
-constant H        : std_logic_vector(7 downto 0) := X"48";
-constant I        : std_logic_vector(7 downto 0) := X"49";
-constant J        : std_logic_vector(7 downto 0) := X"4A";
-constant K        : std_logic_vector(7 downto 0) := X"4B";
-constant L        : std_logic_vector(7 downto 0) := X"4C";
-constant M        : std_logic_vector(7 downto 0) := X"4D";
-constant N        : std_logic_vector(7 downto 0) := X"4E";
-constant O        : std_logic_vector(7 downto 0) := X"4F";
-constant P        : std_logic_vector(7 downto 0) := X"50";
-constant Qu       : std_logic_vector(7 downto 0) := X"51";
-constant R        : std_logic_vector(7 downto 0) := X"52";
-constant S        : std_logic_vector(7 downto 0) := X"53";
-constant T        : std_logic_vector(7 downto 0) := X"54";
-constant U        : std_logic_vector(7 downto 0) := X"55";
-constant V        : std_logic_vector(7 downto 0) := X"56";
-constant W        : std_logic_vector(7 downto 0) := X"57";
-constant X        : std_logic_vector(7 downto 0) := X"58";
-constant Y        : std_logic_vector(7 downto 0) := X"59";
-constant Z        : std_logic_vector(7 downto 0) := X"5A";
-constant Space    : std_logic_vector(7 downto 0) := X"20";
-constant Dot      : std_logic_vector(7 downto 0) := X"2E";
-
-constant Zero     : std_logic_vector(7 downto 0) := X"30";
-constant One      : std_logic_vector(7 downto 0) := X"31";
-constant Two      : std_logic_vector(7 downto 0) := X"32";
-constant Three    : std_logic_vector(7 downto 0) := X"33";
-constant Four     : std_logic_vector(7 downto 0) := X"34";
-constant Five     : std_logic_vector(7 downto 0) := X"35";
-constant Six      : std_logic_vector(7 downto 0) := X"36";
-constant Seven    : std_logic_vector(7 downto 0) := X"37";
-constant Eight    : std_logic_vector(7 downto 0) := X"38";
-constant Nine     : std_logic_vector(7 downto 0) := X"39";
+signal Seconds_out_mem_hi_i            : std_logic_vector(7 downto 0);
+signal Seconds_out_mem_lo_i            : std_logic_vector(7 downto 0);
+signal Minutes_out_mem_hi_i            : std_logic_vector(7 downto 0);
+signal Minutes_out_mem_lo_i            : std_logic_vector(7 downto 0);
+signal Hours_out_mem_hi_i              : std_logic_vector(7 downto 0);
+signal Hours_out_mem_lo_i              : std_logic_vector(7 downto 0);
+signal Day_out_mem_hi_i                : std_logic_vector(7 downto 0);
+signal Day_out_mem_lo_i                : std_logic_vector(7 downto 0);
+signal Date_out_mem_hi_i               : std_logic_vector(7 downto 0);
+signal Date_out_mem_lo_i               : std_logic_vector(7 downto 0);
+signal Month_Century_out_mem_hi_i      : std_logic_vector(7 downto 0);
+signal Month_Century_out_mem_lo_i      : std_logic_vector(7 downto 0);
+signal Year_out_mem_hi_i               : std_logic_vector(7 downto 0);
+signal Year_out_mem_lo_i               : std_logic_vector(7 downto 0);
+signal Ready_mem_i                     : std_logic;
 
 -- Build State
 -- Good Build State 
@@ -1194,61 +1186,7 @@ T1: test_bench_T
    oClk => sClok,
    iVec => srx_data
    );
-
--------------------------------------------------------------------------------
--- RTC I2C Driver Instance
--------------------------------------------------------------------------------
-Real_Time_Clock_I2C_Driver_1: entity work.I2C_Driver
-  PORT map (
-    clk       => CLK_I_i,                  --system clock
-    reset_n   => RST_I_i,                  --active low reset
-    ena       => Enable_i,                 --latch in command
-    addr      => Address_i,                --address of target slave
-    rw        => RnW_i,                    --'0' is write, '1' is read
-    data_wr   => Data_WR_i,                --data to write to slave
-    busy      => Busy_i,                   --indicates transaction in progress
-    data_rd   => Data_RD_i,                --data read from slave
-    ack_error => Ack_Error_i,              --flag if improper acknowledge from slave
-    sda       => SDA_i,                    --serial data output of i2c bus
-    scl       => SCL_i                    -- serial clock output of i2c bus
-    );    
-
--------------------------------------------------------------------------------
--- RTC I2C Handler Controller Instance
--------------------------------------------------------------------------------
-Real_Time_Clock_I2C_Handler_1: entity work.Real_Time_Clock_I2C_Handler
-  PORT map (
-    CLK_I               => CLK_I_i,     
-    RST_I               => RST_I_i,    
-    Busy                => Busy_i,     
-    data_read           => Data_RD_i,   
-    ack_error           => Ack_Error_i, 
-    initialation_Status => initialation_Status_i,
-    Enable              => Enable_i,    
-    Slave_Address_Out   => Address_i,   
-    Slave_read_nWrite   => RnW_i,       
-    Slave_Data_Out      => Data_WR_i,   
-    Get_Sample          => Get_Sample_i,
-    Sync                => Sync_i,
-    Enable_in           => Enable_in_i,
-    PPS_in              => PPS_in_i,
-    Seconds_in          => Seconds_in_i,          
-    Minutes_in          => Minutes_in_i,           
-    Hours_in            => Hours_in_i,           
-    Day_in              => Day_in_i,           
-    Date_in             => Date_in_i, 
-    Month_Century_in    => Month_Century_in_i,   
-    Year_in             => Year_in_i, 
-    Seconds_out         => Seconds_out_i,          
-    Minutes_out         => Minutes_out_i,           
-    Hours_out           => Hours_out_i,           
-    Day_out             => Day_out_i,           
-    Date_out            => Date_out_i,
-    Month_Century_out   => Month_Century_out_i,    
-    Year_out            => Year_out_i,   
-    Ready               => Real_Time_Clock_Ready_i   
-    );   
-    
+   
 ---------------------------------
 -- Version Control Instance 
 ---------------------------------
@@ -1309,6 +1247,73 @@ Ver_Reg_1: entity work.Version_Reg
         CLK_I             => CLK_I_i,
         Version_Timestamp => Version_Timestamp_i
         );    
+
+-------------------------------------------------------------------------------
+-- RTC I2C Driver Instance
+-------------------------------------------------------------------------------
+Real_Time_Clock_I2C_Driver_1: entity work.I2C_Driver
+  PORT map (
+    clk       => CLK_I_i,                  --system clock
+    reset_n   => RST_I_i,                  --active low reset
+    ena       => Enable_i,                 --latch in command
+    addr      => Address_i,                --address of target slave
+    rw        => RnW_i,                    --'0' is write, '1' is read
+    data_wr   => Data_WR_i,                --data to write to slave
+    busy      => Busy_i,                   --indicates transaction in progress
+    data_rd   => Data_RD_i,                --data read from slave
+    ack_error => Ack_Error_i,              --flag if improper acknowledge from slave
+    sda       => SDA_i,                    --serial data output of i2c bus
+    scl       => SCL_i                    -- serial clock output of i2c bus
+    );    
+
+-------------------------------------------------------------------------------
+-- RTC I2C Handler Controller Instance
+-------------------------------------------------------------------------------
+Real_Time_Clock_I2C_Handler_1: entity work.Real_Time_Clock_I2C_Handler
+  PORT map (
+    CLK_I                       => CLK_I_i,     
+    RST_I                       => RST_I_i,    
+    Busy                        => Busy_i,     
+    data_read                   => Data_RD_i,   
+    ack_error                   => Ack_Error_i, 
+    initialation_Status         => initialation_Status_i,
+    Enable                      => Enable_i,    
+    Slave_Address_Out           => Address_i,   
+    Slave_read_nWrite           => RnW_i,       
+    Slave_Data_Out              => Data_WR_i,   
+    Get_Sample                  => Get_Sample_i,
+    PPS_in                      => PPS_in_i,
+    Seconds_in                  => Seconds_in_i,          
+    Minutes_in                  => Minutes_in_i,           
+    Hours_in                    => Hours_in_i,           
+    Day_in                      => Day_in_i,           
+    Date_in                     => Date_in_i, 
+    Month_Century_in            => Month_Century_in_i,   
+    Year_in                     => Year_in_i, 
+    Seconds_out                 => Seconds_out_i,          
+    Minutes_out                 => Minutes_out_i,           
+    Hours_out                   => Hours_out_i,           
+    Day_out                     => Day_out_i,           
+    Date_out                    => Date_out_i,
+    Month_Century_out           => Month_Century_out_i,    
+    Year_out                    => Year_out_i,   
+    Ready                       => Real_Time_Clock_Ready_i,
+    Seconds_out_mem_hi          => Seconds_out_mem_hi_i,
+    Seconds_out_mem_lo          => Seconds_out_mem_lo_i,
+    Minutes_out_mem_hi          => Minutes_out_mem_hi_i,
+    Minutes_out_mem_lo          => Minutes_out_mem_lo_i,
+    Hours_out_mem_hi            => Hours_out_mem_hi_i,
+    Hours_out_mem_lo            => Hours_out_mem_lo_i,
+    Day_out_mem_hi              => Day_out_mem_hi_i,
+    Day_out_mem_lo              => Day_out_mem_lo_i,
+    Date_out_mem_hi             => Date_out_mem_hi_i,
+    Date_out_mem_lo             => Date_out_mem_lo_i,
+    Month_Century_out_mem_hi    => Month_Century_out_mem_hi_i,
+    Month_Century_out_mem_lo    => Month_Century_out_mem_lo_i,
+    Year_out_mem_hi             => Year_out_mem_hi_i,
+    Year_out_mem_lo             => Year_out_mem_lo_i,
+    Ready_mem                   => Ready_mem_i  
+    );   
     
 -------------------------------------------------------------------------------                      
 -- SPI In Driver Instance - Module 1
@@ -1753,7 +1758,7 @@ if RST_I_i = '0' then
 
  end process;
 
-Endat_Firmware_Controller_Version_Updator: process(RST_I_i,CLK_I_i)
+Firmware_Controller_Version_Updator: process(RST_I_i,CLK_I_i)
  variable Endat_Firmware_Controller_Version_cnt: integer range 0 to 10;
 begin
   if RST_I_i = '0' then
@@ -1766,11 +1771,11 @@ begin
      
      if Module_Number_i = X"0e" then
       if Endat_Firmware_Controller_Version_Request_i = '1' then
-         Endat_Firmware_Controller_Version_Name_i   <= R & F & Space & C & O & N & T & R & O & L & L & E & R &
+         Endat_Firmware_Controller_Version_Name_i   <= A & P & E & C & O & N & T & R & O & L & L & E & R &
                                            Space & Space & Space & Space & Space & Space & Space & Space &
                                            Space & Space & Space & Space & Space & Space & Space &
                                            Space & Space & Space & Space;
-         Endat_Firmware_Controller_Version_Number_i <= Zero & Zero & Dot & Zero & One & Dot & Zero & Two; 
+         Endat_Firmware_Controller_Version_Number_i <= ZeroE & ZeroE & Dot & ZeroE & One & Dot & ZeroE & Three; 
          Endat_Firmware_Controller_Version_Load_i   <= '1';
       else
          Endat_Firmware_Controller_Version_Ready_i <= '0';
@@ -1792,7 +1797,7 @@ begin
 
 
   end if;
-end process Endat_Firmware_Controller_Version_Updator;
+end process Firmware_Controller_Version_Updator;
 
 
 ------------------------------------------------------
@@ -1834,6 +1839,7 @@ begin
         OnemS_Count               := 0; 
         Sample_Count              := 0; 
         Latch_Sample_Count        := 0; 
+        PPS_In_i                  <= '0';
     elsif (CLK_I_i'event and CLK_I_i = '1') then
 
         ----------------------------------
@@ -1856,7 +1862,9 @@ begin
         -----------------------------------------
         -- End of Test No. of Samples in a Second
         -----------------------------------------
-
+        -----------------------------------------
+        -- Slave and Test Clock Matching
+        -----------------------------------------
         if SCL_i = '0' then
             Int_SCL_i   <= '0';
         else
@@ -1903,7 +1911,7 @@ begin
                                 Test_I2C_Config_State   <= WriteData;
                             end if;
                         else
-                            Test_I2C_Config_State      <= StartFallingEdge;
+                            Test_I2C_Config_State       <= StartFallingEdge;
                         end if;
                                             
                     when WriteData =>
@@ -1981,7 +1989,7 @@ begin
                             else
                                 Delay_Count             <= 0;
                                 Test_I2C_Config_State   <= WriteData;
-                                end if;   
+                            end if;   
                         end if;
                             
                     when AckRisingEdge =>    
@@ -2019,8 +2027,8 @@ begin
                     when StartFallingEdge =>
                         if Int_SCL_i = '0' then
                             if Start_Detected = '1' then
-                              Delay_Count               <= 0;
-                              Test_I2C_Read_State       <= WriteData;
+                              Delay_Count           <= 0;
+                              Test_I2C_Read_State   <= WriteData;
                             end if;
                         elsif Busy_i = '0' then
                             Test_I2C_Read_State     <= StartEdge;
@@ -2122,7 +2130,6 @@ begin
                             Test_I2C_Read_State  <= ReStartEdge;
                         end if;
                         
-
                     -------------------------------------------
                     -- ReStart Condition
                     -------------------------------------------
@@ -2419,7 +2426,11 @@ begin
 
                         end if;
                 end case;
+
+
         end case;
+
+        
         -------------------------------
         -- Real Time Counters
         -------------------------------

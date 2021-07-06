@@ -13,50 +13,57 @@
 -- Last update : ??/??/20?? - ??
 -- Outstanding : 
 -------------------------------------------------------------------------------
---
 
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.numeric_std.all;
 use ieee.std_logic_unsigned.all;
+use work.Version_Ascii.all;
 
 entity Real_Time_Clock_Memory is
   
    port (
 -- General Signals
-   RST_I                   : in  std_logic;
-   CLK_I 	               : in  std_logic;
+   RST_I                      : in  std_logic;
+   CLK_I 	                  : in  std_logic;
 -- Inputs from I2C Driver
-   Busy                    : in  std_logic;
-   data_read               : in  std_logic_vector(7 downto 0);
-   ack_error               : in std_logic;
+   Busy                       : in  std_logic;
+   data_read                  : in  std_logic_vector(7 downto 0);
+   ack_error                  : in std_logic;
 -- Outputs to I2C Driver
-   initialation_Status     : out std_logic;
-   Enable                  : out std_logic;
-   Slave_Address_Out       : out std_logic_vector(6 downto 0);
-   Slave_read_nWrite       : out std_logic;
-   Slave_Data_Out          : out std_logic_vector(7 downto 0);  
+   initialation_Status        : out std_logic;
+   Enable                     : out std_logic;
+   Slave_Address_Out          : out std_logic_vector(6 downto 0);
+   Slave_read_nWrite          : out std_logic;
+   Slave_Data_Out             : out std_logic_vector(7 downto 0);  
 -- Inputs from Handler
-   Get_Sample_mem          : in std_logic;      
-   Clear_mem               : in std_logic;
+   Get_Sample_mem             : in std_logic;      
+   Clear_mem                  : in std_logic;
 -- Inputs from Handler
-   Seconds_in_mem          : in std_logic_vector(7 downto 0); 
-   Minutes_in_mem          : in std_logic_vector(7 downto 0); 
-   Hours_in_mem            : in std_logic_vector(7 downto 0); 
-   Day_in_mem              : in std_logic_vector(7 downto 0); 
-   Date_in_mem             : in std_logic_vector(7 downto 0); 
-   Month_Century_in_mem    : in std_logic_vector(7 downto 0); 
-   Year_in_mem             : in std_logic_vector(7 downto 0); 
+   Seconds_in_mem             : in std_logic_vector(7 downto 0); 
+   Minutes_in_mem             : in std_logic_vector(7 downto 0); 
+   Hours_in_mem               : in std_logic_vector(7 downto 0); 
+   Day_in_mem                 : in std_logic_vector(7 downto 0); 
+   Date_in_mem                : in std_logic_vector(7 downto 0); 
+   Month_Century_in_mem       : in std_logic_vector(7 downto 0); 
+   Year_in_mem                : in std_logic_vector(7 downto 0); 
 -- Outputs for Mux
-   Seconds_out_mem         : out std_logic_vector(7 downto 0); 
-   Minutes_out_mem         : out std_logic_vector(7 downto 0); 
-   Hours_out_mem           : out std_logic_vector(7 downto 0); 
-   Day_out_mem             : out std_logic_vector(7 downto 0); 
-   Date_out_mem            : out std_logic_vector(7 downto 0); 
-   Month_Century_out_mem   : out std_logic_vector(7 downto 0); 
-   Year_out_mem            : out std_logic_vector(7 downto 0); 
-   Ready_mem               : out std_logic
+   Seconds_out_mem_hi         : out std_logic_vector(7 downto 0);
+   Seconds_out_mem_lo         : out std_logic_vector(7 downto 0);
+   Minutes_out_mem_hi         : out std_logic_vector(7 downto 0);
+   Minutes_out_mem_lo         : out std_logic_vector(7 downto 0);
+   Hours_out_mem_hi           : out std_logic_vector(7 downto 0);
+   Hours_out_mem_lo           : out std_logic_vector(7 downto 0);
+   Day_out_mem_hi             : out std_logic_vector(7 downto 0);
+   Day_out_mem_lo             : out std_logic_vector(7 downto 0);
+   Date_out_mem_hi            : out std_logic_vector(7 downto 0);
+   Date_out_mem_lo            : out std_logic_vector(7 downto 0);
+   Month_Century_out_mem_hi   : out std_logic_vector(7 downto 0);
+   Month_Century_out_mem_lo   : out std_logic_vector(7 downto 0);
+   Year_out_mem_hi            : out std_logic_vector(7 downto 0);
+   Year_out_mem_lo            : out std_logic_vector(7 downto 0);
+   Ready_mem                  : out std_logic
    );
 end Real_Time_Clock_Memory;
 
@@ -117,6 +124,20 @@ signal Month_Century_mem_lo_i          : std_logic_vector(7 downto 0);
 signal Year_mem_hi_i                   : std_logic_vector(7 downto 0);
 signal Year_mem_lo_i                   : std_logic_vector(7 downto 0);
 
+signal Seconds_out_mem_hi_i            : std_logic_vector(7 downto 0);
+signal Seconds_out_mem_lo_i            : std_logic_vector(7 downto 0);
+signal Minutes_out_mem_hi_i            : std_logic_vector(7 downto 0);
+signal Minutes_out_mem_lo_i            : std_logic_vector(7 downto 0);
+signal Hours_out_mem_hi_i              : std_logic_vector(7 downto 0);
+signal Hours_out_mem_lo_i              : std_logic_vector(7 downto 0);
+signal Day_out_mem_hi_i                : std_logic_vector(7 downto 0);
+signal Day_out_mem_lo_i                : std_logic_vector(7 downto 0);
+signal Date_out_mem_hi_i               : std_logic_vector(7 downto 0);
+signal Date_out_mem_lo_i               : std_logic_vector(7 downto 0);
+signal Month_Century_out_mem_hi_i      : std_logic_vector(7 downto 0);
+signal Month_Century_out_mem_lo_i      : std_logic_vector(7 downto 0);
+signal Year_out_mem_hi_i               : std_logic_vector(7 downto 0);
+signal Year_out_mem_lo_i               : std_logic_vector(7 downto 0);
 
 signal Slave_Address_i                 : std_logic_vector(6 downto 0);
 signal Slave_Register_i                : std_logic_vector(7 downto 0);
@@ -137,19 +158,27 @@ signal i2c_ReadData_State        : i2c_ReadData_States;
 
   begin
 -- i2C Controller Wires
-Enable                <= Enable_i;                  
-Get_Sample_i          <= Get_Sample_mem; 
-slave_Data_Out        <= Slave_Data_i;
-Seconds_out_mem       <= Seconds_out_mem_i;                
-Minutes_out_mem       <= Minutes_out_mem_i;             
-Hours_out_mem         <= Hours_out_mem_i;
-Day_out_mem           <= Day_out_mem_i;
-Date_out_mem          <= Date_out_mem_i;
-Month_Century_out_mem <= Month_Century_out_mem_i;
-Year_out_mem          <= Year_out_mem_i;
-initialation_Status   <= initialation_Status_i;
-busy_i                <= busy;
-Ready_mem             <= Ready_mem_i;
+Enable                     <= Enable_i;                  
+Get_Sample_i               <= Get_Sample_mem; 
+slave_Data_Out             <= Slave_Data_i;
+-- Slave Read Data
+Seconds_out_mem_hi         <= Seconds_out_mem_hi_i;    
+Seconds_out_mem_lo         <= Seconds_out_mem_lo_i;                
+Minutes_out_mem_hi         <= Minutes_out_mem_hi_i; 
+Minutes_out_mem_lo         <= Minutes_out_mem_lo_i;
+Hours_out_mem_hi           <= Hours_out_mem_hi_i;
+Hours_out_mem_lo           <= Hours_out_mem_lo_i;
+Day_out_mem_hi             <= Day_out_mem_hi_i;
+Day_out_mem_lo             <= Day_out_mem_lo_i;
+Date_out_mem_hi            <= Date_out_mem_hi_i;
+Date_out_mem_lo            <= Date_out_mem_lo_i;
+Month_Century_out_mem_hi   <= Month_Century_out_mem_hi_i;
+Month_Century_out_mem_lo   <= Month_Century_out_mem_lo_i;
+Year_out_mem_hi            <= Year_out_mem_hi_i;
+Year_out_mem_lo            <= Year_out_mem_lo_i;
+initialation_Status        <= initialation_Status_i;
+busy_i                     <= busy;
+Ready_mem                  <= Ready_mem_i;
 -- Slave Write Data
 Seconds_mem_hi_i(7 downto 4)        <= x"0";
 Seconds_mem_hi_i(3 downto 0)        <= Seconds_in_mem(7 downto 4);
@@ -186,12 +215,12 @@ Year_mem_hi_i(3 downto 0)           <= Year_in_mem(7 downto 4);
 Year_mem_lo_i(7 downto 4)           <= Year_in_mem(3 downto 0);
 Year_mem_lo_i(3 downto 0)           <= x"0";
 -------------------------------------------------------------------------------
--- Maser i2C Controller
+-- i2C Controller
 -------------------------------------------------------------------------------
-Maser_i2c_Control :process (CLK_I,RST_I)
+Memory_I2C_Control :process (CLK_I,RST_I)
     --timing for clock generation
    Variable Count             : INTEGER RANGE 0 TO 150 := 0;
-   Variable Config_Count      : INTEGER RANGE 0 TO 9 := 0;
+   Variable Config_Count      : INTEGER RANGE 0 TO 12 := 0;
    Variable Read_Count        : INTEGER RANGE 0 TO 10 := 0;
    Variable Write_Count       : INTEGER RANGE 0 TO 10 := 0;
 begin
@@ -226,7 +255,7 @@ begin
                      Slave_Data_i            <= Slave_Register_i;
                      Enable_i                <= '1';
                      if Config_Count = 0 then 
-                        Config_i <= Seconds_register_conf_i;
+                        Config_i <= Seconds_register_conf_lo_i;
                      end if;
                      i2c_Intialization_State <= LoadData;
                   end if; 
