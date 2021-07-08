@@ -855,15 +855,14 @@ component Main_Mux is
         Alg_Card1_48            : in  std_logic_vector(15 downto 0);        
         Version_Register        : in  std_logic_vector(167 downto 0);
         Analog_Input_Valid      : in  std_logic;
-        One_mS_pulse            : in  std_logic;
-        Tx_Rate                 : in  integer range 0 to 255;
+        One_mS                  : in  std_logic;
         Baud_Rate_Enable        : in  std_logic;
-        SYCN_Pulse              : out std_logic;
+        Get_RTC                 : out std_logic;
+        Version_Name            : in  std_logic_vector(255 downto 0); 
+        Version_Number          : in  std_logic_vector(63 downto 0);
         Version_Data_Ready      : in  std_logic;
         Real_Time_Clock_Ready   : in std_logic;
         Data_Ready              : in  std_logic;
-        Watchdog_Reset          : in  std_logic;
-        Mux_watchdog            : out std_logic;
         Ana_In_Request          : out std_logic;
         Dig_In_Request          : out std_logic;
         Dig_Out_Request         : out std_logic
@@ -1665,12 +1664,11 @@ port map (
   Month_Century_out          => Month_Century_out_i,    
   Year_out                   => Year_out_i,
   Dig_In_Request             => Dig_In_Request_i,                
-  Dig_Out_Request            => Dig_Out_Request_i,               
+  Dig_Out_Request            => Dig_Out_Request_i,
   Baud_Rate_Enable           => Mux_Baud_Rate_Enable_i,
   Data_Ready                 => Data_Ready_i,
   Real_Time_Clock_Ready      => Real_Time_Clock_Ready_i,
-  Watchdog_Reset             => Watchdog_Reset_i,
-  Mux_watchdog               => Mux_watchdog_i,
+  Get_RTC                    => Get_RTC_i,
   One_mS                     => OnemS_sStrobe,
   Module_Number              => Module_Number_i,
   Main_Mux_Version_Name      => Main_Mux_Version_Name_i, 
@@ -1890,7 +1888,6 @@ begin
 
         --end if;
 
-
         case I2C_Test_State is
             when Wait_Start =>
                 if initialation_Status_i = '0' then
@@ -1931,7 +1928,7 @@ begin
                                             
                     when WriteData =>
                         if Delay_Count = 31 then
-                            Test_I2C_Config_State   <= RisingEdge;
+                            Test_I2C_Config_State    <= RisingEdge;
                         else
                             Delay_Count             <= Delay_Count + 1;
                         end if;
@@ -2067,7 +2064,7 @@ begin
                             Test_I2C_Read_State <= RisingEdge;
                         end if;
                                                 
-                    when ReadData =>     -- Read Slave Address 0xd0 Reagister Address 0x
+                    when ReadData =>     -- Read Slave Address 0xd0 Register Address 0x
                         if Byte_Count >= 0 and Byte_Count < 3 then
                             if Delay_Count = 31 then
                                 Test_Byte_i(Cycle_Count)    <= Int_SDA_i;  -- Data Address 0x32
@@ -2245,15 +2242,7 @@ begin
 
                     when ReadAckData_SA =>                      
                         if Delay_Count = 31 then 
-                            -- Test_Byte_i         <= X"00";
-                            --Seconds_TestData_i          <= Seconds_TestData_i;
-                            --Minutes_TestData_i          <= Minutes_TestData_i;
-                            --Hours_TestData_i            <= Hours_TestData_i;
-                            --Days_TestData_i             <= Days_TestData_i;
-                            --Dates_TestData_i            <= Dates_TestData_i;
-                            --Months_Century_TestData_i   <= Months_Century_TestData_i;
-                            --Years_TestData_i            <= Years_TestData_i;
-                            Delay_Count                 <= 0;
+                            Delay_Count         <= 0;
                             Test_I2C_Read_State <= FallingEdgeAckData_SA;
                         else
                             Delay_Count         <= Delay_Count + 1;
@@ -2272,9 +2261,9 @@ begin
                                 Cycle_Count         := Cycle_Count - 1;
                                 Test_I2C_Read_State <= WriteData_Data;
                             end if;    
-                            end if;
+                        end if;
                             
-                        when WriteData_Data =>
+                    when WriteData_Data =>
                             if Delay_Count = 31 then
                                 Delay_Count          <= 0;
                                 if Assert_Data_Count = 0 then

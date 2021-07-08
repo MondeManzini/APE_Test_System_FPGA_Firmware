@@ -139,13 +139,11 @@ entity Main_Mux is
    Ana_In_Request                      : out std_logic;
    Dig_In_Request                      : out std_logic;
    Dig_Out_Request                     : out std_logic;
-   Get_Sample                          : out std_logic;
+   Get_RTC                             : out std_logic;
 
    Real_Time_Clock_Ready               : in std_logic;
    Baud_Rate_Enable                    : in  std_logic;  
    Data_Ready                          : in  std_logic;
-   Watchdog_Reset                      : in  std_logic;
-   Mux_watchdog                        : out std_logic;
    One_mS                              : in  std_logic;
    Main_Mux_Version_Name               : out std_logic_vector(255 downto 0);
    Main_Mux_Version_Number             : out std_logic_vector(63 downto 0);
@@ -349,7 +347,6 @@ signal Version_Data_Request       : std_logic;
 signal Send_RTC_Mess              : std_logic;
 signal Send_RTC_Operation         : std_logic;
 signal Stack_RTC_Data             : std_logic;
-signal Get_RTC                    : std_logic;
 signal Send_RTC_Data                : std_logic;
 signal Main_Mux_Version_Name_i     : std_logic_vector(255 downto 0); 
 signal Main_Mux_Version_Number_i   : std_logic_vector(63 downto 0);  
@@ -367,7 +364,7 @@ end;  -- function reverse_any_bus
 
 begin
 
-UART_TXD     	           <= SerDataOut;
+UART_TXD     	          <= SerDataOut;
 Ana_In_Request           <= Ana_In_Request_i;
 Dig_In_Request           <= Dig_In_Request_i;
 Dig_Out_Request          <= Dig_Out_Request_i;
@@ -540,7 +537,7 @@ begin
                                     Space & Space & Space & Space & Space & Space & Space & Space &
                                     Space & Space & Space & Space & Space & Space & Space &
                                     Space & Space & Space & Space & Space & Space & Space;
-      Main_Mux_Version_Number_i  <= ZeroE & ZeroE & Dot & ZeroE & One & Dot & ZeroE & Four;  
+      Main_Mux_Version_Number_i  <= ZeroE & ZeroE & Dot & ZeroE & One & Dot & ZeroE & Five;  
       
       if Module_Number = X"00000008" then
          if Main_Mux_Version_Request = '1' then
@@ -564,6 +561,7 @@ begin
             Dig_Out_Request_i     <= '0';  
             Ana_In_Request_i      <= '0';
             Get_RTC               <= '0';
+            Send_All_Modules      <= '0';
             if Request_Data_cnt = 650_000 then  -- 100 ms Retrieve 0 for 5000_000
                Send_Data_Strobe                    <= '1';                  
                Request_Data_cnt                    := 0;
@@ -574,7 +572,7 @@ begin
                   Real_Time_Clock_Request_50mS_cnt    := Real_Time_Clock_Request_50mS_cnt + 1;
                   if Real_Time_Clock_Request_50mS_cnt = 1 THEN
                      Real_Time_Clock_Request_50mS_cnt := 0;
-                     Get_RTC                          <= '1';
+                     --Get_RTC                          <= '1'; -- Retrieve after simulation
                   else
                      Get_RTC                          <= '0';
                   end if;
@@ -593,6 +591,7 @@ begin
             Dig_In_Request_i     <= '1';  
             Dig_Out_Request_i    <= '1';
             Ana_In_Request_i     <= '1';
+            Get_RTC                          <= '1'; -- For simulation, remove when done
             Request_Data_Strobe  <= '0';
             Request_Send_State   <= Request_Idle;
             -----------------------------      
@@ -750,7 +749,7 @@ begin
             Send_All_Modules      <= '1';
             Request_Send_State    <= Request_Idle;
          else
-            Send_All_Modules  <= '0';
+            Send_All_Modules      <= '0';
          end if; 
       end case;
 
@@ -784,7 +783,7 @@ begin
             elsif Delay = 101 then
                RTC_Ready <= '0';
             else
-               Delay       := Delay + 1;  
+               Delay     := Delay + 1;  
             end if;   
          else
             All_Data_Ready       <= '0';
@@ -796,7 +795,7 @@ begin
          if All_Data_Ready = '1' then              
             if (Busy = '1') then
                Stack_100mS_Data           <= '1';
-               Send_100mS_Data            <= '1';
+               Send_100mS_Data            <= '0';
             else
                Send_100mS_Data            <= '1';
                Stack_100mS_Data           <= '0';
@@ -827,16 +826,16 @@ begin
          if (Busy = '0') and (Lockout = '0') then
             if Send_100mS_Data = '1' then
                Send_Operation         <= '1';
-               Send_100mS_Data        <= '0';
+               --Send_100mS_Data        <= '0';
                Lockout                <= '1';
             elsif Send_Version_Data_Mess = '1' then
                Send_Version_Data      <= '1';
                Send_Version_Data_Mess <= '0';
                Lockout                <= '1';   
-            elsif Send_RTC_Mess = '1' then
-               Send_RTC_Operation   <= '1';
-               Send_RTC_Mess        <= '0';
-               Lockout              <= '1'; 
+            --elsif Send_RTC_Mess = '1' then
+            --   Send_RTC_Operation   <= '1';
+            --   Send_RTC_Mess        <= '0';
+            --   Lockout              <= '1'; 
             elsif (Send_100mS_Data = '1') and (Stack_100mS_Data = '1') then
                Send_Operation       <= '1';
                Stack_100mS_Data     <= '0';
@@ -845,14 +844,15 @@ begin
                Send_Version_Data    <= '1';
                Stack_Version_Data   <= '0';
                Lockout              <= '1';     
-            elsif (Send_RTC_Data = '1') and (Stack_RTC_Data = '1') then
-               Send_RTC_Operation   <= '1';
-               Stack_RTC_Data       <= '0';
-               Lockout              <= '1';      
+            --elsif (Send_RTC_Data = '1') and (Stack_RTC_Data = '1') then
+            --   Send_RTC_Operation   <= '1';
+            --   Stack_RTC_Data       <= '0';
+            --   Lockout              <= '1';      
             end if;
          else
             Send_100mS_Data         <= '0';
             Send_All_Modules        <= '0';
+            --Send_RTC_Operation      <= '0';
             All_Data_Ready          <= '0';
          end if;   
          
@@ -1112,7 +1112,7 @@ begin
             CRC2send(97)    <= reverse_any_bus(Alg_Card1_33_B0_i);
             CRC2send(98)    <= reverse_any_bus(Alg_Card1_33_B1_i);
             CRC2send(99)    <= reverse_any_bus(Alg_Card1_34_B0_i);       
-            CRC2send(100)    <= reverse_any_bus(Alg_Card1_34_B1_i);      
+            CRC2send(100)   <= reverse_any_bus(Alg_Card1_34_B1_i);      
             CRC2send(101)   <= reverse_any_bus(Alg_Card1_35_B0_i);
             CRC2send(102)   <= reverse_any_bus(Alg_Card1_35_B1_i);
             CRC2send(103)   <= reverse_any_bus(Alg_Card1_36_B0_i);
@@ -1280,9 +1280,7 @@ begin
       Wait_cnt      := 0;
       crc16_ready   <= '0';
       SerData_Byte  <= (others => '0');
-      flag_WD       <= '0';
-      Mux_watchdog  <= '0';
-      
+      flag_WD       <= '0';      
     elsif CLK_I'event and CLK_I = '1' then
 
       if Baud_Rate_Enable = '1' then  
@@ -1290,17 +1288,6 @@ begin
       else
          tx_en := '0';
       end if;
-      
-      if Watchdog_Reset = '1' then
-         flag_WD <= '1';
-      end if;
-      
-      if flag_WD = '1' then
-         flag_WD <= '0';
-         Mux_watchdog <= '1';
-      else
-         Mux_watchdog <= '0';
-      end if; 
 
       case tx_state is
 
