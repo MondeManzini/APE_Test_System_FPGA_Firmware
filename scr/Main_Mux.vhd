@@ -140,6 +140,7 @@ entity Main_Mux is
    Dig_In_Request                      : out std_logic;
    Dig_Out_Request                     : out std_logic;
    Get_Sample                          : out std_logic;
+
    Real_Time_Clock_Ready               : in std_logic;
    Baud_Rate_Enable                    : in  std_logic;  
    Data_Ready                          : in  std_logic;
@@ -562,6 +563,7 @@ begin
             Dig_In_Request_i      <= '0';  
             Dig_Out_Request_i     <= '0';  
             Ana_In_Request_i      <= '0';
+            Get_RTC               <= '0';
             if Request_Data_cnt = 650_000 then  -- 100 ms Retrieve 0 for 5000_000
                Send_Data_Strobe                    <= '1';                  
                Request_Data_cnt                    := 0;
@@ -598,6 +600,7 @@ begin
             -----------------------------
          when Data_RX =>
             Send_Data_Strobe     <= '0';
+            Get_RTC              <= '0';
             All_Modules_Trig     <= '1';
             Request_Send_State   <= Collect_Data;
 

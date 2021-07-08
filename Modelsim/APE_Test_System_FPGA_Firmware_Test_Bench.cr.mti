@@ -65,18 +65,6 @@ Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 
 -- Loading package std_logic_arith
 -- Compiling package Version_Ascii
 
-} {} {}} C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/scr/Main_Mux.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/scr/Main_Mux.vhd
-Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
--- Loading package STANDARD
--- Loading package TEXTIO
--- Loading package std_logic_1164
--- Loading package NUMERIC_STD
--- Loading package std_logic_arith
--- Loading package STD_LOGIC_UNSIGNED
--- Loading package Version_Ascii
--- Compiling entity Main_Mux
--- Compiling architecture Arch_DUT of Main_Mux
-
 } {} {}} C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/scr/SPI_IO_Driver.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/scr/SPI_IO_Driver.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
 -- Loading package STANDARD
@@ -96,6 +84,15 @@ Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 
 -- Loading package STD_LOGIC_UNSIGNED
 -- Compiling entity Main_Demux
 -- Compiling architecture Arch_DUT of Main_Demux
+
+} {} {}} {C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/Testbench Files/txt_util.vhd} {1 {vcom -work work -2002 -explicit -stats=none {C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/Testbench Files/txt_util.vhd}
+Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling package txt_util
+-- Compiling package body txt_util
+-- Loading package txt_util
 
 } {} {}} C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/scr/SPI_Input_Handler.vhd {1 {vcom -work work -2002 -explicit -stats=none C:/Users/User/Documents/GitHub/Work/APE_Test_System_FPGA_Firmware/scr/SPI_Input_Handler.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 2020.1 Compiler 2020.02 Feb 28 2020

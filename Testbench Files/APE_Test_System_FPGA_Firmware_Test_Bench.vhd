@@ -246,6 +246,7 @@ signal SDA_i                  : std_logic;
 signal SCL_i                  : std_logic;  
 signal lock_Out_i             : std_logic;
 signal lock_Out2_i            : std_logic;
+signal I2C_Busy_i               : std_logic;
 signal Busy_i                 : std_logic;
 signal Data_RD_i              : std_logic_vector(7 downto 0);
 signal Start_i                : std_logic;
@@ -961,6 +962,9 @@ signal Hours_TestData_int           : integer range 0 to 24;
 signal Days_TestData_int            : integer range 0 to 31;
 signal Months_Century_TestData_int  : integer range 0 to 12;
 
+type memory_array is array (0 to 255) of std_logic_vector(7 downto 0);
+signal data2store                   : memory_array;
+
 ----------------------------------------
 ----------------------------------------
 -- General Signals
@@ -1011,6 +1015,7 @@ signal Month_Century_out_mem_lo_i      : std_logic_vector(7 downto 0);
 signal Year_out_mem_hi_i               : std_logic_vector(7 downto 0);
 signal Year_out_mem_lo_i               : std_logic_vector(7 downto 0);
 signal Ready_mem_i                     : std_logic;
+signal Get_RTC_i                       : std_logic;
 
 -- Build State
 -- Good Build State 
@@ -1169,10 +1174,14 @@ begin
       
  RST_I_i            <= snrst;
  CLK_I_i            <= sClok;
+ Endat_Firmware_Controller_Version_Name_i   <= A & P & E & C & O & N & T & R & O & L & L & E & R &
+                                           Space & Space & Space & Space & Space & Space & Space & Space &
+                                           Space & Space & Space & Space & Space & Space & Space &
+                                           Space & Space & Space & Space;
+Endat_Firmware_Controller_Version_Number_i <= ZeroE & ZeroE & Dot & ZeroE & One & Dot & ZeroE & Three; 
  Version_Register_i <=  Endat_Firmware_Controller_name_i & Null_i & Version_Major_High_i & Version_Major_Low_i & Dot_i &
                         Version_Minor_High_i & Version_Minor_Low_i & Dot_i &
-                        Version_Timestamp_i & Null_i; 
-     
+                        Version_Timestamp_i & Null_i;      
 -------------------------------------------------------------------------------
 -- New test Code
 -------------------------------------------------------------------------------
@@ -1259,7 +1268,7 @@ Real_Time_Clock_I2C_Driver_1: entity work.I2C_Driver
     addr      => Address_i,                --address of target slave
     rw        => RnW_i,                    --'0' is write, '1' is read
     data_wr   => Data_WR_i,                --data to write to slave
-    busy      => Busy_i,                   --indicates transaction in progress
+    busy      => I2C_Busy_i,                   --indicates transaction in progress
     data_rd   => Data_RD_i,                --data read from slave
     ack_error => Ack_Error_i,              --flag if improper acknowledge from slave
     sda       => SDA_i,                    --serial data output of i2c bus
@@ -1273,7 +1282,7 @@ Real_Time_Clock_I2C_Handler_1: entity work.Real_Time_Clock_I2C_Handler
   PORT map (
     CLK_I                       => CLK_I_i,     
     RST_I                       => RST_I_i,    
-    Busy                        => Busy_i,     
+    Busy                        => I2C_Busy_i,     
     data_read                   => Data_RD_i,   
     ack_error                   => Ack_Error_i, 
     initialation_Status         => initialation_Status_i,
@@ -1281,7 +1290,7 @@ Real_Time_Clock_I2C_Handler_1: entity work.Real_Time_Clock_I2C_Handler
     Slave_Address_Out           => Address_i,   
     Slave_read_nWrite           => RnW_i,       
     Slave_Data_Out              => Data_WR_i,   
-    Get_Sample                  => Get_Sample_i,
+    Get_Sample                  => Get_RTC_i,
     PPS_in                      => PPS_in_i,
     Seconds_in                  => Seconds_in_i,          
     Minutes_in                  => Minutes_in_i,           
@@ -1333,7 +1342,7 @@ port map (
   SPI_Outport                   => SPI_Data_out_i,           
   Data_Out_Ready                => Data_In_Ready_i,
   SPI_Inport                    => SPI_Inport_i,
-  Busy                          => busy_i,
+  Busy                          => Busy_i,
   Module_Number                 => Module_Number_i,
   SPI_IO_Driver_Version_Request => SPI_IO_Driver_Version_Request_i,
   SPI_IO_Driver_Version_Name    => SPI_IO_Driver_Version_Name_1_i, 
@@ -1573,7 +1582,7 @@ port map (
   );
         
 -------------------------------------------------------------------------------
--- Endat Firmware Controller Mux 
+-- APE Firmware Controller Mux 
 -------------------------------------------------------------------------------
 Main_Mux_1: entity work.Main_Mux
 port map (
@@ -1729,7 +1738,7 @@ port map (
              '1' after 13.28513 ms, '1' after 13.29000 ms;
 
 
-Endat_Firmware_Controller_Version_Tester: process(CLK_I_i, RST_I_i)
+Firmware_Controller_Version_Tester: process(CLK_I_i, RST_I_i)
   variable display_version_cnt  : integer range 0 to 50;
   
 begin
@@ -1737,7 +1746,7 @@ begin
 if RST_I_i = '0' then
    display_version_lock <= '0';
    display_version_cnt  := 1;
-   report "The version number of A0212-0003-007 Endat_Firmware Controller is 2.17." severity note;  -- For Modelsim
+   report "The version number of " & hstr(Endat_Firmware_Controller_Version_Name_i) & " is " & hstr(Endat_Firmware_Controller_Version_Number_i) severity note;  -- For Modelsim
  elsif (CLK_I_i'event and CLK_I_i = '1') then
      
      if display_version_cnt = 0 then
@@ -1762,39 +1771,34 @@ Firmware_Controller_Version_Updator: process(RST_I_i,CLK_I_i)
  variable Endat_Firmware_Controller_Version_cnt: integer range 0 to 10;
 begin
   if RST_I_i = '0' then
-     Endat_Firmware_Controller_Version_Ready_i  <= '0';
-     Endat_Firmware_Controller_Version_Name_i   <= (others=>'0');
-     Endat_Firmware_Controller_Version_Number_i <= (others=>'0');
-     Endat_Firmware_Controller_Version_cnt      := 0;
-     Endat_Firmware_Controller_Version_Load_i   <= '0';
+    Endat_Firmware_Controller_Version_Ready_i  <= '0';
+    Endat_Firmware_Controller_Version_Name_i   <= (others=>'0');
+    Endat_Firmware_Controller_Version_Number_i <= (others=>'0');
+    Endat_Firmware_Controller_Version_cnt      := 0;
+    Endat_Firmware_Controller_Version_Load_i   <= '0';
   elsif CLK_I_i'event and CLK_I_i = '1' then  
      
-     if Module_Number_i = X"0e" then
-      if Endat_Firmware_Controller_Version_Request_i = '1' then
-         Endat_Firmware_Controller_Version_Name_i   <= A & P & E & C & O & N & T & R & O & L & L & E & R &
-                                           Space & Space & Space & Space & Space & Space & Space & Space &
-                                           Space & Space & Space & Space & Space & Space & Space &
-                                           Space & Space & Space & Space;
-         Endat_Firmware_Controller_Version_Number_i <= ZeroE & ZeroE & Dot & ZeroE & One & Dot & ZeroE & Three; 
-         Endat_Firmware_Controller_Version_Load_i   <= '1';
-      else
-         Endat_Firmware_Controller_Version_Ready_i <= '0';
-      end if;
+    if Module_Number_i = X"0e" then
+        if Endat_Firmware_Controller_Version_Request_i = '1' then
+            
+            Endat_Firmware_Controller_Version_Load_i   <= '1';
+        else
+            Endat_Firmware_Controller_Version_Ready_i  <= '0';
+        end if;
 
-      if Endat_Firmware_Controller_Version_Load_i = '1' then
-         if Endat_Firmware_Controller_Version_cnt = 5 then
-            Endat_Firmware_Controller_Version_Ready_i <= '1';
-            Endat_Firmware_Controller_Version_Load_i  <= '0';
-            Endat_Firmware_Controller_Version_cnt     := 0;
-         else
-            Endat_Firmware_Controller_Version_cnt     := Endat_Firmware_Controller_Version_cnt + 1;   
-            Endat_Firmware_Controller_Version_Ready_i <= '0';
-         end if;  
-      end if;   
-     else   
-      Endat_Firmware_Controller_Version_Ready_i <= '0'; 
-     end if;   
-
+        if Endat_Firmware_Controller_Version_Load_i = '1' then
+            if Endat_Firmware_Controller_Version_cnt = 5 then
+                Endat_Firmware_Controller_Version_Ready_i <= '1';
+                Endat_Firmware_Controller_Version_Load_i  <= '0';
+                Endat_Firmware_Controller_Version_cnt     := 0;
+            else
+                Endat_Firmware_Controller_Version_cnt     := Endat_Firmware_Controller_Version_cnt + 1;   
+                Endat_Firmware_Controller_Version_Ready_i <= '0';
+            end if;  
+        end if;   
+    else   
+        Endat_Firmware_Controller_Version_Ready_i <= '0'; 
+    end if;   
 
   end if;
 end process Firmware_Controller_Version_Updator;
@@ -1840,6 +1844,7 @@ begin
         Sample_Count              := 0; 
         Latch_Sample_Count        := 0; 
         PPS_In_i                  <= '0';
+        data2store                <= (others => (others => '0'));
     elsif (CLK_I_i'event and CLK_I_i = '1') then
 
         ----------------------------------
@@ -1876,7 +1881,16 @@ begin
         else
             Int_SDA_i   <= '1';
         end if;  
-             
+        -------------------------------------------
+        ---- Slave Select - RTC or Memory
+        -------------------------------------------
+        --if Slave_Address_Out = "1101000" then
+
+        --elsif Slave_Address_Out = "1010000" then
+
+        --end if;
+
+
         case I2C_Test_State is
             when Wait_Start =>
                 if initialation_Status_i = '0' then
@@ -1909,6 +1923,7 @@ begin
                             if Start_Detected = '1' then
                                 Delay_Count             <= 0;
                                 Test_I2C_Config_State   <= WriteData;
+                                Test_Byte_i             <= X"00";
                             end if;
                         else
                             Test_I2C_Config_State       <= StartFallingEdge;
@@ -1982,7 +1997,7 @@ begin
                         
                     when FallingEdgeAck =>       
                         if Int_SCL_i = '0' then
-                            if Byte_Count = 3 then
+                            if Byte_Count = 1 then
                                 Byte_Count              <= 0; 
                                 Delay_Count             <= 0;
                                 Test_I2C_Config_State   <= AckRisingEdge;
@@ -2427,17 +2442,15 @@ begin
                         end if;
                 end case;
 
-
         end case;
 
-        
         -------------------------------
         -- Real Time Counters
         -------------------------------
-        Seconds_TestData_int  <= conv_integer(Seconds_TestData_i);                
-        Minutes_TestData_int <= conv_integer(Minutes_TestData_i);
-        Hours_TestData_int      <= conv_integer(Hours_TestData_i);
-        Days_TestData_int      <= conv_integer(Days_TestData_i);
+        Seconds_TestData_int        <= conv_integer(Seconds_TestData_i);                
+        Minutes_TestData_int        <= conv_integer(Minutes_TestData_i);
+        Hours_TestData_int          <= conv_integer(Hours_TestData_i);
+        Days_TestData_int           <= conv_integer(Days_TestData_i);
         Months_Century_TestData_int <= conv_integer(Months_Century_TestData_i);
 
         case Real_Time_Counters_State is 

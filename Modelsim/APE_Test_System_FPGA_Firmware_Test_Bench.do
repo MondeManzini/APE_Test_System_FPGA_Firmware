@@ -13,6 +13,15 @@ add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Real_Time_Clock_I2C
 add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Real_Time_Clock_I2C_Handler_1/Month_Century_out
 add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Real_Time_Clock_I2C_Handler_1/Year_out
 add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Real_Time_Clock_I2C_Handler_1/Ready
+add wave -noupdate -radix hexadecimal /ape_test_system_fpga_firmware_test_bench/Real_Time_Clock_I2C_Handler_1/Slave_Address_i
+add wave -noupdate -radix hexadecimal /ape_test_system_fpga_firmware_test_bench/Real_Time_Clock_I2C_Handler_1/Slave_Address_Out
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Real_Time_Clock_I2C_Handler_1/Busy
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Real_Time_Clock_I2C_Handler_1/i2c_Controller_State
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Real_Time_Clock_I2C_Handler_1/i2c_Intialization_State
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Real_Time_Clock_I2C_Handler_1/i2c_ReadData_State
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Real_Time_Clock_I2C_Handler_1/I2C_Control/Count
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Real_Time_Clock_I2C_Handler_1/I2C_Control/Config_Count
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Real_Time_Clock_I2C_Handler_1/I2C_Control/Read_Count
 add wave -noupdate -divider -height 30 DeMux
 add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Demux_1/UART_RXD
 add wave -noupdate -divider -height 30 {Digital Output}
@@ -80,6 +89,16 @@ add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Send_RTC
 add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Real_Time_Clock_Ready
 add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Main_Mux_1/Version_Data_Ready
 add wave -noupdate -divider -height 30 Endat
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/I2C_Test_State
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Test_I2C_Config_State
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Test_I2C_Read_State
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Real_Time_Counters_State
+add wave -noupdate -radix hexadecimal /ape_test_system_fpga_firmware_test_bench/Seconds_TestData_i
+add wave -noupdate -radix hexadecimal /ape_test_system_fpga_firmware_test_bench/Test_Byte_i
+add wave -noupdate -radix hexadecimal /ape_test_system_fpga_firmware_test_bench/TestData_i
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/data_test/Cycle_Count
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Int_SCL_i
+add wave -noupdate /ape_test_system_fpga_firmware_test_bench/initialation_Status_i
 TreeUpdate [SetDefaultTree]
 quietly WaveActivateNextPane
 add wave -noupdate -divider {SPI I/O Driver}
@@ -100,8 +119,8 @@ add wave -noupdate -divider {I2C Driver}
 add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Real_Time_Clock_I2C_Driver_1/scl
 add wave -noupdate /ape_test_system_fpga_firmware_test_bench/Real_Time_Clock_I2C_Driver_1/sda
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {13297930000 ps} 0} {{Cursor 2} {25683712252 ps} 0}
-quietly wave cursor active 2
+WaveRestoreCursors {{Cursor 1} {2916959229 ps} 0} {{Cursor 2} {17169705830 ps} 0}
+quietly wave cursor active 1
 configure wave -namecolwidth 242
 configure wave -valuecolwidth 96
 configure wave -justifyvalue left
@@ -116,4 +135,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ms
 update
-WaveRestoreZoom {0 ps} {55052067 ns}
+WaveRestoreZoom {0 ps} {6416109 ns}
