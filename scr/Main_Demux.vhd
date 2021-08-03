@@ -769,7 +769,7 @@ begin
             CRC_out <= '0';                           
             if got_byte = '1' then
                CRC_out              <= '1';                 
-               Month_Century_out_i  <= byte_received;    -- mS Byte 0 -- Byte 11
+               Year_out_i           <= byte_received;    -- mS Byte 0 -- Byte 11
                cmd_state            <= CRC_check;
             end if;  
 -------------------------------------------------------------------------------
@@ -925,7 +925,7 @@ begin
 
                Dig_Outputs_Ready     <= '1';
 
-                    cmd_state             <= reset_trigger;
+               cmd_state             <= reset_trigger;
   
             elsif Mode_i = X"90" then        
                Module_Number         <= Module_Number_i;
@@ -964,7 +964,7 @@ begin
                   when X"09" =>
                      Real_Time_Clock_Handler_Version_Request      <= '1';  
                   when X"0a" =>
-                        Baud_Rate_Generator_Version_Request          <= '1';
+                     Baud_Rate_Generator_Version_Request          <= '1';
                   when X"0b" =>       
                      APE_Test_System_FPGA_Firmware_Version_Request   <= '1';   
                   when X"0c" =>       

@@ -450,18 +450,9 @@ begin
                      Slave_read_nWrite         <= '1';                       
                   elsif Busy_i = '0' and Address_Lock_i = '1' then
                      Address_Lock_i            <= '0';
-                     i2c_ReadData_State        <= Wait_Read;
-                     --
-                     --Enable_i                <= '1';                        
+                     i2c_ReadData_State        <= Wait_Read;                        
                   end if;
-                     -- 
-                  --if wait_cnt = 1200 then
-                  --   wait_cnt := 0;
-                  --   Enable_i <= '0';
-                  --else
-                  --   wait_cnt := wait_cnt + 1;
-                  --end if;
-                     --
+
                when Wait_Read =>
                   if Busy_i = '1' then
                      Slave_Address_Out         <= Slave_Address_i;      
@@ -473,9 +464,6 @@ begin
                when Wait_Data =>
                   if Busy_i = '0' and Read_Count < 8 then
                      case Read_Count is
-                        --when 1 =>
-                           --Seconds_out_i        <= data_read;
-                        --   i2c_ReadData_State   <= Wait_Read;
                         when 1 =>
                            Seconds_out_i        <= data_read;
                            i2c_ReadData_State   <= Wait_Read;
@@ -508,35 +496,10 @@ begin
                      end case;
                   elsif Busy_i = '0' and Read_Count = 8 then      
                      Ready_i              <= '1';
-                     --Enable_i                <= '0';
+                     Enable_i                <= '0';
                      i2c_ReadData_State   <= TestStop;                                                                                       
                   end if;
 
-                  --if Busy_i = '0' and Read_Count < 8 then
-                  --   i2c_ReadData_State      <= Wait_Read; 
-                  --   if Read_Count = 1 then
-                  --      Seconds_out_i        <= data_read;                                                                                 
-                  --   elsif Read_Count = 2 then
-                  --      Minutes_out_i        <= data_read; 
-                  --   elsif Read_Count = 3 then
-                  --      Hours_out_i          <= data_read;                          
-                  --   elsif Read_Count = 4 then
-                  --      Day_out_i            <= data_read;                          
-                  --   elsif Read_Count = 5 then
-                  --      Date_out_i           <= data_read;                          
-                  --   elsif Read_Count = 6 then
-                  --      Month_Century_out_i  <= data_read;                            
-                  --   elsif Read_Count = 7 then
-                  --      Year_out_i           <= data_read;                         
-                  --   end if;                           
-                  --elsif Busy_i = '1' and Read_Count = 8 then
-                  --   Slave_read_nWrite    <= '1';
-                  --   Enable_i             <= '0';
-                  --elsif Busy_i = '0' and Read_Count = 8 then      
-                  --   Ready_i              <= '1';
-                  --   i2c_ReadData_State   <= TestStop;                                                                                       
-                  --end if;
-                     
                when TestStop =>
                Enable_i                <= '0';
                   Ready_i              <= '0';
