@@ -196,7 +196,7 @@ signal mem_flash_i                     : std_logic := '0';
 --signal NumberBytes       : INTEGER RANGE 0 TO 20 := 0;
 
 -- States
-type   i2c_Controller_States is (Idle, Initialization, ReadData, WriteData, Mem_Control);
+type   i2c_Controller_States is (Idle, Initialization, ReadData, WriteData);
 signal i2c_Controller_State : i2c_Controller_States;
 type   i2c_Intialization_States is (i2c_Idle, LoadData, WaitnBusy, Wait_Byte_Write, Wait_Busy_Low, StopInitialization,
        initialzation_Complete);
@@ -396,17 +396,19 @@ begin
                when StopInitialization =>                       
                   if Busy_i = '0'  then     
                      if Config_Count = 21 then
-                        i2c_Intialization_State  <= initialzation_Complete;
-                        i2c_Controller_State     <= Idle;
-                        initialation_Status_i    <= '1';
-                        Config_Count             := 0;
+                        i2c_Intialization_State <= initialzation_Complete;
+                        i2c_Controller_State    <= Idle;
+                        --mem_flash_i             <= '1';
+                        initialation_Status_i   <= '1';
+                        Config_Count            := 0;
                      else
                         i2c_Intialization_State  <= i2c_Idle;  
                      end if;   
                   end if;
                         
                when initialzation_Complete =>
-                  initialation_Status_i    <= '1';               
+                  initialation_Status_i    <= '1';
+                  mem_flash_i             <= '0';               
             end case;
 
 ----------------------------                            
@@ -493,15 +495,17 @@ begin
                            i2c_ReadData_State   <= Wait_Read;
 
                         when others =>
+                           i2c_ReadData_State   <= TestStop;
+
                      end case;
-                  elsif Busy_i = '0' and Read_Count = 8 then      
+                  elsif Busy_i = '0' and Read_Count > 7 then      
                      Ready_i              <= '1';
                      Enable_i                <= '0';
                      i2c_ReadData_State   <= TestStop;                                                                                       
                   end if;
 
                when TestStop =>
-               Enable_i                <= '0';
+                  Enable_i                <= '0';
                   Ready_i              <= '0';
                   Read_Count           := 0;                
                   i2c_Controller_State    <= idle;
@@ -558,7 +562,7 @@ begin
                      elsif Write_Count = 6 then
                         Slave_Data_i  <= Month_Century_in;                            
                      elsif Write_Count = 7 then
-                        Slave_Data_i           <= Year_in;                         
+                        Slave_Data_i  <= Year_in;                         
                      end if;                           
                   elsif Busy_i = '1' and Write_Count = 8 then
                      Slave_read_nWrite    <= '0';
@@ -570,20 +574,18 @@ begin
                      
                when TestStop =>
                   Ready_i                 <= '0';
-                  --i2c_Controller_State    <= ReadData;   -- Read after Writing
                   i2c_WriteData_State     <= Idle;
-                  --i2c_ReadData_State      <= Idle;
                   i2c_Controller_State    <= Idle;
                     
             end case;  
 
-      when Mem_Control =>
+      end case;
    -----------------------------
    -- Writing/Reading the EEPROM
    -----------------------------
          case Mem_Controller_State is
             when Wait_ready =>
-               Slave_Address_i      <= "1010000";
+               Slave_Address_i      <= "1010000"; -- EEPROM 
                -- Load Memory Slave Write Data
                Seconds_mem_i        <= Seconds_out_i;
                Minutes_mem_i        <= Minutes_out_i;
@@ -695,7 +697,6 @@ begin
                        
                end case; 
             end case;
-      end case;
 
    end if;
     
