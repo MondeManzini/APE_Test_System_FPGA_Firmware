@@ -193,6 +193,7 @@ signal lockout_i                       : std_logic;
 signal initialation_Status_i           : std_logic;
 signal Address_Lock_i                  : std_logic := '0';
 signal mem_flash_i                     : std_logic := '0';
+signal mem_flash_done_i                : std_logic := '0';
 --signal NumberBytes       : INTEGER RANGE 0 TO 20 := 0;
 
 -- States
@@ -203,10 +204,15 @@ type   i2c_Intialization_States is (i2c_Idle, LoadData, WaitnBusy, Wait_Byte_Wri
 signal i2c_Intialization_State : i2c_Intialization_States;
 type   i2c_ReadData_States is (Idle, Wait_Address, Wait_Read, Wait_Data, TestStop);
 signal i2c_ReadData_State : i2c_ReadData_States;
+
 type   i2c_WriteData_States is (Idle, Wait_Address, Wait_Write, Write_Data, Wait_Data, TestStop);
 signal i2c_WriteData_State : i2c_WriteData_States;
+-- Memory Flashing States
 type   Mem_Controller_States is (Idle, Wait_ready, WriteData);
 signal Mem_Controller_State : Mem_Controller_States;
+
+type   i2c_WriteData_Mem_States is (Idle, Wait_Address_Mem, Wait_Write_Mem, Write_Data_Mem, Wait_Data_Mem, TestStop_Mem);
+signal i2c_WriteData_Mem_State : i2c_WriteData_Mem_States;
 ------------------------------------------------------------------------------- 
 
   begin
@@ -241,8 +247,11 @@ I2C_Control :process (CLK_I,RST_I)
    Variable Config_Count      : INTEGER RANGE 0 TO 21 := 0;
    Variable Read_Count        : INTEGER RANGE 0 TO 10 := 0;
    Variable Write_Count       : INTEGER RANGE 0 TO 10 := 0;
+   variable Mem_Read_Count    : INTEGER RANGE 0 TO 10 := 0;
+   variable Mem_Write_Count   : INTEGER RANGE 0 TO 10 := 0;
    variable mem_flash_cnt     : integer range 0 to 1000;
    variable wait_cnt          : integer range 0 to 1200;
+   variable wait_busy         : integer range 0 to 100;
 begin
    if RST_I = '0' then 
       Count                   := 0;
@@ -366,6 +375,7 @@ begin
                         when 21 => 
                            Config_i          <= x"00";  
                            Slave_Register_i  <= X"00";
+                           mem_flash_i       <= '1';
                         
                         when others =>
 
@@ -386,7 +396,7 @@ begin
                when Wait_Byte_Write =>
                   if busy_i = '1' then
                      if Count= 100 then
-                        Enable_i                <= '0';
+                        Enable_i                <= '0';                           
                         i2c_Intialization_State <= StopInitialization;
                      else                  
                         Count                   := Count + 1;
@@ -396,19 +406,23 @@ begin
                when StopInitialization =>                       
                   if Busy_i = '0'  then     
                      if Config_Count = 21 then
-                        i2c_Intialization_State <= initialzation_Complete;
-                        i2c_Controller_State    <= Idle;
-                        --mem_flash_i             <= '1';
-                        initialation_Status_i   <= '1';
-                        Config_Count            := 0;
+                        if mem_flash_done_i = '1' then
+                           i2c_Intialization_State <= initialzation_Complete;
+                           i2c_Controller_State    <= Idle;
+                           initialation_Status_i   <= '1';
+                           Config_Count            := 0;
+                           mem_flash_i             <= '0';
+                        else
+                           mem_flash_i             <= '0';
+                        end if;
                      else
                         i2c_Intialization_State  <= i2c_Idle;  
                      end if;   
                   end if;
                         
                when initialzation_Complete =>
-                  initialation_Status_i    <= '1';
-                  mem_flash_i             <= '0';               
+                  initialation_Status_i    <= '0';
+                  mem_flash_i              <= '0';               
             end case;
 
 ----------------------------                            
@@ -425,8 +439,8 @@ begin
                Slave_Register_i     <= Seconds_register_i;
                i2c_Controller_State <= ReadData;  
             elsif Write_RTC = '1' then
-               i2c_WriteData_State   <= Idle;
-               Write_Count           := 0;
+               i2c_WriteData_State  <= Idle;
+               Write_Count          := 0;
                Slave_Register_i     <= Seconds_register_i;
                i2c_Controller_State <= WriteData; 
             else  
@@ -578,122 +592,130 @@ begin
                   i2c_Controller_State    <= Idle;
                     
             end case;  
-
       end case;
+
    -----------------------------
    -- Writing/Reading the EEPROM
    -----------------------------
          case Mem_Controller_State is
-            when Wait_ready =>
-               Slave_Address_i      <= "1010000"; -- EEPROM 
-               -- Load Memory Slave Write Data
-               Seconds_mem_i        <= Seconds_out_i;
-               Minutes_mem_i        <= Minutes_out_i;
-               Hours_mem_i          <= Hours_out_i;
-               Day_mem_i            <= Day_out_i;
-               Date_mem_i           <= Date_out_i;
-               Month_Century_mem_i  <= Month_Century_out_i;
-               Year_mem_i           <= Year_out_i;
-               Mem_Controller_State <= Idle;
 
             when Idle =>
                if mem_flash_i = '1' then
-                  i2c_WriteData_State   <= Idle;
-                  Read_Count           := 0;
-                  Write_Count          := 0;
-                  Slave_Register_i     <= Seconds_register_conf_hi_i;
-                  Mem_Controller_State <= WriteData;  
+                  Mem_Read_Count          := 0;
+                  Mem_Write_Count         := 0;
+                  Slave_Register_i        <= Seconds_register_conf_hi_i;
+                  Mem_Controller_State    <= Wait_ready;
+                  i2c_WriteData_Mem_State <= Idle;  
                else  
                   Mem_Controller_State <= idle;
                end if;
 
+            when Wait_ready =>
+               if wait_busy = 100 then 
+                  wait_busy            := 0;
+                  Slave_Address_i      <= "1010000"; -- EEPROM 
+                  -- Load Memory Slave Write Data
+                  Seconds_mem_i        <= Seconds_out_i;
+                  Minutes_mem_i        <= Minutes_out_i;
+                  Hours_mem_i          <= Hours_out_i;
+                  Day_mem_i            <= Day_out_i;
+                  Date_mem_i           <= Date_out_i;
+                  Month_Century_mem_i  <= Month_Century_out_i;
+                  Year_mem_i           <= Year_out_i;
+                  Mem_Controller_State <= WriteData;
+               else
+                  wait_busy := wait_busy + 1;
+               end if;
+
             when WriteData =>
-               case i2c_WriteData_State is             
-                  when Idle =>         
+               case i2c_WriteData_Mem_State is             
+                  when Idle =>        
                      if Busy_i = '0' then
                         Slave_Address_Out       <= Slave_Address_i;     
                         Slave_read_nWrite       <= '0';   
                         Slave_Data_i            <= Slave_Register_i;
                         Enable_i                <= '1';
                         Address_Lock_i          <= '0';       
-                        i2c_WriteData_State     <= Wait_Address;
+                        i2c_WriteData_Mem_State <= Wait_Address_Mem;
                      end if;
 
-                  when Wait_Address =>
+                  when Wait_Address_Mem =>
                      if Busy_i = '1' and Address_Lock_i = '0' then
                         Address_Lock_i            <= '1';                       
                         Slave_Address_Out         <= Slave_Address_i;      
                         Slave_read_nWrite         <= '0';                       
                      elsif Busy_i = '0' and Address_Lock_i = '1' then
                         Address_Lock_i            <= '0';
-                        Write_Count               := Write_Count + 1; 
-                        i2c_WriteData_State        <= Wait_Data;                        
+                        Mem_Write_Count           := Mem_Write_Count + 1; 
+                        i2c_WriteData_Mem_State   <= Wait_Data_Mem;                        
                      end if;
    
-                  when Wait_Data =>
+                  when Wait_Data_Mem =>
                      if Busy_i = '0' and Write_Count < 8 then
-                        i2c_WriteData_State      <= Wait_Write; 
-                        if Write_Count = 1 then
+                        i2c_WriteData_Mem_State      <= Wait_Write_Mem; 
+                        Enable_i                <= '1';
+                        if Mem_Write_Count = 1 then
                            Slave_Data_i <= Seconds_mem_i; 
-                        elsif Write_Count = 2 then
+                        elsif Mem_Write_Count = 2 then
                            Slave_Data_i <= Minutes_mem_i;
-                        elsif Write_Count = 3 then
+                        elsif Mem_Write_Count = 3 then
                            Slave_Data_i <= Hours_mem_i;                         
-                        elsif Write_Count = 4 then
+                        elsif Mem_Write_Count = 4 then
                            Slave_Data_i <= Day_mem_i;                         
-                        elsif Write_Count = 5 then
+                        elsif Mem_Write_Count = 5 then
                            Slave_Data_i <= Date_mem_i;  
-                        elsif Write_Count = 6 then
+                        elsif Mem_Write_Count = 6 then
                            Slave_Data_i <= Month_Century_mem_i;
-                        elsif Write_Count = 7 then
-                           Slave_Data_i <= Year_mem_i;                       
+                        elsif Mem_Write_Count = 7 then
+                           Slave_Data_i <= Year_mem_i; 
                         end if;                           
-                     elsif Busy_i = '1' and Write_Count = 8 then
+                     elsif Busy_i = '1' and Mem_Write_Count = 8 then
                         Slave_read_nWrite    <= '0';    -- Write data to memory slave
                         Enable_i             <= '0';
-                     elsif Busy_i = '0' and Write_Count = 8 then      
-                        --Ready_mem_i          <= '1';
-                        i2c_WriteData_State  <= Wait_Write;                                                                                       
+                     elsif Busy_i = '0' and Mem_Write_Count = 8 then      
+                        i2c_WriteData_Mem_State  <= Wait_Write_Mem;                                                                                       
                      end if;
                    
-                  when Wait_Write =>
+                  when Wait_Write_Mem =>
                      if Busy_i = '1' then
                         Slave_Address_Out         <= Slave_Address_i;      
                         Slave_read_nWrite         <= '1';   
-                        Read_Count                := Read_Count + 1;                       
-                        i2c_WriteData_State       <= Write_Data;                     
+                        Mem_Read_Count            := Mem_Read_Count + 1;                       
+                        i2c_WriteData_Mem_State   <= Write_Data_Mem;                     
                      end if;
 
-                  when Write_Data =>
-                     if Busy_i = '0' and Read_Count < 8 then
-                        i2c_WriteData_State      <= Wait_Write;                                                                                
-                        if Read_Count = 1 then
+                  when Write_Data_Mem =>
+                     if Busy_i = '0' and Mem_Read_Count < 8 then
+                        i2c_WriteData_Mem_State      <= Wait_Write_Mem;                                                                                
+                        if Mem_Read_Count = 1 then
                            Seconds_out_mem_i       <= data_read;  
-                        elsif Read_Count = 2 then
+                        elsif Mem_Read_Count = 2 then
                            Minutes_out_mem_i       <= data_read; 
-                        elsif Read_Count = 3 then
+                        elsif Mem_Read_Count = 3 then
                            Hours_out_mem_i         <= data_read;  
-                        elsif Read_Count = 4 then
+                        elsif Mem_Read_Count = 4 then
                            Day_out_mem_i           <= data_read;  
-                        elsif Read_Count = 5 then
+                        elsif Mem_Read_Count = 5 then
                            Date_out_mem_i          <= data_read;                            
-                        elsif Read_Count = 6 then
+                        elsif Mem_Read_Count = 6 then
                            Month_Century_out_mem_i <= data_read;                                                      
-                        elsif Read_Count = 7 then
+                        elsif Mem_Read_Count = 7 then
                            Year_out_mem_i          <= data_read;                          
                         end if;                            
-                     elsif Busy_i = '1' and Read_Count = 8 then
+                     elsif Busy_i = '1' and Mem_Read_Count = 8 then
                         Slave_read_nWrite    <= '1';
                         Enable_i             <= '0';
-                     elsif Busy_i = '0' and Read_Count = 8 then      
+                     elsif Busy_i = '0' and Mem_Read_Count = 8 then      
                         Ready_mem_i          <= '1';
-                        i2c_WriteData_State   <= TestStop;                                                                                       
+                        mem_flash_done_i     <= '1';
+                        i2c_WriteData_Mem_State   <= TestStop_Mem;                                                                                       
                      end if;
                         
-                  when TestStop =>
-                     Ready_mem_i             <= '0';                
-                     i2c_Controller_State    <= idle;
-                     i2c_WriteData_State     <= Idle;
+                  when TestStop_Mem =>
+                     Ready_mem_i             <= '0';  
+                     mem_flash_done_i        <= '0';              
+                     Mem_Controller_State    <= idle;
+                     i2c_WriteData_Mem_State <= Idle;
                        
                end case; 
             end case;
