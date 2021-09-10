@@ -59,6 +59,7 @@ use work.Version_Ascii.all;
                       
 -- Flags
          SET_Timer                                       : out std_logic;
+         GET_Timer                                       : out std_logic;
          Dig_Outputs_Ready                               : out std_logic;
          Module_Number                                   : out std_logic_vector(7 downto 0);
          SPI_IO_Driver_Version_Request                   : out std_logic;  
@@ -591,6 +592,7 @@ begin
       wait_cnt                                  := 0;
       got_byte_cnt                              := 0;
       SET_Timer                                 <= '0';
+      GET_Timer                                 <= '0';
       Dig_Outputs_Ready                         <= '0';
       CRC_out                                   <= '0';
       Module_Number_i                           <= (others=> '0');
@@ -694,14 +696,11 @@ begin
             CRC_out <= '0'; 
               case Mode_i  is
                                         
-                  when X"80" =>                       -- Mode Time Stamp
+                  when X"80" =>                       -- Mode Set RTC Stamp
                      cmd_state           <= get_time_sec;
                         
                   when X"81" =>                       -- Mode Outputs
                      cmd_state           <= Get_Outputs;
-
-                  when X"82" =>                       -- Mode Time Stamp
-                     cmd_state           <= get_mem;
 
                   when X"90" =>                       -- Mode Version
                      cmd_state           <= get_version_mod_1;     
@@ -720,6 +719,8 @@ begin
                   Seconds_out_i <= byte_received;   -- Time Stamp Byte 3 
                                                           -- Byte 5
                   cmd_state     <= get_time_min;
+               else -- no data then get time
+                  cmd_state     <= Active;
                end if;
 
           when get_time_min =>
@@ -772,6 +773,7 @@ begin
                Year_out_i           <= byte_received;    -- mS Byte 0 -- Byte 11
                cmd_state            <= CRC_check;
             end if;  
+
 -------------------------------------------------------------------------------
 -- Outputs - From Colin to Us - Mode "81"
 -------------------------------------------------------------------------------
@@ -824,40 +826,7 @@ begin
                   cmd_state        <= CRC_check;
                
                 when others =>
-            end case;
-
-            --if got_byte_cnt = 1 then        
-            --   Output_Card_1_i   <= byte_received;   -- Output Card 1 Byte5
-            --   cmd_state         <= Get_Outputs;
-            --elsif got_byte_cnt = 2 then     
-            --   Dig_Card1_1_B3_i <= byte_received;    -- Output Card 1 Byte6
-            --   cmd_state        <= Get_Outputs;
-            --elsif got_byte_cnt = 3 then       
-            --   Dig_Card1_1_B2_i <= byte_received;    -- Output Card 1 Byte7 
-            --   cmd_state        <= Get_Outputs;
-            --elsif got_byte_cnt = 4 then       
-            --   Dig_Card1_1_B1_i <= byte_received;    -- Output Card 1 Byte8 
-            --   cmd_state        <= Get_Outputs;   
-            --elsif got_byte_cnt = 5 then       
-            --   Dig_Card1_1_B0_i <= byte_received;    -- Output Card 1 Byte9 
-            --   cmd_state        <= Get_Outputs;     
-            --elsif got_byte_cnt = 6 then       
-            --   Output_Card_2_i  <= byte_received;    -- Output Card 2 Byte10 
-            --   cmd_state        <= Get_Outputs;   
-            --elsif got_byte_cnt = 7 then     
-            --   Dig_Card1_1_B7_i <= byte_received;    -- Output Card 1 Byte11
-            --   cmd_state        <= Get_Outputs;
-            --  elsif got_byte_cnt = 8 then       
-            --   Dig_Card1_1_B6_i <= byte_received;    -- Output Card 1 Byte12 
-            --   cmd_state        <= Get_Outputs;
-            --elsif got_byte_cnt = 9 then       
-            --   Dig_Card1_1_B5_i <= byte_received;    -- Output Card 1 Byte13 
-            --   cmd_state        <= Get_Outputs;   
-            --elsif got_byte_cnt = 10 then       
-            --   Dig_Card1_1_B4_i <= byte_received;    -- Output Card 1 Byte14
-            --   got_byte_cnt     := 0;
-            --   cmd_state        <= CRC_check;
-            --end if;   
+            end case; 
 
 -------------------------------------------------------------------------------
 -- Version Config - From Software to Controller Mode "90"
@@ -910,6 +879,7 @@ begin
                Month_Century_out          <= Month_Century_out_i;
                Year_out                   <= Year_out_i;
                SET_Timer                  <= '1';
+               GET_Timer                  <= '1';
                cmd_state                  <= reset_trigger;
                     
             elsif Mode_i = X"81" then
@@ -977,6 +947,7 @@ begin
             when reset_trigger =>
                  got_byte_cnt                               := 0;
                  SET_Timer                                  <= '0';
+                 GET_Timer                                  <= '0';
                  Dig_Outputs_Ready                          <= '0';
                  SPI_IO_Driver_Version_Request              <= '0';
                  SPI_Output_Handler_Version_Request         <= '0';                 

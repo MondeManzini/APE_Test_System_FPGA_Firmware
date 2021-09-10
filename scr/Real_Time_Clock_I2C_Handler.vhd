@@ -489,11 +489,11 @@ begin
                            i2c_ReadData_State   <= Wait_Read;
 
                         when 3 =>
-                           Hours_out_i        <= data_read;
+                           Hours_out_i          <= data_read;
                            i2c_ReadData_State   <= Wait_Read;
 
                         when 4 =>
-                           Day_out_i        <= data_read;
+                           Day_out_i            <= data_read;
                            i2c_ReadData_State   <= Wait_Read;
 
                         when 5 =>
@@ -501,7 +501,7 @@ begin
                            i2c_ReadData_State   <= Wait_Read;
 
                         when 6 =>
-                           Month_Century_out_i        <= data_read;
+                           Month_Century_out_i  <= data_read;
                            i2c_ReadData_State   <= Wait_Read;
 
                         when 7 =>
@@ -514,7 +514,7 @@ begin
                      end case;
                   elsif Busy_i = '0' and Read_Count > 7 then      
                      Ready_i              <= '1';
-                     Enable_i                <= '0';
+                     Enable_i             <= '0';
                      i2c_ReadData_State   <= TestStop;                                                                                       
                   end if;
 
@@ -622,6 +622,8 @@ begin
                   Date_mem_i           <= Date_out_i;
                   Month_Century_mem_i  <= Month_Century_out_i;
                   Year_mem_i           <= Year_out_i;
+                  -- Load Version Numbers of Modules
+
                   Mem_Controller_State <= WriteData;
                else
                   wait_busy := wait_busy + 1;
@@ -652,28 +654,42 @@ begin
    
                   when Wait_Data_Mem =>
                      if Busy_i = '0' and Write_Count < 8 then
-                        i2c_WriteData_Mem_State      <= Wait_Write_Mem; 
-                        Enable_i                <= '1';
+                        
                         if Mem_Write_Count = 1 then
                            Slave_Data_i <= Seconds_mem_i; 
+                           i2c_WriteData_Mem_State <= Wait_Address_Mem; 
+                        Enable_i                <= '1';
                         elsif Mem_Write_Count = 2 then
                            Slave_Data_i <= Minutes_mem_i;
+                           i2c_WriteData_Mem_State <= Wait_Address_Mem; 
+                        Enable_i                <= '1';
                         elsif Mem_Write_Count = 3 then
-                           Slave_Data_i <= Hours_mem_i;                         
+                           Slave_Data_i <= Hours_mem_i;     
+                           i2c_WriteData_Mem_State <= Wait_Address_Mem; 
+                        Enable_i                <= '1';                    
                         elsif Mem_Write_Count = 4 then
-                           Slave_Data_i <= Day_mem_i;                         
+                           Slave_Data_i <= Day_mem_i;     
+                           i2c_WriteData_Mem_State <= Wait_Address_Mem; 
+                        Enable_i                <= '1';                    
                         elsif Mem_Write_Count = 5 then
                            Slave_Data_i <= Date_mem_i;  
+                           i2c_WriteData_Mem_State <= Wait_Address_Mem; 
+                        Enable_i                <= '1';
                         elsif Mem_Write_Count = 6 then
                            Slave_Data_i <= Month_Century_mem_i;
+                           i2c_WriteData_Mem_State <= Wait_Address_Mem; 
+                        Enable_i                <= '1';
                         elsif Mem_Write_Count = 7 then
                            Slave_Data_i <= Year_mem_i; 
+                           i2c_WriteData_Mem_State <= Wait_Address_Mem; 
+                        Enable_i                <= '1';
                         end if;                           
                      elsif Busy_i = '1' and Mem_Write_Count = 8 then
                         Slave_read_nWrite    <= '0';    -- Write data to memory slave
                         Enable_i             <= '0';
+                        i2c_WriteData_Mem_State <= Wait_Write_Mem;
                      elsif Busy_i = '0' and Mem_Write_Count = 8 then      
-                        i2c_WriteData_Mem_State  <= Wait_Write_Mem;                                                                                       
+                        i2c_WriteData_Mem_State <= Wait_Write_Mem;                                                                                       
                      end if;
                    
                   when Wait_Write_Mem =>
@@ -686,21 +702,35 @@ begin
 
                   when Write_Data_Mem =>
                      if Busy_i = '0' and Mem_Read_Count < 8 then
-                        i2c_WriteData_Mem_State      <= Wait_Write_Mem;                                                                                
+                                                                                                        
                         if Mem_Read_Count = 1 then
-                           Seconds_out_mem_i       <= data_read;  
+                           Seconds_out_mem_i       <= data_read; 
+                           i2c_WriteData_Mem_State      <= Wait_Write_Mem;
+                           Enable_i                <= '1'; 
                         elsif Mem_Read_Count = 2 then
                            Minutes_out_mem_i       <= data_read; 
+                           i2c_WriteData_Mem_State      <= Wait_Write_Mem;
+                           Enable_i                <= '1'; 
                         elsif Mem_Read_Count = 3 then
                            Hours_out_mem_i         <= data_read;  
+                           i2c_WriteData_Mem_State      <= Wait_Write_Mem;
+                           Enable_i                <= '1'; 
                         elsif Mem_Read_Count = 4 then
                            Day_out_mem_i           <= data_read;  
+                           i2c_WriteData_Mem_State      <= Wait_Write_Mem;
+                           Enable_i                <= '1'; 
                         elsif Mem_Read_Count = 5 then
-                           Date_out_mem_i          <= data_read;                            
+                           Date_out_mem_i          <= data_read;    
+                           i2c_WriteData_Mem_State      <= Wait_Write_Mem;
+                           Enable_i                <= '1';                         
                         elsif Mem_Read_Count = 6 then
-                           Month_Century_out_mem_i <= data_read;                                                      
+                           Month_Century_out_mem_i <= data_read;   
+                           i2c_WriteData_Mem_State      <= Wait_Write_Mem;
+                           Enable_i                <= '1';                                                    
                         elsif Mem_Read_Count = 7 then
-                           Year_out_mem_i          <= data_read;                          
+                           Year_out_mem_i          <= data_read;    
+                           i2c_WriteData_Mem_State      <= Wait_Write_Mem;
+                           Enable_i                <= '1';                       
                         end if;                            
                      elsif Busy_i = '1' and Mem_Read_Count = 8 then
                         Slave_read_nWrite    <= '1';

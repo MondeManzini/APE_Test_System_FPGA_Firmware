@@ -68,89 +68,42 @@ entity Main_Mux is
    Digital_Input_Valid        : in  std_logic;
    
 -- Digital Input          
-   Dig_In_1_B0                         : in  std_logic_vector(7 downto 0);
-   Dig_In_1_B1                         : in  std_logic_vector(7 downto 0);        
-   Dig_In_1_B2                         : in  std_logic_vector(7 downto 0);        
-   Dig_In_1_B3                         : in  std_logic_vector(7 downto 0);
-   Dig_In_1_B4                         : in  std_logic_vector(7 downto 0);
-   Dig_In_1_B5                         : in  std_logic_vector(7 downto 0);        
-   Dig_In_1_B6                         : in  std_logic_vector(7 downto 0);        
-   Dig_In_1_B7                         : in  std_logic_vector(7 downto 0); 
-   Digital_Output_Valid                : in  std_logic;
+   Dig_In_1_B0                : in  std_logic_vector(7 downto 0);
+   Dig_In_1_B1                : in  std_logic_vector(7 downto 0);        
+   Dig_In_1_B2                : in  std_logic_vector(7 downto 0);        
+   Dig_In_1_B3                : in  std_logic_vector(7 downto 0);
+   Dig_In_1_B4                : in  std_logic_vector(7 downto 0);
+   Dig_In_1_B5                : in  std_logic_vector(7 downto 0);        
+   Dig_In_1_B6                : in  std_logic_vector(7 downto 0);        
+   Dig_In_1_B7                : in  std_logic_vector(7 downto 0); 
+   Digital_Output_Valid       : in  std_logic;
     	 
 -- Analog In        
    -- Analog InS        
    -- Analog In 1        
-   Alg_Card1_1                         : in  std_logic_vector(15 downto 0);        
-   Alg_Card1_2                         : in  std_logic_vector(15 downto 0);                
-   Alg_Card1_3                         : in  std_logic_vector(15 downto 0);
-   Alg_Card1_4                         : in  std_logic_vector(15 downto 0);        
-   Alg_Card1_5                         : in  std_logic_vector(15 downto 0);
-   Alg_Card1_6                         : in  std_logic_vector(15 downto 0);
-   Alg_Card1_7                         : in  std_logic_vector(15 downto 0);
-   Alg_Card1_8                         : in  std_logic_vector(15 downto 0);
-   Alg_Card1_9                         : in  std_logic_vector(15 downto 0);
-   Alg_Card1_10                        : in  std_logic_vector(15 downto 0);        
-   Alg_Card1_11                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_12                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_13                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_14                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_15                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_16                        : in  std_logic_vector(15 downto 0);        
-   Alg_Card1_17                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_18                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_19                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_20                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_21                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_22                        : in  std_logic_vector(15 downto 0);        
-   Alg_Card1_23                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_24                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_25                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_26                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_27                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_28                        : in  std_logic_vector(15 downto 0);        
-   Alg_Card1_29                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_30                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_31                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_32                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_33                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_34                        : in  std_logic_vector(15 downto 0);        
-   Alg_Card1_35                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_36                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_37                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_38                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_39                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_40                        : in  std_logic_vector(15 downto 0);        
-   Alg_Card1_41                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_42                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_43                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_44                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_45                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_46                        : in  std_logic_vector(15 downto 0);        
-   Alg_Card1_47                        : in  std_logic_vector(15 downto 0);
-   Alg_Card1_48                        : in  std_logic_vector(15 downto 0);
+   Analog_Data                : in std_logic_vector(767 downto 0);
     
-   Analog_Input_Valid                  : in  std_logic;
-   Version_Name                        : in  std_logic_vector(255 downto 0); 
-   Version_Number                      : in  std_logic_vector(63 downto 0);
-   Version_Data_Ready                  : in  std_logic; 
+   Analog_Input_Valid         : in  std_logic;
+   Version_Name               : in  std_logic_vector(255 downto 0); 
+   Version_Number             : in  std_logic_vector(63 downto 0);
+   Version_Data_Ready         : in  std_logic; 
    
 -- Requests
-   Ana_In_Request                      : out std_logic;
-   Dig_In_Request                      : out std_logic;
-   Dig_Out_Request                     : out std_logic;
-   Get_RTC                             : out std_logic;
+   Ana_In_Request             : out std_logic;
+   Dig_In_Request             : out std_logic;
+   Dig_Out_Request            : out std_logic;
+   Get_RTC                    : out std_logic;
 
-   Real_Time_Clock_Request             : in std_logic;
-   RTC_Valid                           : in std_logic;
-   Baud_Rate_Enable                    : in  std_logic;  
-   Data_Ready                          : in  std_logic;
-   One_mS                              : in  std_logic;
-   Main_Mux_Version_Name               : out std_logic_vector(255 downto 0);
-   Main_Mux_Version_Number             : out std_logic_vector(63 downto 0);
-   Main_Mux_Version_Ready              : out std_logic; 
-   Main_Mux_Version_Request            : in  std_logic;
-   Module_Number                       : in  std_logic_vector(7 downto 0)
+   Real_Time_Clock_Request    : in std_logic;
+   RTC_Valid                  : in std_logic;
+   Baud_Rate_Enable           : in  std_logic;  
+   Data_Ready                 : in  std_logic;
+   One_mS                     : in  std_logic;
+   Main_Mux_Version_Name      : out std_logic_vector(255 downto 0);
+   Main_Mux_Version_Number    : out std_logic_vector(63 downto 0);
+   Main_Mux_Version_Ready     : out std_logic; 
+   Main_Mux_Version_Request   : in  std_logic;
+   Module_Number              : in  std_logic_vector(7 downto 0)
    );
 
 end Main_Mux;
@@ -257,10 +210,10 @@ signal RTC_Build_Trig_i           : std_logic;
 signal RTC_Build_Trig_Done_i      : std_logic;     
 signal All_Data_Build_Trig_i        : std_logic;  
 signal All_Data_Build_Trig_Done_i   : std_logic;  
--- signal Real_Time_Clock_Request    : std_logic;
-signal Real_Time_Clock_Ready      : std_logic;
-signal Main_Mux_Version_Name_i    : std_logic_vector(255 downto 0); 
-signal Main_Mux_Version_Number_i  : std_logic_vector(63 downto 0);  
+signal Analog_Input_Load            : std_logic;
+signal Real_Time_Clock_Ready        : std_logic;
+signal Main_Mux_Version_Name_i      : std_logic_vector(255 downto 0); 
+signal Main_Mux_Version_Number_i    : std_logic_vector(63 downto 0);  
 
 -- Time Out
 signal Seconds_out_i              : std_logic_vector(7 downto 0) := X"00";         
@@ -275,19 +228,19 @@ signal no_of_chars2snd            : std_logic_vector(7 downto 0) := X"00";
 signal mode_i                     : std_logic_vector(7 downto 0) := X"00";
 
 type Time_Array is array (0 to 255) of std_logic_vector(7 downto 0);
-signal Time_Data_Array                   : Time_Array;
+signal Time_Data_Array        : Time_Array;
 
 type Preamble_Array is array (0 to 255) of std_logic_vector(7 downto 0);
-signal Preamble_Data_Array               : Preamble_Array;
+signal Preamble_Data_Array    : Preamble_Array;
 
 type Digital_In_Array is array (0 to 255) of std_logic_vector(7 downto 0);
-signal Digital_In_Data_Array         : Digital_In_Array;
+signal Digital_In_Data_Array  : Digital_In_Array;
 
 type Digital_Out_Array is array (0 to 255) of std_logic_vector(7 downto 0);
-signal Digital_Out_Data_Array         : Digital_Out_Array;
+signal Digital_Out_Data_Array : Digital_Out_Array;
 
-type Analog_In_Array is array (0 to 255) of std_logic_vector(7 downto 0);
-signal Analog_In_Data_Array         : Analog_In_Array;
+type Analog_In_Array is array (0 to 767) of std_logic_vector(7 downto 0);
+signal Analog_In_Data_Array   : Analog_In_Array;
 
 function reverse_any_bus (a : in std_logic_vector)
 return std_logic_vector is
@@ -319,6 +272,7 @@ variable Real_Time_Clock_Request_50mS_cnt    : integer range 0 to 5;
 variable send_data_cnt                       : integer range 0 to 10;
 variable wait_cnt_rtc                        : integer range 0 to 50;
 variable wait_cnt_all                        : integer range 0 to 100;
+variable analog_data_load                    : integer range 0 to 100;
 begin
    if RST_I = '0' then
       Preamble_Data_Array(0)     <= x"a5";
@@ -347,6 +301,7 @@ begin
       Send_Operation             <= '0';
       Request_Data_cnt           := 0;
       send_data_cnt              := 0;
+      analog_data_load           := 0;
       Request_Data_Strobe        <= '0'; 
       Send_Data_Strobe           <= '0';
       Send_Version_Data_Mess     <= '0';
@@ -362,6 +317,7 @@ begin
       Get_RTC                    <= '0';
       Real_Time_Clock_Ready      <= '0';
       RTC_Ready                  <= '0';
+      Analog_Input_Load          <= '0';
       Main_Mux_Version_Name      <= (others => '0');
       Main_Mux_Version_Name_i    <= (others => '0');
       Main_Mux_Version_Number    <= (others => '0'); 
@@ -415,7 +371,7 @@ begin
                Get_RTC                 <= '0';
                Send_All_Modules        <= '0';
                All_Modules_Trig        <= '0';
-               --RTC_Ready               <= '0';
+               Analog_Input_Load       <= '0';
                Real_Time_Clock_Ready   <= '0';
                Request_Send_State      <= Request_Idle;
             end if; 
@@ -488,105 +444,25 @@ begin
       -- Analog Input Data Validity Generator
             
             if Analog_Input_Valid = '1' then
-               Analog_Input_Ready         <= '1';        -- Latch AI
-               Analog_In_Data_Array(0)    <= Analog_Card_1;
-               Analog_In_Data_Array(1)    <= Alg_Card1_1(15 downto 8);
-               Analog_In_Data_Array(2)    <= Alg_Card1_1(7 downto 0);        
-               Analog_In_Data_Array(3)    <= Alg_Card1_2(15 downto 8);
-               Analog_In_Data_Array(4)    <= Alg_Card1_2(7 downto 0);               
-               Analog_In_Data_Array(5)    <= Alg_Card1_3(15 downto 8);
-               Analog_In_Data_Array(6)    <= Alg_Card1_3(7 downto 0);
-               Analog_In_Data_Array(7)    <= Alg_Card1_4(15 downto 8);       
-               Analog_In_Data_Array(8)    <= Alg_Card1_4(7 downto 0);      
-               Analog_In_Data_Array(9)    <= Alg_Card1_5(15 downto 8);
-               Analog_In_Data_Array(10)   <= Alg_Card1_5(7 downto 0);
-               Analog_In_Data_Array(11)   <= Alg_Card1_6(15 downto 8);
-               Analog_In_Data_Array(12)   <= Alg_Card1_6(7 downto 0);
-               Analog_In_Data_Array(13)   <= Alg_Card1_7(15 downto 8);
-               Analog_In_Data_Array(14)   <= Alg_Card1_7(7 downto 0);       
-               Analog_In_Data_Array(15)   <= Alg_Card1_8(15 downto 8);
-               Analog_In_Data_Array(16)   <= Alg_Card1_8(7 downto 0);                
-               Analog_In_Data_Array(17)   <= Alg_Card1_9(15 downto 8);
-               Analog_In_Data_Array(18)   <= Alg_Card1_9(7 downto 0);
-               Analog_In_Data_Array(19)   <= Alg_Card1_10(15 downto 8);       
-               Analog_In_Data_Array(20)   <= Alg_Card1_10(7 downto 0);     
-               Analog_In_Data_Array(21)   <= Alg_Card1_11(15 downto 8);
-               Analog_In_Data_Array(22)   <= Alg_Card1_11(7 downto 0);
-               Analog_In_Data_Array(23)   <= Alg_Card1_12(15 downto 8);
-               Analog_In_Data_Array(24)   <= Alg_Card1_12(7 downto 0);
-               Analog_In_Data_Array(25)   <= Alg_Card1_13(15 downto 8);
-               Analog_In_Data_Array(26)   <= Alg_Card1_13(7 downto 0);      
-               Analog_In_Data_Array(27)   <= Alg_Card1_14(15 downto 8);
-               Analog_In_Data_Array(28)   <= Alg_Card1_14(7 downto 0);               
-               Analog_In_Data_Array(29)   <= Alg_Card1_15(15 downto 8);
-               Analog_In_Data_Array(30)   <= Alg_Card1_15(7 downto 0);
-               Analog_In_Data_Array(31)   <= Alg_Card1_16(15 downto 8);        
-               Analog_In_Data_Array(32)   <= Alg_Card1_16(7 downto 0);       
-               Analog_In_Data_Array(33)   <= Alg_Card1_17(15 downto 8);
-               Analog_In_Data_Array(34)   <= Alg_Card1_17(7 downto 0);
-               Analog_In_Data_Array(35)   <= Alg_Card1_18(15 downto 8);
-               Analog_In_Data_Array(36)   <= Alg_Card1_18(7 downto 0);
-               Analog_In_Data_Array(37)   <= Alg_Card1_19(15 downto 8);
-               Analog_In_Data_Array(38)   <= Alg_Card1_19(7 downto 0);        
-               Analog_In_Data_Array(39)   <= Alg_Card1_20(15 downto 8);
-               Analog_In_Data_Array(40)   <= Alg_Card1_20(7 downto 0);                
-               Analog_In_Data_Array(41)   <= Alg_Card1_21(15 downto 8);
-               Analog_In_Data_Array(42)   <= Alg_Card1_21(7 downto 0);
-               Analog_In_Data_Array(43)   <= Alg_Card1_22(15 downto 8);       
-               Analog_In_Data_Array(44)   <= Alg_Card1_22(7 downto 0);       
-               Analog_In_Data_Array(45)   <= Alg_Card1_23(15 downto 8);
-               Analog_In_Data_Array(46)   <= Alg_Card1_23(7 downto 0);
-               Analog_In_Data_Array(47)   <= Alg_Card1_24(15 downto 8);
-               Analog_In_Data_Array(48)   <= Alg_Card1_24(7 downto 0);
-               Analog_In_Data_Array(49)   <= Alg_Card1_25(15 downto 8);
-               Analog_In_Data_Array(50)   <= Alg_Card1_25(7 downto 0);        
-               Analog_In_Data_Array(51)   <= Alg_Card1_26(15 downto 8);
-               Analog_In_Data_Array(52)   <= Alg_Card1_26(7 downto 0);               
-               Analog_In_Data_Array(53)   <= Alg_Card1_27(15 downto 8);
-               Analog_In_Data_Array(54)   <= Alg_Card1_27(7 downto 0);
-               Analog_In_Data_Array(55)   <= Alg_Card1_28(15 downto 8);        
-               Analog_In_Data_Array(56)   <= Alg_Card1_28(7 downto 0);        
-               Analog_In_Data_Array(57)   <= Alg_Card1_29(15 downto 8);
-               Analog_In_Data_Array(58)   <= Alg_Card1_29(7 downto 0);
-               Analog_In_Data_Array(59)   <= Alg_Card1_30(15 downto 8);
-               Analog_In_Data_Array(60)   <= Alg_Card1_30(7 downto 0);
-               Analog_In_Data_Array(61)   <= Alg_Card1_31(15 downto 8);
-               Analog_In_Data_Array(62)   <= Alg_Card1_31(7 downto 0);        
-               Analog_In_Data_Array(63)   <= Alg_Card1_32(15 downto 8);
-               Analog_In_Data_Array(64)   <= Alg_Card1_32(7 downto 0);                
-               Analog_In_Data_Array(65)   <= Alg_Card1_33(15 downto 8);
-               Analog_In_Data_Array(66)   <= Alg_Card1_33(7 downto 0);
-               Analog_In_Data_Array(67)   <= Alg_Card1_34(15 downto 8);        
-               Analog_In_Data_Array(68)   <= Alg_Card1_34(7 downto 0);        
-               Analog_In_Data_Array(69)   <= Alg_Card1_35(15 downto 8);
-               Analog_In_Data_Array(70)   <= Alg_Card1_35(7 downto 0);
-               Analog_In_Data_Array(71)   <= Alg_Card1_36(15 downto 8);
-               Analog_In_Data_Array(72)   <= Alg_Card1_36(7 downto 0);
-               Analog_In_Data_Array(73)   <= Alg_Card1_37(15 downto 8);
-               Analog_In_Data_Array(74)   <= Alg_Card1_37(7 downto 0);        
-               Analog_In_Data_Array(75)   <= Alg_Card1_38(15 downto 8);
-               Analog_In_Data_Array(76)   <= Alg_Card1_38(7 downto 0);                
-               Analog_In_Data_Array(77)   <= Alg_Card1_39(15 downto 8);
-               Analog_In_Data_Array(78)   <= Alg_Card1_39(7 downto 0);
-               Analog_In_Data_Array(79)   <= Alg_Card1_40(15 downto 8);        
-               Analog_In_Data_Array(80)   <= Alg_Card1_40(7 downto 0);        
-               Analog_In_Data_Array(81)   <= Alg_Card1_41(15 downto 8);
-               Analog_In_Data_Array(82)   <= Alg_Card1_41(7 downto 0);
-               Analog_In_Data_Array(83)   <= Alg_Card1_42(15 downto 8);
-               Analog_In_Data_Array(84)   <= Alg_Card1_42(7 downto 0);
-               Analog_In_Data_Array(85)   <= Alg_Card1_43(15 downto 8);
-               Analog_In_Data_Array(86)   <= Alg_Card1_43(7 downto 0);        
-               Analog_In_Data_Array(87)   <= Alg_Card1_44(15 downto 8);
-               Analog_In_Data_Array(88)   <= Alg_Card1_44(7 downto 0);                
-               Analog_In_Data_Array(89)   <= Alg_Card1_45(15 downto 8);
-               Analog_In_Data_Array(90)   <= Alg_Card1_45(7 downto 0);
-               Analog_In_Data_Array(91)   <= Alg_Card1_46(15 downto 8);       
-               Analog_In_Data_Array(92)   <= Alg_Card1_46(7 downto 0);       
-               Analog_In_Data_Array(93)   <= Alg_Card1_47(15 downto 8);
-               Analog_In_Data_Array(94)   <= Alg_Card1_47(7 downto 0);
-               Analog_In_Data_Array(95)   <= Alg_Card1_48(15 downto 8);
-               Analog_In_Data_Array(96)   <= Alg_Card1_48(7 downto 0); 
-            end if;   
+               Analog_Input_Load <= '1';        -- Latch AI
+            end if;  
+
+            if Analog_Input_Load = '1' then
+               if analog_data_load = 50 then
+                  analog_data_load     := 0;
+                  Analog_Input_Ready   <= '1';        -- Latch AI
+               else
+                  analog_data_load := analog_data_load + 1;
+                  for i in 0 to 49 loop
+                     if i = 0 then
+                        Analog_In_Data_Array(0) <= Analog_Card_1;
+                     elsif i > 0 then
+                        --Analog_In_Data_Array(i) <= Analog_Data((15+(i * 16)) downto (0+(i * 16)));
+                        Analog_In_Data_Array(i) <= Analog_Data(i-1); 
+                     end if;  
+                  end loop;
+               end if;
+            end if;
   
    -- Main Data Ready Generator          
          if  (Digital_Output_Ready = '1') and (Digital_Input_Ready  = '1')
