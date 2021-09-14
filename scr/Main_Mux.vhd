@@ -458,7 +458,7 @@ begin
                         Analog_In_Data_Array(0) <= Analog_Card_1;
                      elsif i > 0 then
                         --Analog_In_Data_Array(i) <= Analog_Data((15+(i * 16)) downto (0+(i * 16)));
-                        Analog_In_Data_Array(i) <= Analog_Data(i-1); 
+                        Analog_In_Data_Array(i) <= Analog_Data((7+((i-1) * 8)) downto (0+((i-1) * 8))); 
                      end if;  
                   end loop;
                end if;
