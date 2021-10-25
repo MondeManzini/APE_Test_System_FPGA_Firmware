@@ -45,7 +45,12 @@ signal Version_Register_i       : STD_LOGIC_VECTOR(199 downto 0);
 signal Version_Timestamp_i      : STD_LOGIC_VECTOR(111 downto 0);       -- 20181120105439
   
 -- Firmware Module
-constant APE_Test_System_FPGA_Firmware_name_i   : STD_LOGIC_VECTOR(23 downto 0) := x"524643";  -- Endat_FirmwareC
+constant APE_Test_System_FPGA_Firmware_name_i           : STD_LOGIC_VECTOR(23 downto 0)     := x"524643";  -- Endat_FirmwareC
+signal APE_Test_System_FPGA_Firmware_Version_Name_i     : std_logic_vector(255 downto 0)    := A & P & E & Space & T & E & S & T & Space & S &
+Y & Y & S & T & E & M & Space & F &
+P & G & A & Space & F & I & R &
+M & W & A & R & E & Space & Space;
+signal APE_Test_System_FPGA_Firmware_Version_Number_i   : std_logic_vector(63 downto 0)     := Zero & Zero & Dot & Zero & Zero & Dot & Zero & Five;
 
 -- Version Major Number - Hardcoded
 signal Version_Major_High_i   : STD_LOGIC_VECTOR(7 downto 0);  -- 0x
@@ -75,12 +80,10 @@ constant Null_i                 : STD_LOGIC_VECTOR(7 downto 0) := x"00";  -- ter
 ----------------------------------------------------------------------
 -- Version Logger
 ----------------------------------------------------------------------
-signal Version_Data_Ready_i                         : std_logic;
-signal Version_Name_i                               : std_logic_vector(255 downto 0); 
-signal Version_Number_i                             : std_logic_vector(63 downto 0);
+signal Version_Data_Ready_i                             : std_logic;
+signal Version_Name_i                                   : std_logic_vector(255 downto 0); 
+signal Version_Number_i                                 : std_logic_vector(63 downto 0);
 signal APE_Test_System_FPGA_Firmware_Version_Ready_i    : std_logic;
-signal APE_Test_System_FPGA_Firmware_Version_Name_i     : std_logic_vector(255 downto 0);
-signal APE_Test_System_FPGA_Firmware_Version_Number_i   : std_logic_vector(63 downto 0);
 signal Version_APE_Test_System_FPGA_Firmware            : std_logic_vector(7 downto 0);  
 signal APE_Test_System_FPGA_Firmware_Version_Request_i  : std_logic;
 signal APE_Test_System_FPGA_Firmware_Version_Load_i     : std_logic;
@@ -98,6 +101,7 @@ component Version_Logger is
     Main_Demux_Version_Ready                      : in  std_logic; 
     Main_Mux_Version_Ready                        : in  std_logic; 
     APE_Test_System_FPGA_Firmware_Version_Ready   : in  std_logic; 
+    Real_Time_Clock_Handler_Version_Ready         : in  std_logic; 
     Main_Mux_Version_Name                         : in  std_logic_vector(255 downto 0); 
     Main_Mux_Version_Number                       : in  std_logic_vector(63 downto 0);
     Main_Demux_Version_Name                       : in  std_logic_vector(255 downto 0); 
@@ -116,6 +120,8 @@ component Version_Logger is
     Baud_Rate_Generator_Version_Number            : in  std_logic_vector(63 downto 0);
     APE_Test_System_FPGA_Firmware_Version_Name    : in  std_logic_vector(255 downto 0);
     APE_Test_System_FPGA_Firmware_Version_Number  : in  std_logic_vector(63 downto 0);
+    Real_Time_Clock_Handler_Version_Name          : in  std_logic_vector(255 downto 0);
+    Real_Time_Clock_Handler_Version_Number        : in  std_logic_vector(63 downto 0);
     Version_Data_Ready                            : out std_logic;
     Module_Number                                 : in  std_logic_vector(7 downto 0);
     Version_Name                                  : out std_logic_vector(255 downto 0);
@@ -156,10 +162,15 @@ component I2C_Driver IS
     );                   
 END component I2C_Driver;
 
+signal Real_Time_Clock_Handler_Version_Request_i   : std_logic;
+signal Real_Time_Clock_Handler_Version_Name_i      : std_logic_vector(255 downto 0);  
+signal Real_Time_Clock_Handler_Version_Number_i    : std_logic_vector(63 downto 0); 
+signal Real_Time_Clock_Handler_Version_Ready_i     : std_logic;
+
 ----------------------------------------------------------------------
 -- RTC I2C Handler Test Bench Component and Signals
 ----------------------------------------------------------------------
-component Real_Time_Clock_I2C_Handler IS
+component Real_Time_Clock_I2C_Handler is
   PORT(
 -- General Signals
   RST_I                     : in  std_logic;
@@ -202,14 +213,18 @@ component Real_Time_Clock_I2C_Handler IS
   -- Memory Port
   ----------------------------------------------------------------
   -- Outputs for Mux
-  Seconds_out_mem           : out std_logic_vector(7 downto 0);
-  Minutes_out_mem           : out std_logic_vector(7 downto 0);
-  Hours_out_mem             : out std_logic_vector(7 downto 0);
-  Day_out_mem               : out std_logic_vector(7 downto 0);
-  Date_out_mem              : out std_logic_vector(7 downto 0);
-  Month_Century_out_mem     : out std_logic_vector(7 downto 0);
-  Year_out_mem              : out std_logic_vector(7 downto 0);
-  Ready_mem                 : out std_logic
+  Seconds_out_mem                           : out std_logic_vector(7 downto 0);
+  Minutes_out_mem                           : out std_logic_vector(7 downto 0);
+  Hours_out_mem                             : out std_logic_vector(7 downto 0);
+  Day_out_mem                               : out std_logic_vector(7 downto 0);
+  Date_out_mem                              : out std_logic_vector(7 downto 0);
+  Month_Century_out_mem                     : out std_logic_vector(7 downto 0);
+  Year_out_mem                              : out std_logic_vector(7 downto 0);
+  Ready_mem                                 : out std_logic;
+  Real_Time_Clock_Handler_Version_Request   : in std_logic;
+  Real_Time_Clock_Handler_Version_Name      : out std_logic_vector(255 downto 0);  
+  Real_Time_Clock_Handler_Version_Number    : out std_logic_vector(63 downto 0); 
+  Real_Time_Clock_Handler_Version_Ready     : out std_logic
   );                   
 END component Real_Time_Clock_I2C_Handler;
 
@@ -260,7 +275,6 @@ signal Year_out_mem_i           : std_logic_vector(7 downto 0) := X"00";
 ----------------------------------------------------------------------
 -- SPI Driver ignals and Component
 ----------------------------------------------------------------------
-
 signal nCS_Output_1_i                   : std_logic;
 signal nCS_Output_2_i                   : std_logic;
 signal Int_1_i                          : std_logic;
@@ -539,57 +553,62 @@ signal Timer_mSec_Reg_1_i                 : std_logic_vector(15 downto 0);
 ----------------------------------------------------------------------
 -- Demux Signals and Component
 ----------------------------------------------------------------------
-signal Software_to_Controller_UART_RXD_i  : std_logic;
-signal Time_Stamp_Byte_3_i                : std_logic_vector(7 downto 0);
-signal Time_Stamp_Byte_2_i                : std_logic_vector(7 downto 0);
-signal Time_Stamp_Byte_1_i                : std_logic_vector(7 downto 0);
-signal Time_Stamp_Byte_0_i                : std_logic_vector(7 downto 0);
-signal Dig_MilliSecond_B1_i               : std_logic_vector(7 downto 0);
-signal Dig_MilliSecond_B0_i               : std_logic_vector(7 downto 0);
-signal Dig_Outputs_Ready_i                : std_logic;
-signal Demux_Data_Ready_i                 : std_logic;
-signal Version_Demux_i                    : std_logic_vector(7 downto 0);
-signal Main_Demux_Version_Name_i          : std_logic_vector(255 downto 0); 
-signal Main_Demux_Version_Number_i        : std_logic_vector(63 downto 0);  
-signal Main_Demux_Version_Ready_i         : std_logic; 
-signal Module_Number_i                    : std_logic_vector(7 downto 0);
+signal Software_to_Controller_UART_RXD_i            : std_logic;
+signal Time_Stamp_Byte_3_i                          : std_logic_vector(7 downto 0);
+signal Time_Stamp_Byte_2_i                          : std_logic_vector(7 downto 0);
+signal Time_Stamp_Byte_1_i                          : std_logic_vector(7 downto 0);
+signal Time_Stamp_Byte_0_i                          : std_logic_vector(7 downto 0);
+signal Dig_MilliSecond_B1_i                         : std_logic_vector(7 downto 0);
+signal Dig_MilliSecond_B0_i                         : std_logic_vector(7 downto 0);
+signal Dig_Outputs_Ready_i                          : std_logic;
+signal Demux_Data_Ready_i                           : std_logic;
+signal Version_Demux_i                              : std_logic_vector(7 downto 0);
+signal Main_Demux_Version_Name_i                    : std_logic_vector(255 downto 0); 
+signal Main_Demux_Version_Number_i                  : std_logic_vector(63 downto 0);  
+signal Main_Demux_Version_Ready_i                   : std_logic; 
+signal Module_Number_i                              : std_logic_vector(7 downto 0);
+signal Endat_Sniffer_Version_Request_i           : std_logic;
+signal Real_Time_Clock_Handler_Version_Request_i    : std_logic;
+signal Real_Time_Clock_Handler_Version_Name_i       : std_logic_vector(255 downto 0); 
 
 component Main_Demux is
   port (
-    CLK_I                               : in  std_logic;
-    RST_I                               : in  std_logic;
-    UART_RXD                            : in  std_logic;
-    Seconds_out                         : out std_logic_vector(7 downto 0); 
-    Minutes_out                         : out std_logic_vector(7 downto 0); 
-    Hours_out                           : out std_logic_vector(7 downto 0); 
-    Day_out                             : out std_logic_vector(7 downto 0); 
-    Date_out                            : out std_logic_vector(7 downto 0); 
-    Month_Century_out                   : out std_logic_vector(7 downto 0); 
-    Year_out                            : out std_logic_vector(7 downto 0); 
-    Dig_Card1_1_B0                      : out std_logic_vector(7 downto 0);
-    Dig_Card1_1_B1                      : out std_logic_vector(7 downto 0);
-    Dig_Card1_1_B2                      : out std_logic_vector(7 downto 0);
-    Dig_Card1_1_B3                      : out std_logic_vector(7 downto 0);
-    Dig_Card1_1_B4                      : out std_logic_vector(7 downto 0);
-    Dig_Card1_1_B5                      : out std_logic_vector(7 downto 0);
-    Dig_Card1_1_B6                      : out std_logic_vector(7 downto 0);
-    Dig_Card1_1_B7                      : out std_logic_vector(7 downto 0);
-    Write_RTC                           : in std_logic;
-    SET_Timer                           : out std_logic;
-    GET_Timer                           : out std_logic;
-    Dig_Outputs_Ready                   : out std_logic;
-    Module_Number                       : out std_logic_vector(7 downto 0);
-    SPI_IO_Driver_Version_Request       : out std_logic;  
-    SPI_Output_Handler_Version_Request  : out std_logic; 
-    SPI_Input_Handler_Version_Request   : out std_logic; 
-    SPI_Analog_Driver_Version_Request   : out std_logic;
-    SPI_Analog_Handler_Version_Request  : out std_logic; 
-    Main_Mux_Version_Request            : out std_logic; 
-    Baud_Rate_Generator_Version_Request : out std_logic; 
-    APE_Test_System_FPGA_Firmware_Version_Request    : out std_logic; 
-    Main_Demux_Version_Name             : out std_logic_vector(255 downto 0); 
-    Main_Demux_Version_Number           : out std_logic_vector(63 downto 0);
-    Main_Demux_Version_Ready            : out std_logic 
+    CLK_I                                           : in  std_logic;
+    RST_I                                           : in  std_logic;
+    UART_RXD                                        : in  std_logic;
+    Seconds_out                                     : out std_logic_vector(7 downto 0); 
+    Minutes_out                                     : out std_logic_vector(7 downto 0); 
+    Hours_out                                       : out std_logic_vector(7 downto 0); 
+    Day_out                                         : out std_logic_vector(7 downto 0); 
+    Date_out                                        : out std_logic_vector(7 downto 0); 
+    Month_Century_out                               : out std_logic_vector(7 downto 0); 
+    Year_out                                        : out std_logic_vector(7 downto 0); 
+    Dig_Card1_1_B0                                  : out std_logic_vector(7 downto 0);
+    Dig_Card1_1_B1                                  : out std_logic_vector(7 downto 0);
+    Dig_Card1_1_B2                                  : out std_logic_vector(7 downto 0);
+    Dig_Card1_1_B3                                  : out std_logic_vector(7 downto 0);
+    Dig_Card1_1_B4                                  : out std_logic_vector(7 downto 0);
+    Dig_Card1_1_B5                                  : out std_logic_vector(7 downto 0);
+    Dig_Card1_1_B6                                  : out std_logic_vector(7 downto 0);
+    Dig_Card1_1_B7                                  : out std_logic_vector(7 downto 0);
+    Write_RTC                                       : in std_logic;
+    SET_Timer                                       : out std_logic;
+    GET_Timer                                       : out std_logic;
+    Dig_Outputs_Ready                               : out std_logic;
+    Module_Number                                   : out std_logic_vector(7 downto 0);
+    SPI_IO_Driver_Version_Request                   : out std_logic;  
+    SPI_Output_Handler_Version_Request              : out std_logic; 
+    SPI_Input_Handler_Version_Request               : out std_logic; 
+    SPI_Analog_Driver_Version_Request               : out std_logic;
+    SPI_Analog_Handler_Version_Request              : out std_logic; 
+    Real_Time_Clock_Handler_Version_Request         : out std_logic;
+    Main_Mux_Version_Request                        : out std_logic; 
+    Baud_Rate_Generator_Version_Request             : out std_logic; 
+    APE_Test_System_FPGA_Firmware_Version_Request   : out std_logic; 
+    Endat_Sniffer_Version_Request                : out std_logic; 
+    Main_Demux_Version_Name                         : out std_logic_vector(255 downto 0); 
+    Main_Demux_Version_Number                       : out std_logic_vector(63 downto 0);
+    Main_Demux_Version_Ready                        : out std_logic 
     );
 end component Main_Demux;
 
@@ -917,107 +936,109 @@ signal digital_output_all_off      : std_logic_vector(170 downto 0):=
                                                                           
                                                                           
 signal digital_output_01_on        : std_logic_vector(170 downto 0):=                                
-                                    stop_bit & X"81" &                    -- CRC L
-                                    start_bit & stop_bit & X"30" &        -- CRC H
-                                    start_bit & stop_bit & X"00" &        -- DigOut1Byte7 
-                                    start_bit & stop_bit & X"00" &        -- DigOut1Byte6
-                                    start_bit & stop_bit & X"00" &        -- DigOut1Byte5
-                                    start_bit & stop_bit & X"00" &        -- DigOut1Byte4
-                                    start_bit & stop_bit & X"11" &        -- OutputCard2
-                                    start_bit & stop_bit & X"00" &        -- DigOut1Byte3 
-                                    start_bit & stop_bit & X"00" &        -- DigOut1Byte2
-                                    start_bit & stop_bit & X"00" &        -- DigOut1Byte1
-                                    start_bit & stop_bit & X"01" &        -- DigOut1Byte0
-                                    start_bit & stop_bit & X"10" &        -- OutputCard1
-                                    start_bit & stop_bit & X"81" &        -- Mode
-                                    start_bit & stop_bit & X"11" &        -- Length
-                                    start_bit & stop_bit & X"7e" &        -- Preamb1
-                                    start_bit & stop_bit & X"5a" &        -- Preamb2
-                                    start_bit & stop_bit & X"a5" & "01";  -- Preamb1
+    stop_bit  & X"81" &                    -- CRC L
+    start_bit & stop_bit & X"30" &        -- CRC H
+    start_bit & stop_bit & X"00" &        -- DigOut1Byte7 
+    start_bit & stop_bit & X"00" &        -- DigOut1Byte6
+    start_bit & stop_bit & X"00" &        -- DigOut1Byte5
+    start_bit & stop_bit & X"00" &        -- DigOut1Byte4
+    start_bit & stop_bit & X"11" &        -- OutputCard2
+    start_bit & stop_bit & X"00" &        -- DigOut1Byte3 
+    start_bit & stop_bit & X"00" &        -- DigOut1Byte2
+    start_bit & stop_bit & X"00" &        -- DigOut1Byte1
+    start_bit & stop_bit & X"01" &        -- DigOut1Byte0
+    start_bit & stop_bit & X"10" &        -- OutputCard1
+    start_bit & stop_bit & X"81" &        -- Mode
+    start_bit & stop_bit & X"11" &        -- Length
+    start_bit & stop_bit & X"7e" &        -- Preamb1
+    start_bit & stop_bit & X"5a" &        -- Preamb2
+    start_bit & stop_bit & X"a5" & "01";  -- Preamb1
                                                                           
 signal digital_output_off_on           : std_logic_vector(170 downto 0):=                                
-                                    stop_bit & X"6c" &                    -- CRC L
-                                    start_bit & stop_bit & X"04" &        -- CRC H
-                                    start_bit & stop_bit & X"55" &        -- DigOut1Byte7 
-                                    start_bit & stop_bit & X"55" &        -- DigOut1Byte6
-                                    start_bit & stop_bit & X"55" &        -- DigOut1Byte5
-                                    start_bit & stop_bit & X"55" &        -- DigOut1Byte4
-                                    start_bit & stop_bit & X"11" &        -- OutputCard2
-                                    start_bit & stop_bit & X"55" &        -- DigOut1Byte3 
-                                    start_bit & stop_bit & X"55" &        -- DigOut1Byte2
-                                    start_bit & stop_bit & X"55" &        -- DigOut1Byte1
-                                    start_bit & stop_bit & X"55" &        -- DigOut1Byte0
-                                    start_bit & stop_bit & X"10" &        -- OutputCard1
-                                    start_bit & stop_bit & X"81" &        -- Mode
-                                    start_bit & stop_bit & X"11" &        -- Length
-                                    start_bit & stop_bit & X"7e" &        -- Preamb1
-                                    start_bit & stop_bit & X"5a" &        -- Preamb2
-                                    start_bit & stop_bit & X"a5" & "01";  -- Preamb1
+    stop_bit  & X"6c" &                    -- CRC L
+    start_bit & stop_bit & X"04" &        -- CRC H
+    start_bit & stop_bit & X"55" &        -- DigOut1Byte7 
+    start_bit & stop_bit & X"55" &        -- DigOut1Byte6
+    start_bit & stop_bit & X"55" &        -- DigOut1Byte5
+    start_bit & stop_bit & X"55" &        -- DigOut1Byte4
+    start_bit & stop_bit & X"11" &        -- OutputCard2
+    start_bit & stop_bit & X"55" &        -- DigOut1Byte3 
+    start_bit & stop_bit & X"55" &        -- DigOut1Byte2
+    start_bit & stop_bit & X"55" &        -- DigOut1Byte1
+    start_bit & stop_bit & X"55" &        -- DigOut1Byte0
+    start_bit & stop_bit & X"10" &        -- OutputCard1
+    start_bit & stop_bit & X"81" &        -- Mode
+    start_bit & stop_bit & X"11" &        -- Length
+    start_bit & stop_bit & X"7e" &        -- Preamb1
+    start_bit & stop_bit & X"5a" &        -- Preamb2
+    start_bit & stop_bit & X"a5" & "01";  -- Preamb1
 
 signal digital_output_on_off           : std_logic_vector(170 downto 0):=                                
-                                    stop_bit & X"1f" &                    -- CRC L
-                                    start_bit & stop_bit & X"74" &        -- CRC H
-                                    start_bit & stop_bit & X"aa" &        -- DigOut1Byte7 
-                                    start_bit & stop_bit & X"aa" &        -- DigOut1Byte6
-                                    start_bit & stop_bit & X"aa" &        -- DigOut1Byte5
-                                    start_bit & stop_bit & X"aa" &        -- DigOut1Byte4
-                                    start_bit & stop_bit & X"11" &        -- OutputCard2
-                                    start_bit & stop_bit & X"aa" &        -- DigOut1Byte3 
-                                    start_bit & stop_bit & X"aa" &        -- DigOut1Byte2
-                                    start_bit & stop_bit & X"aa" &        -- DigOut1Byte1
-                                    start_bit & stop_bit & X"aa" &        -- DigOut1Byte0
-                                    start_bit & stop_bit & X"10" &        -- OutputCard1
-                                    start_bit & stop_bit & X"81" &        -- Mode
-                                    start_bit & stop_bit & X"11" &        -- Length
-                                    start_bit & stop_bit & X"7e" &        -- Preamb1
-                                    start_bit & stop_bit & X"5a" &        -- Preamb2
-                                    start_bit & stop_bit & X"a5" & "01";  -- Preamb1
+    stop_bit  & X"1f" &                    -- CRC L
+    start_bit & stop_bit & X"74" &        -- CRC H
+    start_bit & stop_bit & X"aa" &        -- DigOut1Byte7 
+    start_bit & stop_bit & X"aa" &        -- DigOut1Byte6
+    start_bit & stop_bit & X"aa" &        -- DigOut1Byte5
+    start_bit & stop_bit & X"aa" &        -- DigOut1Byte4
+    start_bit & stop_bit & X"11" &        -- OutputCard2
+    start_bit & stop_bit & X"aa" &        -- DigOut1Byte3 
+    start_bit & stop_bit & X"aa" &        -- DigOut1Byte2
+    start_bit & stop_bit & X"aa" &        -- DigOut1Byte1
+    start_bit & stop_bit & X"aa" &        -- DigOut1Byte0
+    start_bit & stop_bit & X"10" &        -- OutputCard1
+    start_bit & stop_bit & X"81" &        -- Mode
+    start_bit & stop_bit & X"11" &        -- Length
+    start_bit & stop_bit & X"7e" &        -- Preamb1
+    start_bit & stop_bit & X"5a" &        -- Preamb2
+    start_bit & stop_bit & X"a5" & "01";  -- Preamb1
 
 signal digital_output_all_on           : std_logic_vector(170 downto 0):=                                
-                                    stop_bit & X"34" &                    -- CRC L
-                                    start_bit & stop_bit & X"e2" &        -- CRC H
-                                    start_bit & stop_bit & X"11" &        -- DigOut1Byte7 
-                                    start_bit & stop_bit & X"11" &        -- DigOut1Byte6
-                                    start_bit & stop_bit & X"11" &        -- DigOut1Byte5
-                                    start_bit & stop_bit & X"11" &        -- DigOut1Byte4
-                                    start_bit & stop_bit & X"11" &        -- OutputCard2
-                                    start_bit & stop_bit & X"11" &        -- DigOut1Byte3 
-                                    start_bit & stop_bit & X"11" &        -- DigOut1Byte2
-                                    start_bit & stop_bit & X"11" &        -- DigOut1Byte1
-                                    start_bit & stop_bit & X"11" &        -- DigOut1Byte0
-                                    start_bit & stop_bit & X"10" &        -- OutputCard1
-                                    start_bit & stop_bit & X"81" &        -- Mode
-                                    start_bit & stop_bit & X"11" &        -- Length
-                                    start_bit & stop_bit & X"7e" &        -- Preamb1
-                                    start_bit & stop_bit & X"5a" &        -- Preamb2
-                                    start_bit & stop_bit & X"a5" & "01";  -- Preamb1
+    stop_bit  & X"34" &                    -- CRC L
+    start_bit & stop_bit & X"e2" &        -- CRC H
+    start_bit & stop_bit & X"11" &        -- DigOut1Byte7 
+    start_bit & stop_bit & X"11" &        -- DigOut1Byte6
+    start_bit & stop_bit & X"11" &        -- DigOut1Byte5
+    start_bit & stop_bit & X"11" &        -- DigOut1Byte4
+    start_bit & stop_bit & X"11" &        -- OutputCard2
+    start_bit & stop_bit & X"11" &        -- DigOut1Byte3 
+    start_bit & stop_bit & X"11" &        -- DigOut1Byte2
+    start_bit & stop_bit & X"11" &        -- DigOut1Byte1
+    start_bit & stop_bit & X"11" &        -- DigOut1Byte0
+    start_bit & stop_bit & X"10" &        -- OutputCard1
+    start_bit & stop_bit & X"81" &        -- Mode
+    start_bit & stop_bit & X"11" &        -- Length
+    start_bit & stop_bit & X"7e" &        -- Preamb1
+    start_bit & stop_bit & X"5a" &        -- Preamb2
+    start_bit & stop_bit & X"a5" & "01";  -- Preamb1
 
-signal write_rtc    : std_logic_vector(140 downto 0):=                                
-                                    stop_bit & X"15" &                    -- CRC L
-                                    start_bit & stop_bit & X"27" &        -- CRC H 
-                                    start_bit & stop_bit & X"15" &        -- Year - 2021
-                                    start_bit & stop_bit & X"07" &        -- Month - July
-                                    start_bit & stop_bit & X"1d" &        -- Date - 28
-                                    start_bit & stop_bit & X"04" &        -- Day - Thurs
-                                    start_bit & stop_bit & X"16" &        -- Hours - 22h
-                                    start_bit & stop_bit & X"2d" &        -- Minutes - 45 
-                                    start_bit & stop_bit & X"0D" &        -- Seconds - 14 
-                                    start_bit & stop_bit & X"80" &        -- Mode
-                                    start_bit & stop_bit & X"23" &        -- Length
-                                    start_bit & stop_bit & X"7E" &        -- Preamb1
-                                    start_bit & stop_bit & X"5A" &        -- Preamb2
-                                    start_bit & stop_bit & X"A5" & "01";  -- Preamb1
-
-
-signal read_rtc : std_logic_vector(50 downto 0):=                                
-    stop_bit  &            X"80" &        -- Mode
+signal write_rtc : std_logic_vector(140 downto 0):=                                
+    stop_bit  & X"15" &                    -- CRC L
+    start_bit & stop_bit & X"27" &        -- CRC H 
+    start_bit & stop_bit & X"15" &        -- Year - 2021
+    start_bit & stop_bit & X"07" &        -- Month - July
+    start_bit & stop_bit & X"1d" &        -- Date - 28
+    start_bit & stop_bit & X"04" &        -- Day - Thurs
+    start_bit & stop_bit & X"16" &        -- Hours - 22h
+    start_bit & stop_bit & X"2d" &        -- Minutes - 45 
+    start_bit & stop_bit & X"0D" &        -- Seconds - 14 
+    start_bit & stop_bit & X"80" &        -- Mode
     start_bit & stop_bit & X"23" &        -- Length
     start_bit & stop_bit & X"7E" &        -- Preamb1
     start_bit & stop_bit & X"5A" &        -- Preamb2
     start_bit & stop_bit & X"A5" & "01";  -- Preamb1
 
+
+signal read_rtc : std_logic_vector(70 downto 0):=
+    stop_bit  &            X"52" &        -- CRC L
+    start_bit & stop_bit & X"35" &        -- CRC H
+    start_bit & stop_bit & X"82" &        -- Mode
+    start_bit & stop_bit & X"07" &        -- Length
+    start_bit & stop_bit & X"7e" &        -- Preamb1
+    start_bit & stop_bit & X"5a" &        -- Preamb2
+    start_bit & stop_bit & X"a5" & "01";  -- Preamb1 
+
 -- Generate Version Data  
-signal set_version_data        : std_logic_vector(80 downto 0):=
+signal set_version_data : std_logic_vector(80 downto 0):=
     stop_bit  &            X"ce" &        -- CRC L
     start_bit & stop_bit & X"c0" &        -- CRC H
     start_bit & stop_bit & X"09" &        -- Module
@@ -1114,6 +1135,7 @@ port map (
   SPI_Analog_Handler_Version_Ready_1            => SPI_Analog_Handler_Version_Ready_i,
   APE_Test_System_FPGA_Firmware_Version_Ready   => APE_Test_System_FPGA_Firmware_Version_Ready_i,
   Version_Data_Ready                            => Version_Data_Ready_i,
+  Real_Time_Clock_Handler_Version_Ready         => Real_Time_Clock_Handler_Version_Ready_i,
   Main_Demux_Version_Name                       => Main_Demux_Version_Name_i, 
   Main_Demux_Version_Number                     => Main_Demux_Version_Number_i,
   Main_Demux_Version_Ready                      => Main_Demux_Version_Ready_i, 
@@ -1135,6 +1157,8 @@ port map (
   Baud_Rate_Generator_Version_Ready             => Baud_Rate_Generator_Version_Ready_1_i,  
   APE_Test_System_FPGA_Firmware_Version_Name    => APE_Test_System_FPGA_Firmware_Version_Name_i,
   APE_Test_System_FPGA_Firmware_Version_Number  => APE_Test_System_FPGA_Firmware_Version_Number_i,
+  Real_Time_Clock_Handler_Version_Name          => Real_Time_Clock_Handler_Version_Name_i, 
+  Real_Time_Clock_Handler_Version_Number        => Real_Time_Clock_Handler_Version_Number_i,
   Module_Number                                 => Module_Number_i,
   Version_Name                                  => Version_Name_i,
   Version_Number                                => Version_Number_i
@@ -1182,42 +1206,46 @@ Real_Time_Clock_I2C_Driver_1: entity work.I2C_Driver
 -------------------------------------------------------------------------------
 Real_Time_Clock_Handler_1: entity work.Real_Time_Clock_I2C_Handler
     PORT map (
-      CLK_I                       => CLK_I_i,     
-      RST_I                       => RST_I_i,    
-      Busy                        => I2C_Busy_i,     
-      data_read                   => Data_RD_i,   
-      ack_error                   => Ack_Error_i, 
-      initialation_Status         => initialation_Status_i,
-      Enable                      => Enable_i,    
-      Slave_Address_Out           => Address_i,   
-      Slave_read_nWrite           => RnW_i,       
-      Slave_Data_Out              => Data_WR_i,   
-      Get_Sample                  => Get_RTC_i,
-      PPS_in                      => PPS_in_i,
-      Seconds_in                  => Seconds_in_i,          
-      Minutes_in                  => Minutes_in_i,           
-      Hours_in                    => Hours_in_i,           
-      Day_in                      => Day_in_i,           
-      Date_in                     => Date_in_i, 
-      Month_Century_in            => Month_Century_in_i,   
-      Year_in                     => Year_in_i, 
-      Write_RTC                   => SET_Timer_i,           -- Write new RTC
-      Seconds_out                 => Seconds_out_i,          
-      Minutes_out                 => Minutes_out_i,           
-      Hours_out                   => Hours_out_i,           
-      Day_out                     => Day_out_i,           
-      Date_out                    => Date_out_i,
-      Month_Century_out           => Month_Century_out_i,    
-      Year_out                    => Year_out_i,   
-      Ready                       => RTC_Valid_i,
-      Seconds_out_mem             => Seconds_out_mem_i,
-      Minutes_out_mem             => Minutes_out_mem_i,
-      Hours_out_mem               => Hours_out_mem_i,
-      Day_out_mem                 => Day_out_mem_i,
-      Date_out_mem                => Date_out_mem_i,
-      Month_Century_out_mem       => Month_Century_out_mem_i,
-      Year_out_mem                => Year_out_mem_i,
-      Ready_mem                   => Ready_mem_i  
+      CLK_I                                     => CLK_I_i,     
+      RST_I                                     => RST_I_i,    
+      Busy                                      => I2C_Busy_i,     
+      data_read                                 => Data_RD_i,   
+      ack_error                                 => Ack_Error_i, 
+      initialation_Status                       => initialation_Status_i,
+      Enable                                    => Enable_i,    
+      Slave_Address_Out                         => Address_i,   
+      Slave_read_nWrite                         => RnW_i,       
+      Slave_Data_Out                            => Data_WR_i,   
+      Get_Sample                                => Get_RTC_i,
+      PPS_in                                    => PPS_in_i,
+      Seconds_in                                => Seconds_in_i,          
+      Minutes_in                                => Minutes_in_i,           
+      Hours_in                                  => Hours_in_i,           
+      Day_in                                    => Day_in_i,           
+      Date_in                                   => Date_in_i, 
+      Month_Century_in                          => Month_Century_in_i,   
+      Year_in                                   => Year_in_i, 
+      Write_RTC                                 => SET_Timer_i,           -- Write new RTC
+      Seconds_out                               => Seconds_out_i,          
+      Minutes_out                               => Minutes_out_i,           
+      Hours_out                                 => Hours_out_i,           
+      Day_out                                   => Day_out_i,           
+      Date_out                                  => Date_out_i,
+      Month_Century_out                         => Month_Century_out_i,    
+      Year_out                                  => Year_out_i,   
+      Ready                                     => RTC_Valid_i,
+      Seconds_out_mem                           => Seconds_out_mem_i,
+      Minutes_out_mem                           => Minutes_out_mem_i,
+      Hours_out_mem                             => Hours_out_mem_i,
+      Day_out_mem                               => Day_out_mem_i,
+      Date_out_mem                              => Date_out_mem_i,
+      Month_Century_out_mem                     => Month_Century_out_mem_i,
+      Year_out_mem                              => Year_out_mem_i,
+      Ready_mem                                 => Ready_mem_i,
+      Real_Time_Clock_Handler_Version_Request   => Real_Time_Clock_Handler_Version_Request_i, 
+      Real_Time_Clock_Handler_Version_Name      => Real_Time_Clock_Handler_Version_Name_i, 
+      Real_Time_Clock_Handler_Version_Number    => Real_Time_Clock_Handler_Version_Number_i,
+      Real_Time_Clock_Handler_Version_Ready     => Real_Time_Clock_Handler_Version_Ready_i 
       );  
 
 -------------------------------------------------------------------------------                      
@@ -1424,9 +1452,11 @@ port map (
   SPI_Input_Handler_Version_Request             => SPI_Input_Handler_Version_Request_i,
   SPI_Analog_Driver_Version_Request             => SPI_Analog_Driver_Version_Request_i,
   SPI_Analog_Handler_Version_Request            => SPI_Analog_Handler_Version_Request_i,
+  Real_Time_Clock_Handler_Version_Request       => Real_Time_Clock_Handler_Version_Request_i,
   Main_Mux_Version_Request                      => Main_Mux_Version_Request_i, 
   Baud_Rate_Generator_Version_Request           => Baud_Rate_Generator_Version_Request_i,
   APE_Test_System_FPGA_Firmware_Version_Request => APE_Test_System_FPGA_Firmware_Version_Request_i,  
+  Endat_Sniffer_Version_Request              => Endat_Sniffer_Version_Request_i,   
   Module_Number                                 => Module_Number_i,
   Main_Demux_Version_Name                       => Main_Demux_Version_Name_i, 
   Main_Demux_Version_Number                     => Main_Demux_Version_Number_i,
@@ -1511,17 +1541,16 @@ port map (
 -------------------------------------------------------------------------------     
 APE_Test_System_FPGA_Firmware_Baud_1: entity work.Baud_Rate_Generator
 port map (
-  Clk                                 => CLK_I_i,
-  RST_I                               => RST_I_i,
-  baud_rate                           => 5,
-  Baud_Rate_Enable                    => Mux_Baud_Rate_Enable_i,
-  Module_Number                       => Module_Number_i,
-  Baud_Rate_Generator_Version_Request => Baud_Rate_Generator_Version_Request_i,
-  Baud_Rate_Generator_Version_Name    => Baud_Rate_Generator_Version_Name_1_i,
-  Baud_Rate_Generator_Version_Number  => Baud_Rate_Generator_Version_Number_1_i,
-  Baud_Rate_Generator_Version_Ready   => Baud_Rate_Generator_Version_Ready_1_i  
+    Clk                                 => CLK_I_i,
+    RST_I                               => RST_I_i,
+    baud_rate                           => 5,
+    Baud_Rate_Enable                    => Mux_Baud_Rate_Enable_i,
+    Module_Number                       => Module_Number_i,
+    Baud_Rate_Generator_Version_Request => Baud_Rate_Generator_Version_Request_i,
+    Baud_Rate_Generator_Version_Name    => Baud_Rate_Generator_Version_Name_1_i,
+    Baud_Rate_Generator_Version_Number  => Baud_Rate_Generator_Version_Number_1_i,
+    Baud_Rate_Generator_Version_Ready   => Baud_Rate_Generator_Version_Ready_1_i  
   );
-
             
  bit_time <= bit_time_19200 when Baudrate = 19200 else bit_time_4800 when Baudrate = 4800 else
             bit_time_9600 when Baudrate = 9600 else bit_time_57600 when Baudrate = 57600 else
@@ -1549,9 +1578,12 @@ port map (
            '0' after 12.21 ms, '1' after 12.698 ms, '1' after 12.865 ms, '1' after 13.549 ms, '1' after 14.03 ms,
            '1' after 14.513 ms, '1' after 15 ms;
  
- DOUT    <= '0', '1' after 20.7 ms, '0' after 21 ms, '1' after 21.062 ms, '0' after 21.698 ms, '1' after 22 ms,
-            '0' after 22.21 ms, '1' after 22.698 ms, '1' after 22.865 ms, '1' after 23.549 ms, '1' after 24.03 ms,
-            '1' after 24.513 ms, '1' after 25 ms;
+--DOUT    <= '0', '1' after 20.7 ms, '0' after 21 ms, '1' after 21.062 ms, '0' after 21.698 ms, '1' after 22 ms,
+--            '0' after 22.21 ms, '1' after 22.698 ms, '1' after 22.865 ms, '1' after 23.549 ms, '1' after 24.03 ms,
+--            '1' after 24.513 ms, '1' after 25 ms;
+
+DOUT    <= '0', '1' after 13.73427 ms, '0' after 13.73430 ms, '1' after 13.73432 ms, '0' after 13.73433 ms, '1' after 13.73434 ms,
+            '0' after 13.73435 ms, '1' after 13.7346 ms, '0' after 13.74 ms, '1' after 13.75 ms;
 
  DOUT2    <= '0', '1' after 13.12000 ms, '0' after 13.12500 ms, '1' after 13.13000 ms, '0' after 13.13539 ms, '1' after 13.13752 ms,
              '0' after 13.14132 ms, '1' after 13.15490 ms, '1' after 13.16000 ms, '1' after 13.17490 ms, '1' after 13.18122 ms,
@@ -1637,6 +1669,8 @@ begin
         PPS_In_i                    <= '0';
         I2C_Test_State              <= Wait_Start;
         data2store                  <= (others => (others => '0'));
+        endat_clk_i                 <= '1';
+        endat_data_i                <= '0';
     elsif (CLK_I_i'event and CLK_I_i = '1') then
 
         ----------------------------------
@@ -2534,7 +2568,7 @@ end process;
  
 get_ser_port_data_digital_output: process
 begin
-    Software_to_Controller_UART_RXD_i <= '0';
+    Software_to_Controller_UART_RXD_i <= '1';
     wait for 6 ms;
     -- Write RTC 
     for i in 0 to 140 loop             
@@ -2544,7 +2578,7 @@ begin
     wait for 3 ms;
 
     -- Read RTC 
-    for i in 0 to 50 loop             
+    for i in 0 to 70 loop             
         Software_to_Controller_UART_RXD_i  <= read_rtc(i);
         wait for bit_time_115200;
     end loop;  -- i

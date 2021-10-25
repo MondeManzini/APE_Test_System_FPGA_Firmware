@@ -16,9 +16,12 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use ieee.std_logic_unsigned.all;
+use std.textio.all;
+use work.txt_util.all;
+use work.Version_Ascii.all;
 
 entity APE_Test_System_FPGA_Firmware is
-
   port (
 
 --------------------------Clock Input  ---------------------------------
@@ -200,6 +203,26 @@ signal Version_Register_i       : STD_LOGIC_VECTOR(199 downto 0);
 signal Module_Number_i          : std_logic_vector(7 downto 0);
 signal APE_Test_System_FPGA_Firmware_Version_Request_i : std_logic;
 
+-- Firmware Module
+signal APE_Test_System_FPGA_Firmware_Version_Name_i     : std_logic_vector(255 downto 0)    :=  A & P & E & Space & T & E & S & T & Space & S &
+                                                                                                Y & S & T & E & M & Space & Space & F & P & G & A & 
+                                                                                                Space & F & I & R & M & W & A & R & E & Space & Space;
+signal APE_Test_System_FPGA_Firmware_Version_Number_i   : std_logic_vector(63 downto 0)     := Zero & Zero & Dot & Zero & Zero & Dot & Zero & Five;
+
+-- Version Verification Signals and Component
+component Version_RX_UASRT is
+  generic(
+    version_verify_log_file   : string   --:= "Firmware Version Verification File.txt"
+    );
+  port (
+      Clk                : in  std_logic;
+      nrst               : in  std_logic;
+      UART_RXD           : in std_logic;
+      Version_Data       : in STD_LOGIC_VECTOR(199 downto 0);
+      Version_Data_Ready : in std_logic 
+  );
+end component Version_RX_UASRT; 
+
 ----------------------------------------------------------------------
 -- Version Logger
 ----------------------------------------------------------------------
@@ -207,8 +230,6 @@ signal Version_Data_Ready_i                         : std_logic;
 signal Version_Name_i                               : std_logic_vector(255 downto 0); 
 signal Version_Number_i                             : std_logic_vector(63 downto 0);
 signal APE_Test_System_FPGA_Firmware_Version_Ready_i    : std_logic;
-signal APE_Test_System_FPGA_Firmware_Version_Name_i     : std_logic_vector(255 downto 0);
-signal APE_Test_System_FPGA_Firmware_Version_Number_i   : std_logic_vector(63 downto 0);
 signal APE_Test_System_FPGA_Firmware_Version_Load_i     : std_logic;
 
 component Version_Logger is
@@ -223,7 +244,8 @@ component Version_Logger is
     SPI_Analog_Handler_Version_Ready_1            : in  std_logic;
     Main_Demux_Version_Ready                      : in  std_logic; 
     Main_Mux_Version_Ready                        : in  std_logic; 
-    APE_Test_System_FPGA_Firmware_Version_Ready       : in  std_logic; 
+    APE_Test_System_FPGA_Firmware_Version_Ready   : in  std_logic; 
+    Real_Time_Clock_Handler_Version_Ready         : in  std_logic; 
     Main_Mux_Version_Name                         : in  std_logic_vector(255 downto 0); 
     Main_Mux_Version_Number                       : in  std_logic_vector(63 downto 0);
     Main_Demux_Version_Name                       : in  std_logic_vector(255 downto 0); 
@@ -240,8 +262,10 @@ component Version_Logger is
     SPI_Analog_Handler_Version_Number             : in  std_logic_vector(63 downto 0);
     Baud_Rate_Generator_Version_Name              : in  std_logic_vector(255 downto 0);
     Baud_Rate_Generator_Version_Number            : in  std_logic_vector(63 downto 0);
-    APE_Test_System_FPGA_Firmware_Version_Name        : in  std_logic_vector(255 downto 0);
-    APE_Test_System_FPGA_Firmware_Version_Number      : in  std_logic_vector(63 downto 0);
+    APE_Test_System_FPGA_Firmware_Version_Name    : in  std_logic_vector(255 downto 0);
+    APE_Test_System_FPGA_Firmware_Version_Number  : in  std_logic_vector(63 downto 0);
+    Real_Time_Clock_Handler_Version_Name          : in  std_logic_vector(255 downto 0);
+    Real_Time_Clock_Handler_Version_Number        : in  std_logic_vector(63 downto 0);
     Version_Data_Ready                            : out std_logic;
     Module_Number                                 : in  std_logic_vector(7 downto 0);
     Version_Name                                  : out std_logic_vector(255 downto 0);
@@ -261,7 +285,6 @@ component Version_Reg is
         Version_Timestamp  : out STD_LOGIC_VECTOR(111 downto 0)
     );
 end component Version_Reg; 
-
 
 ----------------------------------------------------------------------
 -- RTC I2C Driver Component and Signals
@@ -285,6 +308,10 @@ component I2C_Driver IS
     );                   
 END component I2C_Driver;
 
+signal Real_Time_Clock_Handler_Version_Request_i   : std_logic;
+signal Real_Time_Clock_Handler_Version_Name_i      : std_logic_vector(255 downto 0);  
+signal Real_Time_Clock_Handler_Version_Number_i    : std_logic_vector(63 downto 0); 
+signal Real_Time_Clock_Handler_Version_Ready_i     : std_logic;
 
 ----------------------------------------------------------------------
 -- RTC I2C Handler Test Bench Component and Signals
@@ -317,6 +344,8 @@ component Real_Time_Clock_I2C_Handler IS
   Date_in              : in std_logic_vector(7 downto 0); 
   Month_Century_in     : in std_logic_vector(7 downto 0); 
   Year_in              : in std_logic_vector(7 downto 0); 
+  Write_RTC            : in std_logic;
+
   -- Outputs for Mux
   Seconds_out          : out std_logic_vector(7 downto 0); 
   Minutes_out          : out std_logic_vector(7 downto 0); 
@@ -325,7 +354,23 @@ component Real_Time_Clock_I2C_Handler IS
   Date_out             : out std_logic_vector(7 downto 0); 
   Month_Century_out    : out std_logic_vector(7 downto 0); 
   Year_out             : out std_logic_vector(7 downto 0); 
-  Ready                : out std_logic
+  Ready                : out std_logic;
+  ----------------------------------------------------------------
+  -- Memory Port
+  ----------------------------------------------------------------
+  -- Outputs for Mux
+  Seconds_out_mem                           : out std_logic_vector(7 downto 0);
+  Minutes_out_mem                           : out std_logic_vector(7 downto 0);
+  Hours_out_mem                             : out std_logic_vector(7 downto 0);
+  Day_out_mem                               : out std_logic_vector(7 downto 0);
+  Date_out_mem                              : out std_logic_vector(7 downto 0);
+  Month_Century_out_mem                     : out std_logic_vector(7 downto 0);
+  Year_out_mem                              : out std_logic_vector(7 downto 0);
+  Ready_mem                                 : out std_logic;
+  Real_Time_Clock_Handler_Version_Request   : in std_logic;
+  Real_Time_Clock_Handler_Version_Name      : out std_logic_vector(255 downto 0);  
+  Real_Time_Clock_Handler_Version_Number    : out std_logic_vector(63 downto 0); 
+  Real_Time_Clock_Handler_Version_Ready     : out std_logic
   );                   
 END component Real_Time_Clock_I2C_Handler;
 
@@ -364,6 +409,15 @@ signal lockout_i                : std_logic;
 signal initialation_Status_i    : std_logic;
 signal Real_Time_Clock_Ready_i  : std_logic;
 signal One_mSEC_Pulse_i         : std_logic;
+signal Write_RTC_i              : std_logic;
+signal Seconds_out_mem_i        : std_logic_vector(7 downto 0) := X"00";         
+signal Minutes_out_mem_i        : std_logic_vector(7 downto 0) := X"00";     
+signal Hours_out_mem_i          : std_logic_vector(7 downto 0) := X"00";
+signal Day_out_mem_i            : std_logic_vector(7 downto 0) := X"00";         
+signal Date_out_mem_i           : std_logic_vector(7 downto 0) := X"00";     
+signal Month_Century_out_mem_i  : std_logic_vector(7 downto 0) := X"00";
+signal Year_out_mem_i           : std_logic_vector(7 downto 0) := X"00";
+
 ----------------------------------------------------------------------
 -- SPI Driver ignals and Component
 ----------------------------------------------------------------------
@@ -599,181 +653,34 @@ component SPI_Analog_Driver is
 -- Analog In Handler Signals and Component
 ----------------------------------------------------------------------
 signal Data_Ready_i                           : std_logic;
-signal CH1_o_i                                : std_logic_vector(15 downto 0);
-signal CH2_o_i                                : std_logic_vector(15 downto 0);
-signal CH3_o_i                                : std_logic_vector(15 downto 0);
-signal CH4_o_i                                : std_logic_vector(15 downto 0);
-signal CH5_o_i                                : std_logic_vector(15 downto 0);
-signal CH6_o_i                                : std_logic_vector(15 downto 0);
-signal CH7_o_i                                : std_logic_vector(15 downto 0);
-signal CH8_o_i                                : std_logic_vector(15 downto 0);
-signal CH9_o_i                                : std_logic_vector(15 downto 0);
-signal CH10_o_i                               : std_logic_vector(15 downto 0);
-signal CH11_o_i                               : std_logic_vector(15 downto 0);
-signal CH12_o_i                               : std_logic_vector(15 downto 0);
-signal CH13_o_i                               : std_logic_vector(15 downto 0);
-signal CH14_o_i                               : std_logic_vector(15 downto 0);
-signal CH15_o_i                               : std_logic_vector(15 downto 0);
-signal CH16_o_i                               : std_logic_vector(15 downto 0);
-signal CH17_o_i                               : std_logic_vector(15 downto 0);
-signal CH18_o_i                               : std_logic_vector(15 downto 0);
-signal CH19_o_i                               : std_logic_vector(15 downto 0);
-signal CH20_o_i                               : std_logic_vector(15 downto 0);
-signal CH21_o_i                               : std_logic_vector(15 downto 0);
-signal CH22_o_i                               : std_logic_vector(15 downto 0);
-signal CH23_o_i                               : std_logic_vector(15 downto 0);
-signal CH24_o_i                               : std_logic_vector(15 downto 0);
-signal CH25_o_i                               : std_logic_vector(15 downto 0);
-signal CH26_o_i                               : std_logic_vector(15 downto 0);
-signal CH27_o_i                               : std_logic_vector(15 downto 0);
-signal CH28_o_i                               : std_logic_vector(15 downto 0);
-signal CH29_o_i                               : std_logic_vector(15 downto 0);
-signal CH30_o_i                               : std_logic_vector(15 downto 0);
-signal CH31_o_i                               : std_logic_vector(15 downto 0);
-signal CH32_o_i                               : std_logic_vector(15 downto 0);
-signal CH33_o_i                               : std_logic_vector(15 downto 0);
-signal CH34_o_i                               : std_logic_vector(15 downto 0);
-signal CH35_o_i                               : std_logic_vector(15 downto 0);
-signal CH36_o_i                               : std_logic_vector(15 downto 0);
-signal CH37_o_i                               : std_logic_vector(15 downto 0);
-signal CH38_o_i                               : std_logic_vector(15 downto 0);
-signal CH39_o_i                               : std_logic_vector(15 downto 0);
-signal CH40_o_i                               : std_logic_vector(15 downto 0);
-signal CH41_o_i                               : std_logic_vector(15 downto 0);
-signal CH42_o_i                               : std_logic_vector(15 downto 0);
-signal CH43_o_i                               : std_logic_vector(15 downto 0);
-signal CH44_o_i                               : std_logic_vector(15 downto 0);
-signal CH45_o_i                               : std_logic_vector(15 downto 0);
-signal CH46_o_i                               : std_logic_vector(15 downto 0);
-signal CH47_o_i                               : std_logic_vector(15 downto 0);
-signal CH48_o_i                               : std_logic_vector(15 downto 0);
-signal CH1_2_o_i                              : std_logic_vector(15 downto 0);
-signal CH2_2_o_i                              : std_logic_vector(15 downto 0);
-signal CH3_2_o_i                              : std_logic_vector(15 downto 0);
-signal CH4_2_o_i                              : std_logic_vector(15 downto 0);
-signal CH5_2_o_i                              : std_logic_vector(15 downto 0);
-signal CH6_2_o_i                              : std_logic_vector(15 downto 0);
-signal CH7_2_o_i                              : std_logic_vector(15 downto 0);
-signal CH8_2_o_i                              : std_logic_vector(15 downto 0);
-signal CH9_2_o_i                              : std_logic_vector(15 downto 0);
-signal CH10_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH11_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH12_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH13_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH14_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH15_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH16_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH17_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH18_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH19_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH20_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH21_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH22_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH23_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH24_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH25_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH26_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH27_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH28_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH29_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH30_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH31_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH32_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH33_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH34_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH35_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH36_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH37_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH38_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH39_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH40_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH41_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH42_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH43_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH44_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH45_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH46_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH47_2_o_i                             : std_logic_vector(15 downto 0);
-signal CH48_2_o_i                             : std_logic_vector(15 downto 0);
+signal Analog_Data_i                          : std_logic_vector(767 downto 0);
+signal Chip_Select_i                          : std_logic_vector(3 downto 0);
 signal Version_Analog_Handler_1_i             : std_logic_vector(7 downto 0);
 signal Version_Analog_Handler_2_i             : std_logic_vector(7 downto 0);
 signal SPI_Analog_Handler_Version_Request_i   : std_logic;
-signal SPI_Analog_Handler_Version_Name_1_i    : std_logic_vector(255 downto 0); 
-signal SPI_Analog_Handler_Version_Number_1_i  : std_logic_vector(63 downto 0);
-signal SPI_Analog_Handler_Version_Ready_1_i   : std_logic;
-signal SPI_Analog_Handler_Version_Name_2_i    : std_logic_vector(255 downto 0); 
-signal SPI_Analog_Handler_Version_Number_2_i  : std_logic_vector(63 downto 0);
-signal SPI_Analog_Handler_Version_Ready_2_i   : std_logic;
+signal SPI_Analog_Handler_Version_Name_i    : std_logic_vector(255 downto 0); 
+signal SPI_Analog_Handler_Version_Number_i  : std_logic_vector(63 downto 0);
+signal SPI_Analog_Handler_Version_Ready_i   : std_logic;
 
 component SPI_Analog_Handler is
-    port (
-      RST_I                              : in  std_logic;
-      CLK_I                              : in  std_logic;
-      Address_out                        : out std_logic_vector(2 downto 0);
-      convert                            : out std_logic;
-      CS1                                : out std_logic;
-      CS2                                : out std_logic;
-      CS3                                : out std_logic;
-      CS4                                : out std_logic;
-      AD_data_in                         : in  std_logic_vector(15 downto 0);
-      Data_valid                         : in  std_logic;
-      CH1_o                              : out std_logic_vector(15 downto 0);
-      CH2_o                              : out std_logic_vector(15 downto 0);
-      CH3_o                              : out std_logic_vector(15 downto 0);
-      CH4_o                              : out std_logic_vector(15 downto 0);
-      CH5_o                              : out std_logic_vector(15 downto 0);
-      CH6_o                              : out std_logic_vector(15 downto 0);
-      CH7_o                              : out std_logic_vector(15 downto 0);
-      CH8_o                              : out std_logic_vector(15 downto 0);
-      CH9_o                              : out std_logic_vector(15 downto 0);
-      CH10_o                             : out std_logic_vector(15 downto 0);
-      CH11_o                             : out std_logic_vector(15 downto 0);
-      CH12_o                             : out std_logic_vector(15 downto 0);
-      CH13_o                             : out std_logic_vector(15 downto 0);
-      CH14_o                             : out std_logic_vector(15 downto 0);
-      CH15_o                             : out std_logic_vector(15 downto 0);
-      CH16_o                             : out std_logic_vector(15 downto 0);
-      CH17_o                             : out std_logic_vector(15 downto 0);
-      CH18_o                             : out std_logic_vector(15 downto 0);
-      CH19_o                             : out std_logic_vector(15 downto 0);
-      CH20_o                             : out std_logic_vector(15 downto 0);
-      CH21_o                             : out std_logic_vector(15 downto 0);
-      CH22_o                             : out std_logic_vector(15 downto 0);
-      CH23_o                             : out std_logic_vector(15 downto 0);
-      CH24_o                             : out std_logic_vector(15 downto 0);
-      CH25_o                             : out std_logic_vector(15 downto 0);
-      CH26_o                             : out std_logic_vector(15 downto 0);
-      CH27_o                             : out std_logic_vector(15 downto 0);
-      CH28_o                             : out std_logic_vector(15 downto 0);
-      CH29_o                             : out std_logic_vector(15 downto 0);
-      CH30_o                             : out std_logic_vector(15 downto 0);
-      CH31_o                             : out std_logic_vector(15 downto 0);
-      CH32_o                             : out std_logic_vector(15 downto 0);
-      CH33_o                             : out std_logic_vector(15 downto 0);
-      CH34_o                             : out std_logic_vector(15 downto 0);
-      CH35_o                             : out std_logic_vector(15 downto 0);
-      CH36_o                             : out std_logic_vector(15 downto 0);
-      CH37_o                             : out std_logic_vector(15 downto 0);
-      CH38_o                             : out std_logic_vector(15 downto 0);
-      CH39_o                             : out std_logic_vector(15 downto 0);
-      CH40_o                             : out std_logic_vector(15 downto 0);
-      CH41_o                             : out std_logic_vector(15 downto 0);
-      CH42_o                             : out std_logic_vector(15 downto 0);
-      CH43_o                             : out std_logic_vector(15 downto 0);
-      CH44_o                             : out std_logic_vector(15 downto 0);
-      CH45_o                             : out std_logic_vector(15 downto 0);
-      CH46_o                             : out std_logic_vector(15 downto 0);
-      CH47_o                             : out std_logic_vector(15 downto 0);
-      CH48_o                             : out std_logic_vector(15 downto 0);
-      Data_Ready                         : out std_logic;
-      Ana_In_Request                     : in  std_logic;
-      Module_Number                      : in  std_logic_vector(7 downto 0);
-      SPI_Analog_Handler_Version_Request : in  std_logic;
-      SPI_Analog_Handler_Version_Name    : out std_logic_vector(255 downto 0); 
-      SPI_Analog_Handler_Version_Number  : out std_logic_vector(63 downto 0);
-      SPI_Analog_Handler_Version_Ready   : out std_logic 
-      );
-  end component SPI_Analog_Handler;
+  port (
+    RST_I                              : in  std_logic;
+    CLK_I                              : in  std_logic;
+    Address_out                        : out std_logic_vector(2 downto 0);
+    convert                            : out std_logic;
+    AD_data_in                         : in  std_logic_vector(15 downto 0);
+    Data_valid                         : in  std_logic;
+    Analog_Data                        : out std_logic_vector(767 downto 0);
+    Chip_Select                        : out std_logic_vector(3 downto 0); 
+    Data_Ready                         : out std_logic;
+    Ana_In_Request                     : in  std_logic;
+    Module_Number                      : in  std_logic_vector(7 downto 0);
+    SPI_Analog_Handler_Version_Request : in  std_logic;
+    SPI_Analog_Handler_Version_Name    : out std_logic_vector(255 downto 0); 
+    SPI_Analog_Handler_Version_Number  : out std_logic_vector(63 downto 0);
+    SPI_Analog_Handler_Version_Ready   : out std_logic 
+    );
+end component SPI_Analog_Handler;
 
 ----------------------------------------------------------------------
 -- Demux Signals and Component
@@ -791,37 +698,47 @@ signal Version_Demux_i                    : std_logic_vector(7 downto 0);
 signal Main_Demux_Version_Name_i          : std_logic_vector(255 downto 0); 
 signal Main_Demux_Version_Number_i        : std_logic_vector(63 downto 0);  
 signal Main_Demux_Version_Ready_i         : std_logic; 
+signal Endat_Sniffer_Version_Request_i : std_logic;
 
 component Main_Demux is
   port (
-    CLK_I                               : in  std_logic;
-    RST_I                               : in  std_logic;
-    UART_RXD                            : in  std_logic;
-    Timer_Sec_Reg                       : out std_logic_vector(31 downto 0);
-    Timer_mSec_Reg                      : out std_logic_vector(15 downto 0);
-    Dig_Card1_1_B0                      : out std_logic_vector(7 downto 0);
-    Dig_Card1_1_B1                      : out std_logic_vector(7 downto 0);
-    Dig_Card1_1_B2                      : out std_logic_vector(7 downto 0);
-    Dig_Card1_1_B3                      : out std_logic_vector(7 downto 0);
-    Dig_Card1_1_B4                      : out std_logic_vector(7 downto 0);
-    Dig_Card1_1_B5                      : out std_logic_vector(7 downto 0);
-    Dig_Card1_1_B6                      : out std_logic_vector(7 downto 0);
-    Dig_Card1_1_B7                      : out std_logic_vector(7 downto 0);
-    SET_Timer                           : out std_logic;
-    Dig_Outputs_Ready                   : out std_logic;
-    Module_Number                       : out std_logic_vector(7 downto 0);
-    SPI_IO_Driver_Version_Request       : out std_logic;  
-    SPI_Output_Handler_Version_Request  : out std_logic; 
-    SPI_Input_Handler_Version_Request   : out std_logic; 
-    SPI_Analog_Driver_Version_Request   : out std_logic;
-    SPI_Analog_Handler_Version_Request  : out std_logic; 
-    Timer_Controller_Version_Request    : out std_logic;
-    Main_Mux_Version_Request            : out std_logic; 
-    Baud_Rate_Generator_Version_Request : out std_logic; 
-    Endat_Controller_Version_Request    : out std_logic; 
-    Main_Demux_Version_Name             : out std_logic_vector(255 downto 0); 
-    Main_Demux_Version_Number           : out std_logic_vector(63 downto 0);
-    Main_Demux_Version_Ready            : out std_logic 
+    CLK_I                                         : in  std_logic;
+    RST_I                                         : in  std_logic;
+    UART_RXD                                      : in  std_logic;
+    Seconds_out                                   : out std_logic_vector(7 downto 0); 
+    Minutes_out                                   : out std_logic_vector(7 downto 0); 
+    Hours_out                                     : out std_logic_vector(7 downto 0); 
+    Day_out                                       : out std_logic_vector(7 downto 0); 
+    Date_out                                      : out std_logic_vector(7 downto 0); 
+    Month_Century_out                             : out std_logic_vector(7 downto 0); 
+    Year_out                                      : out std_logic_vector(7 downto 0); 
+    Dig_Card1_1_B0                                : out std_logic_vector(7 downto 0);
+    Dig_Card1_1_B1                                : out std_logic_vector(7 downto 0);
+    Dig_Card1_1_B2                                : out std_logic_vector(7 downto 0);
+    Dig_Card1_1_B3                                : out std_logic_vector(7 downto 0);
+    Dig_Card1_1_B4                                : out std_logic_vector(7 downto 0);
+    Dig_Card1_1_B5                                : out std_logic_vector(7 downto 0);
+    Dig_Card1_1_B6                                : out std_logic_vector(7 downto 0);
+    Dig_Card1_1_B7                                : out std_logic_vector(7 downto 0);
+    Write_RTC                                     : in std_logic;
+    SET_Timer                                     : out std_logic;
+    GET_Timer                                     : out std_logic;
+    Dig_Outputs_Ready                             : out std_logic;
+    Module_Number                                 : out std_logic_vector(7 downto 0);
+    SPI_IO_Driver_Version_Request                 : out std_logic;  
+    SPI_Output_Handler_Version_Request            : out std_logic; 
+    SPI_Input_Handler_Version_Request             : out std_logic; 
+    SPI_Analog_Driver_Version_Request             : out std_logic;
+    Real_Time_Clock_Handler_Version_Request       : out std_logic;
+    SPI_Analog_Handler_Version_Request            : out std_logic; 
+    Timer_Controller_Version_Request              : out std_logic;
+    Main_Mux_Version_Request                      : out std_logic; 
+    Baud_Rate_Generator_Version_Request           : out std_logic;
+    APE_Test_System_FPGA_Firmware_Version_Request : out std_logic;  
+    Endat_Sniffer_Version_Request                 : out std_logic; 
+    Main_Demux_Version_Name                       : out std_logic_vector(255 downto 0); 
+    Main_Demux_Version_Number                     : out std_logic_vector(63 downto 0);
+    Main_Demux_Version_Ready                      : out std_logic 
     );
 end component Main_Demux;
 
@@ -868,100 +785,97 @@ signal Main_Mux_Version_Name_i            : std_logic_vector(255 downto 0);
 signal Main_Mux_Version_Number_i          : std_logic_vector(63 downto 0);
 signal Main_Mux_Version_Ready_i           : std_logic; 
 signal Main_Mux_Version_Request_i         : std_logic;
-
+signal Real_Time_Clock_Request_i          : std_logic;
 component Main_Mux is
-    port (
-        Clk                     : in  std_logic;
-        RST_I                   : in  std_logic;
-        UART_TXD                : out std_logic;
-        Message_Length          : in  std_logic_vector(7 downto 0);
-        Time_Stamp_Byte_3       : in  std_logic_vector(7 downto 0);
-        Time_Stamp_Byte_2       : in  std_logic_vector(7 downto 0);
-        Time_Stamp_Byte_1       : in  std_logic_vector(7 downto 0);
-        Time_Stamp_Byte_0       : in  std_logic_vector(7 downto 0);
-        Dig_MilliSecond_B1      : in  std_logic_vector(7 downto 0);
-        Dig_MilliSecond_B0      : in  std_logic_vector(7 downto 0);
-        Dig_Card1_1_B0          : in  std_logic_vector(7 downto 0);
-        Dig_Card1_1_B1          : in  std_logic_vector(7 downto 0);
-        Dig_Card1_1_B2          : in  std_logic_vector(7 downto 0);
-        Dig_Card1_1_B3          : in  std_logic_vector(7 downto 0);
-        Dig_Card1_1_B4          : in  std_logic_vector(7 downto 0);
-        Dig_Card1_1_B5          : in  std_logic_vector(7 downto 0);
-        Dig_Card1_1_B6          : in  std_logic_vector(7 downto 0);
-        Dig_Card1_1_B7          : in  std_logic_vector(7 downto 0);
-        Digital_Input_Valid     : in  std_logic;
-        Dig_Card1_2_B0          : in  std_logic_vector(7 downto 0);
-        Dig_Card1_2_B1          : in  std_logic_vector(7 downto 0);
-        Dig_Card1_2_B2          : in  std_logic_vector(7 downto 0);
-        Dig_Card1_2_B3          : in  std_logic_vector(7 downto 0);
-        Dig_Card1_2_B4          : in  std_logic_vector(7 downto 0);
-        Dig_Card1_2_B5          : in  std_logic_vector(7 downto 0);
-        Dig_Card1_2_B6          : in  std_logic_vector(7 downto 0);
-        Dig_Card1_2_B7          : in  std_logic_vector(7 downto 0);
-        Digital_Output_Valid    : in  std_logic;
-        Alg_Card1_1             : in  std_logic_vector(15 downto 0);        
-        Alg_Card1_2             : in  std_logic_vector(15 downto 0);                
-        Alg_Card1_3             : in  std_logic_vector(15 downto 0);
-        Alg_Card1_4             : in  std_logic_vector(15 downto 0);        
-        Alg_Card1_5             : in  std_logic_vector(15 downto 0);
-        Alg_Card1_6             : in  std_logic_vector(15 downto 0);
-        Alg_Card1_7             : in  std_logic_vector(15 downto 0);
-        Alg_Card1_8             : in  std_logic_vector(15 downto 0);
-        Alg_Card1_9             : in  std_logic_vector(15 downto 0);
-        Alg_Card1_10            : in  std_logic_vector(15 downto 0);        
-        Alg_Card1_11            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_12            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_13            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_14            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_15            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_16            : in  std_logic_vector(15 downto 0);        
-        Alg_Card1_17            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_18            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_19            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_20            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_21            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_22            : in  std_logic_vector(15 downto 0);        
-        Alg_Card1_23            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_24            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_25            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_26            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_27            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_28            : in  std_logic_vector(15 downto 0);        
-        Alg_Card1_29            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_30            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_31            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_32            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_33            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_34            : in  std_logic_vector(15 downto 0);        
-        Alg_Card1_35            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_36            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_37            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_38            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_39            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_40            : in  std_logic_vector(15 downto 0);        
-        Alg_Card1_41            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_42            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_43            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_44            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_45            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_46            : in  std_logic_vector(15 downto 0);        
-        Alg_Card1_47            : in  std_logic_vector(15 downto 0);
-        Alg_Card1_48            : in  std_logic_vector(15 downto 0);        
-        Version_Register        : in  std_logic_vector(167 downto 0);
-        Analog_Input_Valid      : in  std_logic;
-        One_mS_pulse            : in  std_logic;
-        Tx_Rate                 : in  integer range 0 to 255;
-        Baud_Rate_Enable        : in  std_logic;
-        SYCN_Pulse              : out std_logic;
-        Version_Data_Ready      : in  std_logic;
-        Data_Ready              : in  std_logic;
-        Watchdog_Reset          : in  std_logic;
-        Mux_watchdog            : out std_logic;
-        Ana_In_Request          : out std_logic;
-        Dig_In_Request          : out std_logic;
-        Dig_Out_Request         : out std_logic
-    );
+  port (
+    Clk                       : in  std_logic;
+    RST_I                     : in  std_logic;
+    UART_TXD                  : out std_logic;
+    Message_Length            : in  std_logic_vector(7 downto 0);
+    Seconds_out               : in std_logic_vector(7 downto 0); 
+    Minutes_out               : in std_logic_vector(7 downto 0); 
+    Hours_out                 : in std_logic_vector(7 downto 0); 
+    Day_out                   : in std_logic_vector(7 downto 0); 
+    Date_out                  : in std_logic_vector(7 downto 0); 
+    Month_Century_out         : in std_logic_vector(7 downto 0); 
+    Year_out                  : in std_logic_vector(7 downto 0);
+    Dig_Card1_1_B0            : in  std_logic_vector(7 downto 0);
+    Dig_Card1_1_B1            : in  std_logic_vector(7 downto 0);
+    Dig_Card1_1_B2            : in  std_logic_vector(7 downto 0);
+    Dig_Card1_1_B3            : in  std_logic_vector(7 downto 0);
+    Dig_Card1_1_B4            : in  std_logic_vector(7 downto 0);
+    Dig_Card1_1_B5            : in  std_logic_vector(7 downto 0);
+    Dig_Card1_1_B6            : in  std_logic_vector(7 downto 0);
+    Dig_Card1_1_B7            : in  std_logic_vector(7 downto 0);
+    Digital_Input_Valid       : in  std_logic;
+    Dig_Card1_2_B0            : in  std_logic_vector(7 downto 0);
+    Dig_Card1_2_B1            : in  std_logic_vector(7 downto 0);
+    Dig_Card1_2_B2            : in  std_logic_vector(7 downto 0);
+    Dig_Card1_2_B3            : in  std_logic_vector(7 downto 0);
+    Dig_Card1_2_B4            : in  std_logic_vector(7 downto 0);
+    Dig_Card1_2_B5            : in  std_logic_vector(7 downto 0);
+    Dig_Card1_2_B6            : in  std_logic_vector(7 downto 0);
+    Dig_Card1_2_B7            : in  std_logic_vector(7 downto 0);
+    Digital_Output_Valid      : in  std_logic;
+    Analog_Data               : in  std_logic_vector(767 downto 0);                
+    Version_Register          : in  std_logic_vector(167 downto 0);
+    Analog_Input_Valid        : in  std_logic;
+    One_mS                    : in  std_logic;
+    Baud_Rate_Enable          : in  std_logic;
+    Real_Time_Clock_Request   : in  std_logic;
+    Get_RTC                   : out std_logic;
+    Version_Name              : in  std_logic_vector(255 downto 0); 
+    Version_Number            : in  std_logic_vector(63 downto 0);
+    Version_Data_Ready        : in  std_logic;
+    RTC_Valid                 : in  std_logic;
+    Data_Ready                : in  std_logic;
+    Ana_In_Request            : out std_logic;
+    Dig_In_Request            : out std_logic;
+    Dig_Out_Request           : out std_logic;
+    Main_Mux_Version_Name     : out std_logic_vector(255 downto 0);
+    Main_Mux_Version_Number   : out std_logic_vector(63 downto 0);
+    Main_Mux_Version_Ready    : out std_logic; 
+    Main_Mux_Version_Request  : in  std_logic;
+    Module_Number             : in  std_logic_vector(7 downto 0)
+  );
 end component Main_Mux;
+
+-------------------------------------------------------------------------------
+-- Endat Sniffer Component and Signals
+-------------------------------------------------------------------------------
+
+component EndatSniffer is
+  generic 
+  ( 
+    MODE_BITS             : integer   :=  8;    -- Width of the mode data
+    POS_BITS              : integer   :=  26;   -- Width of Position
+    ADD_BITS              : integer   :=  25;   -- Width of Additional Data
+    CRC_BITS              : integer   :=  5    -- Width of CRC 
+  );
+  port
+   (
+    clk                   : in  std_logic;     -- FPGA 50MHz clock
+    reset_n               : in  std_logic;     -- FPGA Reset
+    endat_clk             : in  std_logic;     -- Clock input from the EnDat sniffer Hardware
+    endat_data            : in  std_logic;     -- Data input from the EnDat sniffer Hardware
+    endat_enable          : in  std_logic;     -- request to sniff EnDat tranmission
+    endat_mode_out        : out std_logic_vector(8 downto 0);  -- All data
+    endat_Position_out    : out std_logic_vector(33 downto 0);  -- All data -- Updated
+    endat_Data_1_out      : out std_logic_vector(31 downto 0);  -- All data
+    endat_Data_2_out      : out std_logic_vector(31 downto 0);  -- All data
+    data_cnt              : out integer; 
+    endat_data_Ready      : out std_logic
+  );
+end component EndatSniffer;
+
+signal endat_mode_out_i         : std_logic_vector(8 downto 0);
+signal endat_Position_out_i     : std_logic_vector(31 downto 0);        -- Updated to 33
+signal endat_Data_1_out_i       : std_logic_vector(31 downto 0);
+signal endat_Data_2_out_i       : std_logic_vector(31 downto 0);
+signal data_cnt_i               : integer;
+signal endat_data_i             : std_logic;                 
+signal endat_clk_i              : std_logic;
+signal endat_data_Ready_i       : std_logic;
 
 ----------------------------------------------------------------------
 -- Baud Rate for Mux Signals and Component
@@ -1014,13 +928,64 @@ signal SPI_Inpor_i     : std_logic_vector(15 downto 0);
 signal Data_Out_Ready  : std_logic;
 signal PC_Comms_TX     : std_logic;
 
-signal One_Milli        : std_logic;
-signal SET_Timer_i      : std_logic;
+signal One_Milli                        : std_logic;
+signal SET_Timer_i                      : std_logic;
+signal Seconds_out_mem_hi_i             : std_logic_vector(7 downto 0);
+signal Seconds_out_mem_lo_i             : std_logic_vector(7 downto 0);
+signal Minutes_out_mem_hi_i             : std_logic_vector(7 downto 0);
+signal Minutes_out_mem_lo_i             : std_logic_vector(7 downto 0);
+signal Hours_out_mem_hi_i               : std_logic_vector(7 downto 0);
+signal Hours_out_mem_lo_i               : std_logic_vector(7 downto 0);
+signal Day_out_mem_hi_i                 : std_logic_vector(7 downto 0);
+signal Day_out_mem_lo_i                 : std_logic_vector(7 downto 0);
+signal Date_out_mem_hi_i                : std_logic_vector(7 downto 0);
+signal Date_out_mem_lo_i                : std_logic_vector(7 downto 0);
+signal Month_Century_out_mem_hi_i       : std_logic_vector(7 downto 0);
+signal Month_Century_out_mem_lo_i       : std_logic_vector(7 downto 0);
+signal Year_out_mem_hi_i                : std_logic_vector(7 downto 0);
+signal Year_out_mem_lo_i                : std_logic_vector(7 downto 0);
+signal Ready_mem_i                      : std_logic;
+signal Get_RTC_i                        : std_logic;
+signal Get_Timer_i                      : std_logic;
+signal I2C_Busy_i                       : std_logic;
+signal RTC_Valid_i                        : std_logic;
 
 -------------------------------------------------------------------------------
 -- Code Start
 -------------------------------------------------------------------------------  
-  Begin
+begin
+
+Firmware_Controller_Version_Updator: process(RST_I_i,CLK_I_i)
+  variable APE_Test_System_FPGA_Firmware_Version_cnt: integer range 0 to 10;
+  begin
+    if RST_I_i = '0' then
+      APE_Test_System_FPGA_Firmware_Version_Ready_i  <= '0';
+      APE_Test_System_FPGA_Firmware_Version_Name_i   <= (others=>'0');
+      APE_Test_System_FPGA_Firmware_Version_Number_i <= (others=>'0');
+      APE_Test_System_FPGA_Firmware_Version_cnt      := 0;
+      APE_Test_System_FPGA_Firmware_Version_Load_i   <= '0';
+    elsif CLK_I_i'event and CLK_I_i = '1' then  
+      
+      if APE_Test_System_FPGA_Firmware_Version_Request_i = '1' then
+        APE_Test_System_FPGA_Firmware_Version_Load_i   <= '1';
+      else
+        APE_Test_System_FPGA_Firmware_Version_Ready_i  <= '0';
+      end if;
+ 
+      if APE_Test_System_FPGA_Firmware_Version_Load_i = '1' then
+        if APE_Test_System_FPGA_Firmware_Version_cnt = 5 then
+          APE_Test_System_FPGA_Firmware_Version_Ready_i <= '1';
+          APE_Test_System_FPGA_Firmware_Version_Load_i  <= '0';
+          APE_Test_System_FPGA_Firmware_Version_cnt     := 0;
+        else
+          APE_Test_System_FPGA_Firmware_Version_cnt     := APE_Test_System_FPGA_Firmware_Version_cnt + 1;   
+          APE_Test_System_FPGA_Firmware_Version_Ready_i <= '0';
+        end if;  
+      end if;     
+ 
+   end if;
+ end process Firmware_Controller_Version_Updator;
+
 -------------------------------------------------------------------------------    
 --  Wire
 -------------------------------------------------------------------------------    
@@ -1072,7 +1037,6 @@ GPIO_0(33)          <= MOSI_3_i;
 GPIO_0(17)          <= INT_1_3_i;       -- CS3 -- correct
 GPIO_0(14)          <= CS_2_3_i;        -- CS4  INT_2_3_i
        
-		 
  --SPI 4 Noise Diode
  
  -- Version 1 PCB
@@ -1087,8 +1051,7 @@ GPIO_0(12)         <= MOSI_4_i;
 GPIO_0(11)         <= CS_2_4_i;
 GPIO_0(9)          <= INT_1_4_i;       -- CS3
 GPIO_0(10)         <= INT_2_4_i;       -- CS4
-		 
-		 	 
+		 		 	 
 --SPI 5 
        
 -- Version 1 PCB
@@ -1162,7 +1125,118 @@ port map (
     CLK_I             => CLK_I_i,
     Version_Timestamp => Version_Timestamp_i
     );
-       
+
+---------------------------------
+-- Version Control Instance 
+---------------------------------
+
+Version_Logger_1: entity work.Version_Logger
+port map (
+  CLK_I                                         => CLK_I_i,
+  RST_I                                         => RST_I_i,
+  SPI_IO_Driver_Version_Ready_1                 => SPI_IO_Driver_Version_Ready_1_i,
+  SPI_IO_Driver_Version_Ready_2                 => SPI_IO_Driver_Version_Ready_2_i,
+  SPI_Input_Handler_Version_Ready               => SPI_Input_Handler_Version_Ready_i,
+  SPI_Output_Handler_Version_Ready              => SPI_Output_Handler_Version_Ready_i,
+  SPI_Analog_Driver_Version_Ready_1             => SPI_Analog_Driver_Version_Ready_i,
+  SPI_Analog_Handler_Version_Ready_1            => SPI_Analog_Handler_Version_Ready_i,
+  APE_Test_System_FPGA_Firmware_Version_Ready   => APE_Test_System_FPGA_Firmware_Version_Ready_i,
+  Version_Data_Ready                            => Version_Data_Ready_i,
+  Real_Time_Clock_Handler_Version_Ready         => Real_Time_Clock_Handler_Version_Ready_i,
+  Main_Demux_Version_Name                       => Main_Demux_Version_Name_i, 
+  Main_Demux_Version_Number                     => Main_Demux_Version_Number_i,
+  Main_Demux_Version_Ready                      => Main_Demux_Version_Ready_i, 
+  Main_Mux_Version_Name                         => Main_Demux_Version_Name_i, 
+  Main_Mux_Version_Number                       => Main_Demux_Version_Number_i,
+  Main_Mux_Version_Ready                        => Main_Demux_Version_Ready_i, 
+  SPI_IO_Driver_Version_Name                    => SPI_IO_Driver_Version_Name_1_i, 
+  SPI_IO_Driver_Version_Number                  => SPI_IO_Driver_Version_Number_1_i,
+  SPI_Input_Handler_Version_Name                => SPI_Input_Handler_Version_Name_i, 
+  SPI_Input_Handler_Version_Number              => SPI_Input_Handler_Version_Number_i,
+  SPI_Output_Handler_Version_Name               => SPI_Output_Handler_Version_Name_i, 
+  SPI_Output_Handler_Version_Number             => SPI_Output_Handler_Version_Number_i, 
+  SPI_Analog_Handler_Version_Name               => SPI_Analog_Handler_Version_Name_i, 
+  SPI_Analog_Handler_Version_Number             => SPI_Analog_Handler_Version_Number_i,
+  SPI_Analog_Driver_Version_Name                => SPI_Analog_Driver_Version_Name_i, 
+  SPI_Analog_Driver_Version_Number              => SPI_Analog_Driver_Version_Number_i,
+  Baud_Rate_Generator_Version_Name              => Baud_Rate_Generator_Version_Name_1_i,
+  Baud_Rate_Generator_Version_Number            => Baud_Rate_Generator_Version_Number_1_i,
+  Baud_Rate_Generator_Version_Ready             => Baud_Rate_Generator_Version_Ready_1_i,  
+  APE_Test_System_FPGA_Firmware_Version_Name    => APE_Test_System_FPGA_Firmware_Version_Name_i,
+  APE_Test_System_FPGA_Firmware_Version_Number  => APE_Test_System_FPGA_Firmware_Version_Number_i,
+  Real_Time_Clock_Handler_Version_Name          => Real_Time_Clock_Handler_Version_Name_i, 
+  Real_Time_Clock_Handler_Version_Number        => Real_Time_Clock_Handler_Version_Number_i,
+  Module_Number                                 => Module_Number_i,
+  Version_Name                                  => Version_Name_i,
+  Version_Number                                => Version_Number_i
+  );
+
+-------------------------------------------------------------------------------
+-- RTC I2C Driver Instance
+-------------------------------------------------------------------------------
+Real_Time_Clock_I2C_Driver_1: entity work.I2C_Driver
+  PORT map (
+    clk       => CLK_I_i,                  --system clock
+    reset_n   => RST_I_i,                  --active low reset
+    ena       => Enable_i,                 --latch in command
+    addr      => Address_i,                --address of target slave
+    rw        => RnW_i,                    --'0' is write, '1' is read
+    data_wr   => Data_WR_i,                --data to write to slave
+    busy      => I2C_Busy_i,                   --indicates transaction in progress
+    data_rd   => Data_RD_i,                --data read from slave
+    ack_error => Ack_Error_i,              --flag if improper acknowledge from slave
+    sda       => SDA_i,                    --serial data output of i2c bus
+    scl       => SCL_i                    -- serial clock output of i2c bus
+    );    
+
+-------------------------------------------------------------------------------
+-- RTC I2C Handler Controller Instance
+-------------------------------------------------------------------------------
+Real_Time_Clock_Handler_1: entity work.Real_Time_Clock_I2C_Handler
+    PORT map (
+      CLK_I                                     => CLK_I_i,     
+      RST_I                                     => RST_I_i,    
+      Busy                                      => I2C_Busy_i,     
+      data_read                                 => Data_RD_i,   
+      ack_error                                 => Ack_Error_i, 
+      initialation_Status                       => initialation_Status_i,
+      Enable                                    => Enable_i,    
+      Slave_Address_Out                         => Address_i,   
+      Slave_read_nWrite                         => RnW_i,       
+      Slave_Data_Out                            => Data_WR_i,   
+      Get_Sample                                => Get_RTC_i,
+      PPS_in                                    => PPS_in_i,
+      Seconds_in                                => Seconds_in_i,          
+      Minutes_in                                => Minutes_in_i,           
+      Hours_in                                  => Hours_in_i,           
+      Day_in                                    => Day_in_i,           
+      Date_in                                   => Date_in_i, 
+      Month_Century_in                          => Month_Century_in_i,   
+      Year_in                                   => Year_in_i, 
+      Write_RTC                                 => SET_Timer_i,           -- Write new RTC
+      Seconds_out                               => Seconds_out_i,          
+      Minutes_out                               => Minutes_out_i,           
+      Hours_out                                 => Hours_out_i,           
+      Day_out                                   => Day_out_i,           
+      Date_out                                  => Date_out_i,
+      Month_Century_out                         => Month_Century_out_i,    
+      Year_out                                  => Year_out_i,   
+      Ready                                     => RTC_Valid_i,
+      Seconds_out_mem                           => Seconds_out_mem_i,
+      Minutes_out_mem                           => Minutes_out_mem_i,
+      Hours_out_mem                             => Hours_out_mem_i,
+      Day_out_mem                               => Day_out_mem_i,
+      Date_out_mem                              => Date_out_mem_i,
+      Month_Century_out_mem                     => Month_Century_out_mem_i,
+      Year_out_mem                              => Year_out_mem_i,
+      Ready_mem                                 => Ready_mem_i,
+      Real_Time_Clock_Handler_Version_Request   => Real_Time_Clock_Handler_Version_Request_i, 
+      Real_Time_Clock_Handler_Version_Name      => Real_Time_Clock_Handler_Version_Name_i, 
+      Real_Time_Clock_Handler_Version_Number    => Real_Time_Clock_Handler_Version_Number_i,
+      Real_Time_Clock_Handler_Version_Ready     => Real_Time_Clock_Handler_Version_Ready_i 
+      );  
+
+
 -------------------------------------------------------------------------------                      
 -- SPI In Driver Instance - Module 1
 -------------------------------------------------------------------------------                      
@@ -1292,10 +1366,10 @@ SPI_Analog_Driver_1: SPI_Analog_Driver
 port map (
   RST_I                             => RST_I_i,
   CLK_I                             => CLK_I_i,
-  CS1                               => CS1_i,
-  CS2                               => CS2_i,
-  CS3                               => CS3_i,
-  CS4                               => CS4_i,
+  CS1                               => Chip_Select_i(0),
+  CS2                               => Chip_Select_i(1),
+  CS3                               => Chip_Select_i(2),
+  CS4                               => Chip_Select_i(3),
   nCS                               => nCS_i,
   Address                           => Address_out_i,  
   convert                           => convert_i,
@@ -1324,67 +1398,17 @@ port map (
   CLK_I                              => CLK_I_i,
   Address_out                        => Address_out_i,
   convert                            => convert_i,
-  CS1                                => CS1_i,
-  CS2                                => CS2_i,
-  CS3                                => CS3_i,
-  CS4                                => CS4_i,
   AD_data_in                         => AD_data_i,
   Data_valid                         => Data_valid_i,
-  CH1_o                              => CH1_o_i,
-  CH2_o                              => CH2_o_i,
-  CH3_o                              => CH3_o_i,
-  CH4_o                              => CH4_o_i,
-  CH5_o                              => CH5_o_i,
-  CH6_o                              => CH6_o_i,
-  CH7_o                              => CH7_o_i,
-  CH8_o                              => CH8_o_i,
-  CH9_o                              => CH9_o_i,
-  CH10_o                             => CH10_o_i,
-  CH11_o                             => CH11_o_i,
-  CH12_o                             => CH12_o_i,
-  CH13_o                             => CH13_o_i,
-  CH14_o                             => CH14_o_i,
-  CH15_o                             => CH15_o_i,
-  CH16_o                             => CH16_o_i,
-  CH17_o                             => CH17_o_i,
-  CH18_o                             => CH18_o_i,
-  CH19_o                             => CH19_o_i,
-  CH20_o                             => CH20_o_i,
-  CH21_o                             => CH21_o_i,
-  CH22_o                             => CH22_o_i,
-  CH23_o                             => CH23_o_i,
-  CH24_o                             => CH24_o_i,
-  CH25_o                             => CH25_o_i,
-  CH26_o                             => CH26_o_i,
-  CH27_o                             => CH27_o_i,
-  CH28_o                             => CH28_o_i,
-  CH29_o                             => CH29_o_i,
-  CH30_o                             => CH30_o_i,
-  CH31_o                             => CH31_o_i,
-  CH32_o                             => CH32_o_i,
-  CH33_o                             => CH33_o_i,
-  CH34_o                             => CH34_o_i,
-  CH35_o                             => CH35_o_i,
-  CH36_o                             => CH36_o_i,
-  CH37_o                             => CH37_o_i,
-  CH38_o                             => CH38_o_i,
-  CH39_o                             => CH39_o_i,
-  CH40_o                             => CH40_o_i,
-  CH41_o                             => CH41_o_i,
-  CH42_o                             => CH42_o_i,
-  CH43_o                             => CH43_o_i,
-  CH44_o                             => CH44_o_i,
-  CH45_o                             => CH45_o_i,
-  CH46_o                             => CH46_o_i,
-  CH47_o                             => CH47_o_i,
-  CH48_o                             => CH48_o_i,
+  Chip_Select                        => Chip_Select_i, 
+  Analog_Data                        => Analog_Data_i,
   Data_Ready                         => Analog_Input_Valid_i,
   Ana_In_Request                     => Ana_In_Request_i,
   Module_Number                      => Module_Number_i,
   SPI_Analog_Handler_Version_Request => SPI_Analog_Handler_Version_Request_i,
-  SPI_Analog_Handler_Version_Name    => SPI_Analog_Handler_Version_Name_1_i, 
-  SPI_Analog_Handler_Version_Number  => SPI_Analog_Handler_Version_Number_1_i,
-  SPI_Analog_Handler_Version_Ready   => SPI_Analog_Handler_Version_Ready_1_i           
+  SPI_Analog_Handler_Version_Name    => SPI_Analog_Handler_Version_Name_i, 
+  SPI_Analog_Handler_Version_Number  => SPI_Analog_Handler_Version_Number_i,
+  SPI_Analog_Handler_Version_Ready   => SPI_Analog_Handler_Version_Ready_i           
   );
  
 -------------------------------------------------------------------------------
@@ -1392,35 +1416,37 @@ port map (
 ------------------------------------------------------------------------------- 
 Main_Demux_1: entity work.Main_Demux
 port map (
-  CLK_I                                     => CLK_I_i,
-  RST_I                                     => RST_I_i,
-  UART_RXD                                  => Software_to_Controller_UART_RXD_i,
-  Dig_Card1_1_B0                            => Dig_Card1_1_B0_i,
-  Dig_Card1_1_B1                            => Dig_Card1_1_B1_i,
-  Dig_Card1_1_B2                            => Dig_Card1_1_B2_i,
-  Dig_Card1_1_B3                            => Dig_Card1_1_B3_i,
-  Dig_Card1_1_B4                            => Dig_Card1_1_B4_i,
-  Dig_Card1_1_B5                            => Dig_Card1_1_B5_i,
-  Dig_Card1_1_B6                            => Dig_Card1_1_B6_i,
-  Dig_Card1_1_B7                            => Dig_Card1_1_B7_i,
-  SET_Timer                                 => SET_Timer_i,
-  Dig_Outputs_Ready                         => Dig_Outputs_Ready_i,
-  SPI_IO_Driver_Version_Request             => SPI_IO_Driver_Version_Request_i,   
-  SPI_Output_Handler_Version_Request        => SPI_Output_Handler_Version_Request_i,
-  SPI_Input_Handler_Version_Request         => SPI_Input_Handler_Version_Request_i,
-  SPI_Analog_Driver_Version_Request         => SPI_Analog_Driver_Version_Request_i,
-  SPI_Analog_Handler_Version_Request        => SPI_Analog_Handler_Version_Request_i,
-  Main_Mux_Version_Request                  => Main_Mux_Version_Request_i, 
-  Baud_Rate_Generator_Version_Request       => Baud_Rate_Generator_Version_Request_i,
-  APE_Test_System_FPGA_Firmware_Version_Request => APE_Test_System_FPGA_Firmware_Version_Request_i,  
-  Module_Number                             => Module_Number_i,
-  Main_Demux_Version_Name                   => Main_Demux_Version_Name_i, 
-  Main_Demux_Version_Number                 => Main_Demux_Version_Number_i,
-  Main_Demux_Version_Ready                  => Main_Demux_Version_Ready_i 
+  CLK_I                                         => CLK_I_i,
+  RST_I                                         => RST_I_i,
+  UART_RXD                                      => Software_to_Controller_UART_RXD_i,
+  Dig_Card1_1_B0                                => Dig_Card1_1_B0_i,
+  Dig_Card1_1_B1                                => Dig_Card1_1_B1_i,
+  Dig_Card1_1_B2                                => Dig_Card1_1_B2_i,
+  Dig_Card1_1_B3                                => Dig_Card1_1_B3_i,
+  Dig_Card1_1_B4                                => Dig_Card1_1_B4_i,
+  Dig_Card1_1_B5                                => Dig_Card1_1_B5_i,
+  Dig_Card1_1_B6                                => Dig_Card1_1_B6_i,
+  Dig_Card1_1_B7                                => Dig_Card1_1_B7_i,
+  SET_Timer                                     => SET_Timer_i,
+  Dig_Outputs_Ready                             => Dig_Outputs_Ready_i,
+  SPI_IO_Driver_Version_Request                 => SPI_IO_Driver_Version_Request_i,   
+  SPI_Output_Handler_Version_Request            => SPI_Output_Handler_Version_Request_i,
+  SPI_Input_Handler_Version_Request             => SPI_Input_Handler_Version_Request_i,
+  SPI_Analog_Driver_Version_Request             => SPI_Analog_Driver_Version_Request_i,
+  SPI_Analog_Handler_Version_Request            => SPI_Analog_Handler_Version_Request_i,
+  Real_Time_Clock_Handler_Version_Request       => Real_Time_Clock_Handler_Version_Request_i,
+  Main_Mux_Version_Request                      => Main_Mux_Version_Request_i, 
+  Baud_Rate_Generator_Version_Request           => Baud_Rate_Generator_Version_Request_i,
+  APE_Test_System_FPGA_Firmware_Version_Request => APE_Test_System_FPGA_Firmware_Version_Request_i,
+  Endat_Sniffer_Version_Request              => Endat_Sniffer_Version_Request_i,   
+  Module_Number                                 => Module_Number_i,
+  Main_Demux_Version_Name                       => Main_Demux_Version_Name_i, 
+  Main_Demux_Version_Number                     => Main_Demux_Version_Number_i,
+  Main_Demux_Version_Ready                      => Main_Demux_Version_Ready_i 
   );
            
 -------------------------------------------------------------------------------
--- Endat Firmware Controller Mux 
+-- APE Firmware Controller Mux 
 -------------------------------------------------------------------------------
 Main_Mux_1: entity work.Main_Mux
 port map (
@@ -1452,63 +1478,15 @@ port map (
   Dig_In_1_B6                => SPI_Inport_7_i,                
   Dig_In_1_B7                => b"0000000" & SPI_Inport_8_i(0),         
   Digital_Output_Valid       => Digital_Output_Valid_i,
-  Alg_Card1_1                => CH1_o_i,           
-  Alg_Card1_2                => CH2_o_i,          
-  Alg_Card1_3                => CH3_o_i,       
-  Alg_Card1_4                => CH4_o_i,          
-  Alg_Card1_5                => CH5_o_i,        
-  Alg_Card1_6                => CH6_o_i,         
-  Alg_Card1_7                => CH7_o_i,         
-  Alg_Card1_8                => CH8_o_i,       
-  Alg_Card1_9                => CH9_o_i,         
-  Alg_Card1_10               => CH10_o_i,        
-  Alg_Card1_11               => CH11_o_i,        
-  Alg_Card1_12               => CH12_o_i,        
-  Alg_Card1_13               => CH13_o_i,         
-  Alg_Card1_14               => CH14_o_i,         
-  Alg_Card1_15               => CH15_o_i,          
-  Alg_Card1_16               => CH16_o_i,        
-  Alg_Card1_17               => CH17_o_i,          
-  Alg_Card1_18               => CH18_o_i,       
-  Alg_Card1_19               => CH19_o_i,         
-  Alg_Card1_20               => CH20_o_i,        
-  Alg_Card1_21               => CH21_o_i,          
-  Alg_Card1_22               => CH22_o_i,         
-  Alg_Card1_23               => CH23_o_i,        
-  Alg_Card1_24               => CH24_o_i,         
-  Alg_Card1_25               => CH25_o_i,        
-  Alg_Card1_26               => CH26_o_i,        
-  Alg_Card1_27               => CH27_o_i,        
-  Alg_Card1_28               => CH28_o_i,          
-  Alg_Card1_29               => CH29_o_i,         
-  Alg_Card1_30               => CH30_o_i,         
-  Alg_Card1_31               => CH31_o_i,        
-  Alg_Card1_32               => CH32_o_i,         
-  Alg_Card1_33               => CH33_o_i,         
-  Alg_Card1_34               => CH34_o_i,          
-  Alg_Card1_35               => CH35_o_i,         
-  Alg_Card1_36               => CH36_o_i,         
-  Alg_Card1_37               => CH37_o_i,         
-  Alg_Card1_38               => CH38_o_i,        
-  Alg_Card1_39               => CH39_o_i,        
-  Alg_Card1_40               => CH40_o_i,        
-  Alg_Card1_41               => CH41_o_i,         
-  Alg_Card1_42               => CH42_o_i,        
-  Alg_Card1_43               => CH43_o_i,        
-  Alg_Card1_44               => CH44_o_i,       
-  Alg_Card1_45               => CH45_o_i,        
-  Alg_Card1_46               => CH46_o_i,         
-  Alg_Card1_47               => CH47_o_i,      
-  Alg_Card1_48               => CH48_o_i, 
+  Analog_Data                => Analog_Data_i, 
   Analog_Input_Valid         => Analog_Input_Valid_i,
   Ana_In_Request             => Ana_In_Request_i,
   Dig_In_Request             => Dig_In_Request_i,                
   Dig_Out_Request            => Dig_Out_Request_i,               
   Baud_Rate_Enable           => Mux_Baud_Rate_Enable_i,
   Data_Ready                 => Data_Ready_i,
-  Real_Time_Clock_Ready      => Real_Time_Clock_Ready_i,
-  Watchdog_Reset             => Watchdog_Reset_i,
-  Mux_watchdog               => Mux_watchdog_i,
+  Real_Time_Clock_Request    => Real_Time_Clock_Request_i,
+  RTC_Valid                  => RTC_Valid_i,
   One_mS                     => One_mS_i,
   Module_Number              => Module_Number_i,
   Main_Mux_Version_Name      => Main_Mux_Version_Name_i, 
@@ -1520,6 +1498,24 @@ port map (
   Version_Number             => Version_Number_i,
   Version_Data_Ready         => Version_Data_Ready_i
   );                              
+
+-------------------------------------------------------------------------------
+-- APE Endat Sniffer Instance 
+-------------------------------------------------------------------------------
+APE_Endat_Sniffer_1: entity work.EndatSniffer
+port map (
+    clk                  => CLK_I_i,                -- FPGA 50MHz clock
+    reset_n              => RST_I_i,                -- FPGA Reset
+    endat_clk            => endat_clk_i,            -- Clock input from the EnDat sniffer Hardware
+    endat_data           => endat_data_i,           -- Data input from the EnDat sniffer Hardware
+    endat_enable         => endat_clk_i,            -- request to sniff EnDat tranmission
+    endat_mode_out       => endat_mode_out_i,       -- All data
+    endat_Position_out   => endat_Position_out_i,   -- All data
+    endat_Data_1_out     => endat_Data_1_out_i,     -- All data
+    endat_Data_2_out     => endat_Data_2_out_i,     -- All data
+    data_cnt             => data_cnt_i, 
+    endat_data_Ready     => endat_data_Ready_i
+);
 
 -------------------------------------------------------------------------------
 -- Baud Instance for Mux  

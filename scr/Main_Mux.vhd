@@ -157,57 +157,59 @@ signal Send_ShaftEncoder          : std_logic;
 signal lockout_trigger            : std_logic;  
 signal lockout_Read_Trigger       : std_logic;
 signal flag_WD                    : std_logic;
-signal Message_done               : std_logic;
-signal Data_Ready_i               : std_logic;
-signal Dig_Card1_1_B0_i           : std_logic_vector(7 downto 0);
-signal Dig_Card1_1_B1_i           : std_logic_vector(7 downto 0);
-signal Dig_Card1_1_B2_i           : std_logic_vector(7 downto 0);
-signal Dig_Card1_1_B3_i           : std_logic_vector(7 downto 0);
-signal Dig_Card1_1_B4_i           : std_logic_vector(7 downto 0);
-signal Dig_Card1_1_B5_i           : std_logic_vector(7 downto 0);
-signal Dig_Card1_1_B6_i           : std_logic_vector(7 downto 0);
-signal Dig_Card1_1_B7_i           : std_logic_vector(7 downto 0);
-signal Dig_Card1_2_B0_i           : std_logic_vector(7 downto 0);
-signal Dig_Card1_2_B1_i           : std_logic_vector(7 downto 0);
-signal Dig_Card1_2_B2_i           : std_logic_vector(7 downto 0);
-signal Dig_Card1_2_B3_i           : std_logic_vector(7 downto 0);
-signal Dig_Card1_2_B4_i           : std_logic_vector(7 downto 0);
-signal Dig_Card1_2_B5_i           : std_logic_vector(7 downto 0);
-signal Dig_Card1_2_B6_i           : std_logic_vector(7 downto 0);
-signal Dig_Card1_2_B7_i           : std_logic_vector(7 downto 0);
+signal Message_done                 : std_logic;
+signal Data_Ready_i                 : std_logic;
+signal Dig_Card1_1_B0_i             : std_logic_vector(7 downto 0);
+signal Dig_Card1_1_B1_i             : std_logic_vector(7 downto 0);
+signal Dig_Card1_1_B2_i             : std_logic_vector(7 downto 0);
+signal Dig_Card1_1_B3_i             : std_logic_vector(7 downto 0);
+signal Dig_Card1_1_B4_i             : std_logic_vector(7 downto 0);
+signal Dig_Card1_1_B5_i             : std_logic_vector(7 downto 0);
+signal Dig_Card1_1_B6_i             : std_logic_vector(7 downto 0);
+signal Dig_Card1_1_B7_i             : std_logic_vector(7 downto 0);
+signal Dig_Card1_2_B0_i             : std_logic_vector(7 downto 0);
+signal Dig_Card1_2_B1_i             : std_logic_vector(7 downto 0);
+signal Dig_Card1_2_B2_i             : std_logic_vector(7 downto 0);
+signal Dig_Card1_2_B3_i             : std_logic_vector(7 downto 0);
+signal Dig_Card1_2_B4_i             : std_logic_vector(7 downto 0);
+signal Dig_Card1_2_B5_i             : std_logic_vector(7 downto 0);
+signal Dig_Card1_2_B6_i             : std_logic_vector(7 downto 0);
+signal Dig_Card1_2_B7_i             : std_logic_vector(7 downto 0);
 
-signal Message_length_i           : std_logic_vector(7 downto 0);
-signal Ana_In_Request_i           : std_logic;
-signal Dig_In_Request_i           : std_logic;
-signal Dig_Out_Request_i          : std_logic;
-signal Busy_Latch                 : std_logic;
-signal Ready_i                    : std_logic;
-signal Stack_100mS_Data           : std_logic;
-signal Lockout                    : std_logic;
-signal Digital_Output_Ready       : std_logic;
-signal Digital_Input_Ready        : std_logic;
-signal Analog_Input_Ready         : std_logic;
-signal All_Modules_Ready          : std_logic;
-signal All_Modules_Trig           : std_logic;
-signal Send_100mS_Data            : std_logic;
-signal Send_All_Modules           : std_logic;
-signal All_Data_Ready             : std_logic;
-signal Request_Data_Strobe        : std_logic;
-signal Send_Data_Strobe           : std_logic;
-signal RTC_Ready                  : std_logic;
-signal Version_Name_i             : std_logic_vector(255 downto 0); 
-signal Version_Number_i           : std_logic_vector(63 downto 0);  
-signal Send_Version_Data_Mess     : std_logic;
-signal Send_Version_Data_Ready    : std_logic;
-signal Send_Version_Data          : std_logic;
-signal Stack_Version_Data         : std_logic;
-signal Version_Data_Request       : std_logic;
-signal Send_RTC_Mess              : std_logic;
-signal Send_RTC_Operation         : std_logic;
-signal Stack_RTC_Data             : std_logic;
-signal Send_RTC_Data              : std_logic;
-signal RTC_Build_Trig_i           : std_logic;
-signal RTC_Build_Trig_Done_i      : std_logic;     
+signal Message_length_i             : std_logic_vector(7 downto 0);
+signal Ana_In_Request_i             : std_logic;
+signal Dig_In_Request_i             : std_logic;
+signal Dig_Out_Request_i            : std_logic;
+signal Busy_Latch                   : std_logic;
+signal Ready_i                      : std_logic;
+signal Stack_100mS_Data             : std_logic;
+signal Lockout                      : std_logic;
+signal Digital_Output_Ready         : std_logic;
+signal Digital_Input_Ready          : std_logic;
+signal Analog_Input_Ready           : std_logic;
+signal All_Modules_Ready            : std_logic;
+signal All_Modules_Trig             : std_logic;
+signal Send_100mS_Data              : std_logic;
+signal Send_All_Modules             : std_logic;
+signal All_Data_Ready               : std_logic;
+signal Request_Data_Strobe          : std_logic;
+signal Send_Data_Strobe             : std_logic;
+signal RTC_Ready                    : std_logic;
+signal Version_Name_i               : std_logic_vector(255 downto 0); 
+signal Version_Number_i             : std_logic_vector(63 downto 0);  
+signal Send_Version_Data_Mess       : std_logic;
+signal Send_Version_Data_Ready      : std_logic;
+signal Send_Version_Data            : std_logic;
+signal Stack_Version_Data           : std_logic;
+signal Version_Data_Request         : std_logic;
+signal Send_RTC_Mess                : std_logic;
+signal Send_RTC_Operation           : std_logic;
+signal Stack_RTC_Data               : std_logic;
+signal Send_RTC_Data                : std_logic;
+signal RTC_Build_Trig_i             : std_logic;
+signal RTC_Build_Trig_Done_i        : std_logic;     
+signal Ver_Build_Trig_i             : std_logic;
+signal Ver_Build_Trig_Done_i        : std_logic;
 signal All_Data_Build_Trig_i        : std_logic;  
 signal All_Data_Build_Trig_Done_i   : std_logic;  
 signal Analog_Input_Load            : std_logic;
@@ -216,16 +218,16 @@ signal Main_Mux_Version_Name_i      : std_logic_vector(255 downto 0);
 signal Main_Mux_Version_Number_i    : std_logic_vector(63 downto 0);  
 
 -- Time Out
-signal Seconds_out_i              : std_logic_vector(7 downto 0) := X"00";         
-signal Minutes_out_i              : std_logic_vector(7 downto 0) := X"00";     
-signal Hours_out_i                : std_logic_vector(7 downto 0) := X"00";
-signal Day_out_i                  : std_logic_vector(7 downto 0) := X"00";         
-signal Date_out_i                 : std_logic_vector(7 downto 0) := X"00";     
-signal Month_Century_out_i        : std_logic_vector(7 downto 0) := X"00";
-signal Year_out_i                 : std_logic_vector(7 downto 0) := X"00";
+signal Seconds_out_i                : std_logic_vector(7 downto 0) := X"00";         
+signal Minutes_out_i                : std_logic_vector(7 downto 0) := X"00";     
+signal Hours_out_i                  : std_logic_vector(7 downto 0) := X"00";
+signal Day_out_i                    : std_logic_vector(7 downto 0) := X"00";         
+signal Date_out_i                   : std_logic_vector(7 downto 0) := X"00";     
+signal Month_Century_out_i          : std_logic_vector(7 downto 0) := X"00";
+signal Year_out_i                   : std_logic_vector(7 downto 0) := X"00";
 
-signal no_of_chars2snd            : std_logic_vector(7 downto 0) := X"00";
-signal mode_i                     : std_logic_vector(7 downto 0) := X"00";
+signal no_of_chars2snd              : std_logic_vector(7 downto 0) := X"00";
+signal mode_i                       : std_logic_vector(7 downto 0) := X"00";
 
 type Time_Array is array (0 to 255) of std_logic_vector(7 downto 0);
 signal Time_Data_Array        : Time_Array;
@@ -240,7 +242,10 @@ type Digital_Out_Array is array (0 to 255) of std_logic_vector(7 downto 0);
 signal Digital_Out_Data_Array : Digital_Out_Array;
 
 type Analog_In_Array is array (0 to 767) of std_logic_vector(7 downto 0);
-signal Analog_In_Data_Array   : Analog_In_Array;
+signal Analog_In_Data_Array   : Analog_In_Array; 
+
+type Version_Array is array (0 to 255) of std_logic_vector(7 downto 0);
+signal Version_Data_Array   : Version_Array;
 
 function reverse_any_bus (a : in std_logic_vector)
 return std_logic_vector is
@@ -255,13 +260,17 @@ end;  -- function reverse_any_bus
 
 begin
 
-UART_TXD     	          <= SerDataOut;
-Ana_In_Request           <= Ana_In_Request_i;
-Dig_In_Request           <= Dig_In_Request_i;
-Dig_Out_Request          <= Dig_Out_Request_i;
-Version_Name_i           <= Version_Name;
-Version_Number_i         <= Version_Number;
-
+UART_TXD     	            <= SerDataOut;
+Ana_In_Request             <= Ana_In_Request_i;
+Dig_In_Request             <= Dig_In_Request_i;
+Dig_Out_Request            <= Dig_Out_Request_i;
+Version_Name_i             <= Version_Name;
+Version_Number_i           <= Version_Number;
+Main_Mux_Version_Name_i    <= M & A & I & N & Space & M & U & X & Space & Space &
+                              Space & Space & Space & Space & Space & Space & Space & Space &
+                              Space & Space & Space & Space & Space & Space & Space &
+                              Space & Space & Space & Space & Space & Space;
+Main_Mux_Version_Number_i  <= Zero & Zero & Dot & Zero & One & Dot & Zero & Eight;
 -- Build message
 gen_tx_ser_data : process (CLK_I, RST_I)
   
@@ -272,7 +281,9 @@ variable Real_Time_Clock_Request_50mS_cnt    : integer range 0 to 5;
 variable send_data_cnt                       : integer range 0 to 10;
 variable wait_cnt_rtc                        : integer range 0 to 50;
 variable wait_cnt_all                        : integer range 0 to 100;
+variable wait_cnt_ver                        : integer range 0 to 100;
 variable analog_data_load                    : integer range 0 to 100;
+
 begin
    if RST_I = '0' then
       Preamble_Data_Array(0)     <= x"a5";
@@ -297,11 +308,14 @@ begin
       RTC_Build_Trig_Done_i      <= '0';
       All_Data_Build_Trig_i      <= '0';
       All_Data_Build_Trig_Done_i <= '0';
+      Ver_Build_Trig_i           <= '0';
+      Ver_Build_Trig_Done_i      <= '0';
       Lockout                    <= '0';
       Send_Operation             <= '0';
       Request_Data_cnt           := 0;
       send_data_cnt              := 0;
       analog_data_load           := 0;
+      wait_cnt_ver               := 0;
       Request_Data_Strobe        <= '0'; 
       Send_Data_Strobe           <= '0';
       Send_Version_Data_Mess     <= '0';
@@ -319,31 +333,22 @@ begin
       RTC_Ready                  <= '0';
       Analog_Input_Load          <= '0';
       Main_Mux_Version_Name      <= (others => '0');
-      Main_Mux_Version_Name_i    <= (others => '0');
       Main_Mux_Version_Number    <= (others => '0'); 
-      Main_Mux_Version_Number_i  <= (others => '0');
       Main_Mux_Version_Ready     <= '0';  
       request_send_state         <= Request_Idle;
-      report "The version number of Main_Mux is 00.01.06." severity note;  
+      report "The version number of Main_Mux is 00.01.08." severity note;      --if Module_Number = X"08" then
    elsif CLK_I'event and CLK_I = '1' then
-
-      Main_Mux_Version_Name_i    <= M & A & I & N & Space & M & U & X & Space & Space &
-                                    Space & Space & Space & Space & Space & Space & Space & Space &
-                                    Space & Space & Space & Space & Space & Space & Space &
-                                    Space & Space & Space & Space & Space & Space;
-      Main_Mux_Version_Number_i  <= Zero & Zero & Dot & Zero & One & Dot & Zero & Eight;  
       
-      if Module_Number = X"08" then
-         if Main_Mux_Version_Request = '1' then
-            Main_Mux_Version_Ready    <= '1';
-            Main_Mux_Version_Name     <= Main_Mux_Version_Name_i;
-            Main_Mux_Version_Number   <= Main_Mux_Version_Number_i;  
-         else
-            Main_Mux_Version_Ready <= '0';
-         end if;
-      else   
-          Main_Mux_Version_Ready <= '0'; 
-      end if; 
+      if Main_Mux_Version_Request = '1' then
+         Main_Mux_Version_Ready    <= '1';
+         Main_Mux_Version_Name     <= Main_Mux_Version_Name_i;
+         Main_Mux_Version_Number   <= Main_Mux_Version_Number_i;  
+      else
+         Main_Mux_Version_Ready <= '0';
+      end if;
+      --else   
+      --    Main_Mux_Version_Ready <= '0'; 
+      --end if; 
     
       case Request_Send_State is
          when Request_Idle =>
@@ -353,8 +358,15 @@ begin
             -----------------------------
             
             if Real_Time_Clock_Request = '1' then 
-               Get_RTC              <= '1'; 
-               Request_Send_State   <= Data_RX;
+               Get_RTC              <= '1';
+               if busy = '1' then  
+                  busy_latch           <= '1';
+               elsif busy = '0' and busy_latch = '1' then 
+                  busy_latch           <= '0';
+                  Request_Send_State   <= Data_RX;
+               elsif busy = '0' then
+                  Request_Send_State   <= Data_RX;
+               end if;
             elsif Request_Data_cnt = 650_000 then  -- 100 ms Retrieve 0 for 5000_000
                Send_Data_Strobe     <= '1';                  
                Request_Data_cnt     := 0;
@@ -382,9 +394,9 @@ begin
             Ana_In_Request_i     <= '1';
             Request_Data_Strobe  <= '0';
             Request_Send_State   <= Request_Idle;
-            -----------------------------      
+            -----------------------------------      
             -- End of Modules Request Generator    
-            -----------------------------
+            -----------------------------------
          when Data_RX =>
             if Send_Data_Strobe = '1' then
                Send_Data_Strobe     <= '0';
@@ -448,21 +460,78 @@ begin
             end if;  
 
             if Analog_Input_Load = '1' then
-               if analog_data_load = 50 then
+               if analog_data_load = 100 then
                   analog_data_load     := 0;
                   Analog_Input_Ready   <= '1';        -- Latch AI
                else
                   analog_data_load := analog_data_load + 1;
-                  for i in 0 to 49 loop
+                  for i in 0 to 95 loop
                      if i = 0 then
                         Analog_In_Data_Array(0) <= Analog_Card_1;
                      elsif i > 0 then
                         --Analog_In_Data_Array(i) <= Analog_Data((15+(i * 16)) downto (0+(i * 16)));
-                        Analog_In_Data_Array(i) <= Analog_Data((7+((i-1) * 8)) downto (0+((i-1) * 8))); 
+                        Analog_In_Data_Array(i-1) <= Analog_Data((7+((i-1) * 8)) downto (0+((i-1) * 8))); 
+                        --Analog_In_Data_Array(24-1) <= Analog_Data((7+((24-1) * 8)) downto (0+((24-1) * 8)));
+                        --Analog_In_Data_Array(24-1) <= Analog_Data((191 downto 184);  
+                        --Analog_In_Data_Array(25-1) <= Analog_Data((7+((25-1) * 8)) downto (0+((25-1) * 8)));
+                        --Analog_In_Data_Array(25-1) <= Analog_Data((199 downto 192);  
+                        --Analog_In_Data_Array(26-1) <= Analog_Data((7+((26-1) * 8)) downto (0+((26-1) * 8)));
+                        --Analog_In_Data_Array(26-1) <= Analog_Data((207 downto 200);  
+
+                        --Analog_In_Data_Array(49-1) <= Analog_Data((7+((49-1) * 8)) downto (0+((49-1) * 8)));
+                        --Analog_In_Data_Array(49-1) <= Analog_Data((391 downto 384);  
+
+                        --Analog_In_Data_Array(96-1) <= Analog_Data((7+((96-1) * 8)) downto (0+((96-1) * 8)));
+                        --Analog_In_Data_Array(96-1) <= Analog_Data((207 downto 200);  
                      end if;  
                   end loop;
                end if;
             end if;
+
+      -- Version Data Validity Generator
+      if Version_Data_Ready = '1' THEN
+         Ver_Build_Trig_i        <= '1';
+         Version_Data_Array(0)   <= Version_Name_i(255 downto 248);
+         Version_Data_Array(1)   <= Version_Name_i(247 downto 240);
+         Version_Data_Array(2)   <= Version_Name_i(239 downto 232);
+         Version_Data_Array(3)   <= Version_Name_i(231 downto 224);
+         Version_Data_Array(4)   <= Version_Name_i(223 downto 216);
+         Version_Data_Array(5)   <= Version_Name_i(215 downto 208);
+         Version_Data_Array(6)   <= Version_Name_i(207 downto 200);
+         Version_Data_Array(7)   <= Version_Name_i(199 downto 192);
+         Version_Data_Array(8)   <= Version_Name_i(191 downto 184);
+         Version_Data_Array(9)   <= Version_Name_i(183 downto 176);
+         Version_Data_Array(10)  <= Version_Name_i(175 downto 168);
+         Version_Data_Array(11)  <= Version_Name_i(167 downto 160);
+         Version_Data_Array(12)  <= Version_Name_i(159 downto 152);
+         Version_Data_Array(13)  <= Version_Name_i(151 downto 144);
+         Version_Data_Array(14)  <= Version_Name_i(143 downto 136);
+         Version_Data_Array(15)  <= Version_Name_i(135 downto 128);
+         Version_Data_Array(16)  <= Version_Name_i(127 downto 120);
+         Version_Data_Array(17)  <= Version_Name_i(119 downto 112);
+         Version_Data_Array(18)  <= Version_Name_i(111 downto 104);
+         Version_Data_Array(19)  <= Version_Name_i(103 downto 96);
+         Version_Data_Array(20)  <= Version_Name_i(95 downto 88);
+         Version_Data_Array(21)  <= Version_Name_i(87 downto 80);
+         Version_Data_Array(22)  <= Version_Name_i(79 downto 72);    
+         Version_Data_Array(23)  <= Version_Name_i(71 downto 64);
+         Version_Data_Array(24)  <= Version_Name_i(63 downto 56);
+         Version_Data_Array(25)  <= Version_Name_i(55 downto 48);
+         Version_Data_Array(26)  <= Version_Name_i(47 downto 40);
+         Version_Data_Array(27)  <= Version_Name_i(39 downto 32);
+         Version_Data_Array(28)  <= Version_Name_i(31 downto 24);
+         Version_Data_Array(29)  <= Version_Name_i(23 downto 16);
+         Version_Data_Array(30)  <= Version_Name_i(15 downto 8);
+         Version_Data_Array(31)  <= Version_Name_i(7 downto 0);
+         Version_Data_Array(32)  <= Version_Number_i(63 downto 56);
+         Version_Data_Array(33)  <= Version_Number_i(55 downto 48);
+         Version_Data_Array(34)  <= Version_Number_i(47 downto 40);
+         Version_Data_Array(35)  <= Version_Number_i(39 downto 32);
+         Version_Data_Array(36)  <= Version_Number_i(31 downto 24);
+         Version_Data_Array(37)  <= Version_Number_i(23 downto 16);
+         Version_Data_Array(38)  <= Version_Number_i(15 downto 8);
+         Version_Data_Array(39)  <= Version_Number_i(7 downto 0);
+      end if;
   
    -- Main Data Ready Generator          
          if  (Digital_Output_Ready = '1') and (Digital_Input_Ready  = '1')
@@ -472,6 +541,7 @@ begin
             Digital_Output_Ready <= '0';
             Digital_Input_Ready  <= '0';
             Analog_Input_Ready   <= '0';
+            Analog_Input_Load    <= '0';
          end if;   
                      
          if (All_Modules_Ready = '1') and (All_Modules_Trig = '1') then              
@@ -538,7 +608,7 @@ begin
                no_of_chars2send  <= 122;
                no_of_chars2snd   <= std_logic_vector(to_unsigned(no_of_chars2send, no_of_chars2snd'length));
                mode_i            <= x"80";
-               for i in 0 to (no_of_chars2send - 3) loop
+               for i in 0 to 122 loop
                   if i < 3 THEN
                      data2send(i)   <= Preamble_Data_Array(i);
                      CRC2send(i)    <= Preamble_Data_Array(i);
@@ -566,7 +636,7 @@ begin
          end if;   
 
          if All_Data_Build_Trig_Done_i = '1' then
-            All_Data_Build_Trig_Done_i <= '0';
+            All_Data_Build_Trig_Done_i    <= '0';
             if (Busy = '1') then
                Stack_100mS_Data           <= '1';
                Send_100mS_Data            <= '0';
@@ -574,39 +644,36 @@ begin
                Send_100mS_Data            <= '1';
                Stack_100mS_Data           <= '0';
             end if; 
-         end if;
-                        
-         if Version_Data_Request = '1' then
-            if (Busy = '1') then
-               Stack_Version_Data     <= '1';
-               Send_Version_Data_Mess <= '0';
-            else
-               Send_Version_Data_Mess <= '1';
-               Stack_Version_Data     <= '0';
-            end if;  
-
+         end if;                        
+         
+         if Ver_Build_Trig_i = '1' then
             -- Build Version Message
-            --no_of_chars2send  <= 47;
-            --no_of_chars2snd   <= std_logic_vector(to_unsigned(no_of_chars2send, no_of_chars2snd'length));
-            --mode_i            <= x"80";
-            --for i in 0 to (no_of_chars2send - 3) loop
-            --   if i < 3 THEN
-            --      data2send(i)   <= Preamble_Data_Array(i);
-            --      CRC2send(i)    <= Preamble_Data_Array(i);
-            --   elsif (i = 3) then
-            --      data2send(i) <= no_of_chars2snd;
-            --      CRC2send(i) <= no_of_chars2snd;
-            --   elsif (i = 4) then
-            --      data2send(i) <= mode_i;
-            --      CRC2send(i) <= mode_i;
-            --   elsif (i > 4) then
-            --      for j in 0 to 6 loop
-            --         data2send(i) <= Time_Data_Array(i);
-            --         CRC2send(i) <= Time_Data_Array(i);
-            --      end loop;
-            --   end if;
-            --end loop;
-         end if;  
+            if wait_cnt_ver = 50 then
+               wait_cnt_ver            := 0;
+               Ver_Build_Trig_i        <= '0';
+               Ver_Build_Trig_Done_i   <= '1';
+            else
+               wait_cnt_ver      := wait_cnt_ver + 1;
+               no_of_chars2send  <= 39;
+               no_of_chars2snd   <= std_logic_vector(to_unsigned(no_of_chars2send, no_of_chars2snd'length));
+               mode_i            <= x"90";
+               for i in 0 to 39 loop
+                  if i < 3 THEN
+                     data2send(i)   <= Preamble_Data_Array(i);
+                     CRC2send(i)    <= Preamble_Data_Array(i);
+                  elsif (i = 3) then
+                     data2send(i)   <= no_of_chars2snd;
+                     CRC2send(i)    <= no_of_chars2snd;
+                  elsif (i = 4) then
+                     data2send(i)   <= mode_i;
+                     CRC2send(i)    <= mode_i;
+                  elsif (i > 4) then
+                     data2send(i)   <= Version_Data_Array(i);
+                     CRC2send(i)    <= Version_Data_Array(i);
+                  end if;
+               end loop;
+            end if;
+         end if;
 
          if RTC_Ready = '1' then
             RTC_Build_Trig_i <= '1';
@@ -623,13 +690,13 @@ begin
                no_of_chars2send  <= 14;
                no_of_chars2snd   <= std_logic_vector(to_unsigned(no_of_chars2send, no_of_chars2snd'length));
                mode_i            <= x"81";
-               for i in 0 to (no_of_chars2send - 3) loop
+               for i in 0 to 14 loop
                   if i < 3 THEN
                      data2send(i)   <= Preamble_Data_Array(i);
                      CRC2send(i)    <= Preamble_Data_Array(i);
                   elsif (i = 3) then
-                     data2send(i) <= no_of_chars2snd;
-                     CRC2send(i) <= no_of_chars2snd;
+                     data2send(i)   <= no_of_chars2snd;
+                     CRC2send(i)    <= no_of_chars2snd;
                   elsif (i = 4) then
                      data2send(i) <= mode_i;
                      CRC2send(i) <= mode_i;
@@ -650,6 +717,17 @@ begin
                Stack_RTC_Data <= '0';
                Send_RTC_Mess  <= '1';
             end if;
+         end if;
+
+         if Ver_Build_Trig_Done_i = '1' then
+            Ver_Build_Trig_Done_i   <= '0';
+            if (Busy = '1') then
+               Stack_Version_Data     <= '1';
+               Send_Version_Data_Mess <= '0';
+            else
+               Send_Version_Data_Mess <= '1';
+               Stack_Version_Data     <= '0';
+            end if;  
          end if;
            
    -- Send when Not Busy       
@@ -701,106 +779,104 @@ begin
          elsif Send_Version_Data = '1' then
             Send_Version_Data <= '0';
             send_msg          <= '1';
-            data2send(0)      <= Preamble1;
-            data2send(1)      <= Preamble2;
-            data2send(2)      <= Preamble3;
-            data2send(3)      <= X"2f";        -- Length
-            data2send(4)      <= X"80";        -- Mode
+  --          data2send(0)      <= Preamble1;
+  --          data2send(1)      <= Preamble2;
+  --          data2send(2)      <= Preamble3;
+  --          data2send(3)      <= X"2f";        -- Length
+  --          data2send(4)      <= X"80";        -- Mode
 
-  -- Version Data
-            data2send(5)      <= Version_Name_i(255 downto 248);
-            data2send(6)      <= Version_Name_i(247 downto 240);
-            data2send(7)      <= Version_Name_i(239 downto 232);
-            data2send(8)      <= Version_Name_i(231 downto 224);
-            data2send(9)      <= Version_Name_i(223 downto 216);
-            data2send(10)     <= Version_Name_i(215 downto 208);
-            data2send(11)     <= Version_Name_i(207 downto 200);
-            data2send(12)     <= Version_Name_i(199 downto 192);
-            data2send(13)     <= Version_Name_i(191 downto 184);
-            data2send(14)     <= Version_Name_i(183 downto 176);
-            data2send(15)     <= Version_Name_i(175 downto 168);
-            data2send(16)     <= Version_Name_i(167 downto 160);
-            data2send(17)     <= Version_Name_i(159 downto 152);
-            data2send(18)     <= Version_Name_i(151 downto 144);
-            data2send(19)     <= Version_Name_i(143 downto 136);
-            data2send(20)     <= Version_Name_i(135 downto 128);
-            data2send(21)     <= Version_Name_i(127 downto 120);
-            data2send(22)     <= Version_Name_i(119 downto 112);
-            data2send(23)     <= Version_Name_i(111 downto 104);
-            data2send(24)     <= Version_Name_i(103 downto 96);
-            data2send(25)     <= Version_Name_i(95 downto 88);
-            data2send(26)     <= Version_Name_i(87 downto 80);
-            data2send(27)     <= Version_Name_i(79 downto 72);    
-            data2send(28)     <= Version_Name_i(71 downto 64);
-            data2send(29)     <= Version_Name_i(63 downto 56);
-            data2send(30)     <= Version_Name_i(55 downto 48);
-            data2send(31)     <= Version_Name_i(47 downto 40);
-            data2send(32)     <= Version_Name_i(39 downto 32);
-            data2send(33)     <= Version_Name_i(31 downto 24);
-            data2send(34)     <= Version_Name_i(23 downto 16);
-            data2send(35)     <= Version_Name_i(15 downto 8);
-            data2send(36)     <= Version_Name_i(7 downto 0);
-            data2send(37)     <= Version_Number_i(63 downto 56);
-            data2send(38)     <= Version_Number_i(55 downto 48);
-            data2send(39)     <= Version_Number_i(47 downto 40);
-            data2send(40)     <= Version_Number_i(39 downto 32);
-            data2send(41)     <= Version_Number_i(31 downto 24);
-            data2send(42)     <= Version_Number_i(23 downto 16);
-            data2send(43)     <= Version_Number_i(15 downto 8);
-            data2send(44)     <= Version_Number_i(7 downto 0);
+  ---- Version Data
+  --          data2send(5)      <= Version_Name_i(255 downto 248);
+  --          data2send(6)      <= Version_Name_i(247 downto 240);
+  --          data2send(7)      <= Version_Name_i(239 downto 232);
+  --          data2send(8)      <= Version_Name_i(231 downto 224);
+  --          data2send(9)      <= Version_Name_i(223 downto 216);
+  --          data2send(10)     <= Version_Name_i(215 downto 208);
+  --          data2send(11)     <= Version_Name_i(207 downto 200);
+  --          data2send(12)     <= Version_Name_i(199 downto 192);
+  --          data2send(13)     <= Version_Name_i(191 downto 184);
+  --          data2send(14)     <= Version_Name_i(183 downto 176);
+  --          data2send(15)     <= Version_Name_i(175 downto 168);
+  --          data2send(16)     <= Version_Name_i(167 downto 160);
+  --          data2send(17)     <= Version_Name_i(159 downto 152);
+  --          data2send(18)     <= Version_Name_i(151 downto 144);
+  --          data2send(19)     <= Version_Name_i(143 downto 136);
+  --          data2send(20)     <= Version_Name_i(135 downto 128);
+  --          data2send(21)     <= Version_Name_i(127 downto 120);
+  --          data2send(22)     <= Version_Name_i(119 downto 112);
+  --          data2send(23)     <= Version_Name_i(111 downto 104);
+  --          data2send(24)     <= Version_Name_i(103 downto 96);
+  --          data2send(25)     <= Version_Name_i(95 downto 88);
+  --          data2send(26)     <= Version_Name_i(87 downto 80);
+  --          data2send(27)     <= Version_Name_i(79 downto 72);    
+  --          data2send(28)     <= Version_Name_i(71 downto 64);
+  --          data2send(29)     <= Version_Name_i(63 downto 56);
+  --          data2send(30)     <= Version_Name_i(55 downto 48);
+  --          data2send(31)     <= Version_Name_i(47 downto 40);
+  --          data2send(32)     <= Version_Name_i(39 downto 32);
+  --          data2send(33)     <= Version_Name_i(31 downto 24);
+  --          data2send(34)     <= Version_Name_i(23 downto 16);
+  --          data2send(35)     <= Version_Name_i(15 downto 8);
+  --          data2send(36)     <= Version_Name_i(7 downto 0);
+  --          data2send(37)     <= Version_Number_i(63 downto 56);
+  --          data2send(38)     <= Version_Number_i(55 downto 48);
+  --          data2send(39)     <= Version_Number_i(47 downto 40);
+  --          data2send(40)     <= Version_Number_i(39 downto 32);
+  --          data2send(41)     <= Version_Number_i(31 downto 24);
+  --          data2send(42)     <= Version_Number_i(23 downto 16);
+  --          data2send(43)     <= Version_Number_i(15 downto 8);
+  --          data2send(44)     <= Version_Number_i(7 downto 0);
                        
-            no_of_chars2send  <= 47;         -- alway 3 more then last number
+  --          no_of_chars2send  <= 47;         -- alway 3 more then last number
 
-            CRC2send(0)       <= reverse_any_bus(Preamble1);
-            CRC2send(1)       <= reverse_any_bus(Preamble2);
-            CRC2send(2)       <= reverse_any_bus(Preamble3);
-            CRC2send(3)       <= reverse_any_bus(X"2f");
-            CRC2send(4)       <= reverse_any_bus(X"80");
+  --          CRC2send(0)       <= reverse_any_bus(Preamble1);
+  --          CRC2send(1)       <= reverse_any_bus(Preamble2);
+  --          CRC2send(2)       <= reverse_any_bus(Preamble3);
+  --          CRC2send(3)       <= reverse_any_bus(X"2f");
+  --          CRC2send(4)       <= reverse_any_bus(X"80");
         
-            CRC2send(5)       <= reverse_any_bus(Version_Name_i(255 downto 248));
-            CRC2send(6)       <= reverse_any_bus(Version_Name_i(247 downto 240));
-            CRC2send(7)       <= reverse_any_bus(Version_Name_i(239 downto 232));
-            CRC2send(8)       <= reverse_any_bus(Version_Name_i(231 downto 224));
-            CRC2send(9)       <= reverse_any_bus(Version_Name_i(223 downto 216));
-            CRC2send(10)      <= reverse_any_bus(Version_Name_i(215 downto 208));
-            CRC2send(11)      <= reverse_any_bus(Version_Name_i(207 downto 200));
-            CRC2send(12)      <= reverse_any_bus(Version_Name_i(199 downto 192));
-            CRC2send(13)      <= reverse_any_bus(Version_Name_i(191 downto 184));
-            CRC2send(14)      <= reverse_any_bus(Version_Name_i(183 downto 176));
-            CRC2send(15)      <= reverse_any_bus(Version_Name_i(175 downto 168));
-            CRC2send(16)      <= reverse_any_bus(Version_Name_i(167 downto 160));
-            CRC2send(17)      <= reverse_any_bus(Version_Name_i(159 downto 152));
-            CRC2send(18)      <= reverse_any_bus(Version_Name_i(151 downto 144));
-            CRC2send(19)      <= reverse_any_bus(Version_Name_i(143 downto 136));
-            CRC2send(20)      <= reverse_any_bus(Version_Name_i(135 downto 128));
-            CRC2send(21)      <= reverse_any_bus(Version_Name_i(127 downto 120));
-            CRC2send(22)      <= reverse_any_bus(Version_Name_i(119 downto 112));
-            CRC2send(23)      <= reverse_any_bus(Version_Name_i(111 downto 104));
-            CRC2send(24)      <= reverse_any_bus(Version_Name_i(103 downto 96));
-            CRC2send(25)      <= reverse_any_bus(Version_Name_i(95 downto 88));
-            CRC2send(26)      <= reverse_any_bus(Version_Name_i(87 downto 80));
-            CRC2send(27)      <= reverse_any_bus(Version_Name_i(79 downto 72));    
-            CRC2send(28)      <= reverse_any_bus(Version_Name_i(71 downto 64));
-            CRC2send(29)      <= reverse_any_bus(Version_Name_i(63 downto 56));
-            CRC2send(30)      <= reverse_any_bus(Version_Name_i(55 downto 48));
-            CRC2send(31)      <= reverse_any_bus(Version_Name_i(47 downto 40));
-            CRC2send(32)      <= reverse_any_bus(Version_Name_i(39 downto 32));
-            CRC2send(33)      <= reverse_any_bus(Version_Name_i(31 downto 24));
-            CRC2send(34)      <= reverse_any_bus(Version_Name_i(23 downto 16));
-            CRC2send(35)      <= reverse_any_bus(Version_Name_i(15 downto 8));
-            CRC2send(36)      <= reverse_any_bus(Version_Name_i(7 downto 0));
-            CRC2send(37)      <= reverse_any_bus(Version_Number_i(63 downto 56));
-            CRC2send(38)      <= reverse_any_bus(Version_Number_i(55 downto 48));
-            CRC2send(39)      <= reverse_any_bus(Version_Number_i(47 downto 40));
-            CRC2send(40)      <= reverse_any_bus(Version_Number_i(39 downto 32));
-            CRC2send(41)      <= reverse_any_bus(Version_Number_i(31 downto 24));
-            CRC2send(42)      <= reverse_any_bus(Version_Number_i(23 downto 16));
-            CRC2send(43)      <= reverse_any_bus(Version_Number_i(15 downto 8));
-            CRC2send(44)      <= reverse_any_bus(Version_Number_i(7 downto 0));
+  --          CRC2send(5)       <= reverse_any_bus(Version_Name_i(255 downto 248));
+  --          CRC2send(6)       <= reverse_any_bus(Version_Name_i(247 downto 240));
+  --          CRC2send(7)       <= reverse_any_bus(Version_Name_i(239 downto 232));
+  --          CRC2send(8)       <= reverse_any_bus(Version_Name_i(231 downto 224));
+  --          CRC2send(9)       <= reverse_any_bus(Version_Name_i(223 downto 216));
+  --          CRC2send(10)      <= reverse_any_bus(Version_Name_i(215 downto 208));
+  --          CRC2send(11)      <= reverse_any_bus(Version_Name_i(207 downto 200));
+  --          CRC2send(12)      <= reverse_any_bus(Version_Name_i(199 downto 192));
+  --          CRC2send(13)      <= reverse_any_bus(Version_Name_i(191 downto 184));
+  --          CRC2send(14)      <= reverse_any_bus(Version_Name_i(183 downto 176));
+  --          CRC2send(15)      <= reverse_any_bus(Version_Name_i(175 downto 168));
+  --          CRC2send(16)      <= reverse_any_bus(Version_Name_i(167 downto 160));
+  --          CRC2send(17)      <= reverse_any_bus(Version_Name_i(159 downto 152));
+  --          CRC2send(18)      <= reverse_any_bus(Version_Name_i(151 downto 144));
+  --          CRC2send(19)      <= reverse_any_bus(Version_Name_i(143 downto 136));
+  --          CRC2send(20)      <= reverse_any_bus(Version_Name_i(135 downto 128));
+  --          CRC2send(21)      <= reverse_any_bus(Version_Name_i(127 downto 120));
+  --          CRC2send(22)      <= reverse_any_bus(Version_Name_i(119 downto 112));
+  --          CRC2send(23)      <= reverse_any_bus(Version_Name_i(111 downto 104));
+  --          CRC2send(24)      <= reverse_any_bus(Version_Name_i(103 downto 96));
+  --          CRC2send(25)      <= reverse_any_bus(Version_Name_i(95 downto 88));
+  --          CRC2send(26)      <= reverse_any_bus(Version_Name_i(87 downto 80));
+  --          CRC2send(27)      <= reverse_any_bus(Version_Name_i(79 downto 72));    
+  --          CRC2send(28)      <= reverse_any_bus(Version_Name_i(71 downto 64));
+  --          CRC2send(29)      <= reverse_any_bus(Version_Name_i(63 downto 56));
+  --          CRC2send(30)      <= reverse_any_bus(Version_Name_i(55 downto 48));
+  --          CRC2send(31)      <= reverse_any_bus(Version_Name_i(47 downto 40));
+  --          CRC2send(32)      <= reverse_any_bus(Version_Name_i(39 downto 32));
+  --          CRC2send(33)      <= reverse_any_bus(Version_Name_i(31 downto 24));
+  --          CRC2send(34)      <= reverse_any_bus(Version_Name_i(23 downto 16));
+  --          CRC2send(35)      <= reverse_any_bus(Version_Name_i(15 downto 8));
+  --          CRC2send(36)      <= reverse_any_bus(Version_Name_i(7 downto 0));
+  --          CRC2send(37)      <= reverse_any_bus(Version_Number_i(63 downto 56));
+  --          CRC2send(38)      <= reverse_any_bus(Version_Number_i(55 downto 48));
+  --          CRC2send(39)      <= reverse_any_bus(Version_Number_i(47 downto 40));
+  --          CRC2send(40)      <= reverse_any_bus(Version_Number_i(39 downto 32));
+  --          CRC2send(41)      <= reverse_any_bus(Version_Number_i(31 downto 24));
+  --          CRC2send(42)      <= reverse_any_bus(Version_Number_i(23 downto 16));
+  --          CRC2send(43)      <= reverse_any_bus(Version_Number_i(15 downto 8));
+  --          CRC2send(44)      <= reverse_any_bus(Version_Number_i(7 downto 0));
 
       elsif Send_RTC_Operation = '1' then
-         
-
          Send_RTC_Data        <= '0';
          Send_RTC_Operation   <= '0';
          send_msg             <= '1';

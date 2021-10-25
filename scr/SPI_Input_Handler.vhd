@@ -31,7 +31,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
-
+use work.Version_Ascii.all;
 entity SPI_Input_Handler is
 
   port (
@@ -85,49 +85,6 @@ architecture Arch_DUT of SPI_Input_Handler is
   constant In_w_nPU              : std_logic_vector(7 downto 0)             := X"AA"; --Input with no pull ups
   constant In_w_PU               : std_logic_vector(7 downto 0)             := X"FF"; --Input with pull ups    
   constant Inout_w_PU            : std_logic_vector(7 downto 0)             := X"FF"; --Input/Output with pull ups
-
---------------
--- Ascii Codes
---------------   
-constant A        : std_logic_vector(7 downto 0) := X"41";
-constant B        : std_logic_vector(7 downto 0) := X"42";
-constant C        : std_logic_vector(7 downto 0) := X"43";
-constant D        : std_logic_vector(7 downto 0) := X"44";
-constant E        : std_logic_vector(7 downto 0) := X"45";
-constant F        : std_logic_vector(7 downto 0) := X"46";
-constant G        : std_logic_vector(7 downto 0) := X"47";
-constant H        : std_logic_vector(7 downto 0) := X"48";
-constant I        : std_logic_vector(7 downto 0) := X"49";
-constant J        : std_logic_vector(7 downto 0) := X"4A";
-constant K        : std_logic_vector(7 downto 0) := X"4B";
-constant L        : std_logic_vector(7 downto 0) := X"4C";
-constant M        : std_logic_vector(7 downto 0) := X"4D";
-constant N        : std_logic_vector(7 downto 0) := X"4E";
-constant O        : std_logic_vector(7 downto 0) := X"4F";
-constant P        : std_logic_vector(7 downto 0) := X"50";
-constant Q        : std_logic_vector(7 downto 0) := X"51";
-constant R        : std_logic_vector(7 downto 0) := X"52";
-constant S        : std_logic_vector(7 downto 0) := X"53";
-constant T        : std_logic_vector(7 downto 0) := X"54";
-constant U        : std_logic_vector(7 downto 0) := X"55";
-constant V        : std_logic_vector(7 downto 0) := X"56";
-constant W        : std_logic_vector(7 downto 0) := X"57";
-constant X        : std_logic_vector(7 downto 0) := X"58";
-constant Y        : std_logic_vector(7 downto 0) := X"59";
-constant Z        : std_logic_vector(7 downto 0) := X"5A";
-constant Space    : std_logic_vector(7 downto 0) := X"20";
-constant Dot      : std_logic_vector(7 downto 0) := X"2E";
-
-constant Zero     : std_logic_vector(7 downto 0) := X"30";
-constant One      : std_logic_vector(7 downto 0) := X"31";
-constant Two      : std_logic_vector(7 downto 0) := X"32";
-constant Three    : std_logic_vector(7 downto 0) := X"33";
-constant Four     : std_logic_vector(7 downto 0) := X"34";
-constant Five     : std_logic_vector(7 downto 0) := X"35";
-constant Six      : std_logic_vector(7 downto 0) := X"36";
-constant Seven    : std_logic_vector(7 downto 0) := X"37";
-constant Eight    : std_logic_vector(7 downto 0) := X"38";
-constant Nine     : std_logic_vector(7 downto 0) := X"39";
 
 signal SPI_Input_Handler_Version_Name_i   : std_logic_vector(255 downto 0); 
 signal SPI_Input_Handler_Version_Number_i : std_logic_vector(63 downto 0); 
@@ -185,14 +142,14 @@ signal SPI_Input_Handler_Version_Number_i : std_logic_vector(63 downto 0);
          SPI_Input_Handler_Version_Number   <= (others => '0'); 
          SPI_Input_Handler_Version_Number_i <= (others => '0');
          SPI_Input_Handler_Version_Ready    <= '0'; 
-              report "The version number of SPI_Input_Handler is 1.1." severity note;  
+              report "The version number of SPI_Input_Handler is 00.01.03." severity note;  
       elsif CLK_I'event and CLK_I = '1' then
 
          SPI_Input_Handler_Version_Name_i   <= S & P & I & Space & I & N & P & U & T & Space & H & A & N & D & L & E & R &
                                                Space & Space & Space & Space & Space & Space & Space & 
                                                Space & Space & Space & Space & Space & Space & Space &
                                                Space;
-         SPI_Input_Handler_Version_Number_i <= Zero & Zero & Dot & Zero & One  & Dot & Zero & Two;
+         SPI_Input_Handler_Version_Number_i <= Zero & Zero & Dot & Zero & One  & Dot & Zero & Three;
 
          if Module_Number = X"02" then
             if SPI_Input_Handler_Version_Request = '1' then

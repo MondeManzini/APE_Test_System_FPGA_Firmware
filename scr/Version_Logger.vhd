@@ -34,40 +34,43 @@ use ieee.std_logic_signed.all;
 entity Version_Logger is
 
   port(
-       CLK_I                                      : in  std_logic;
-       RST_I                                      : in  std_logic;
-       SPI_IO_Driver_Version_Ready_1              : in  std_logic; 
-       SPI_IO_Driver_Version_Ready_2              : in  std_logic;
-       SPI_Input_Handler_Version_Ready            : in  std_logic; 
-       SPI_Output_Handler_Version_Ready           : in  std_logic; 
-       SPI_Analog_Driver_Version_Ready_1          : in  std_logic;  
-       SPI_Analog_Handler_Version_Ready_1         : in  std_logic;
-       Main_Demux_Version_Ready                   : in  std_logic; 
-       Main_Mux_Version_Ready                     : in  std_logic; 
-       Baud_Rate_Generator_Version_Ready          : in  std_logic; 
-       APE_Test_System_FPGA_Firmware_Version_Ready    : in  std_logic; 
-       SPI_IO_Driver_Version_Name                 : in  std_logic_vector(255 downto 0); 
-       SPI_IO_Driver_Version_Number               : in  std_logic_vector(63 downto 0);
-       SPI_Input_Handler_Version_Name             : in  std_logic_vector(255 downto 0); 
-       SPI_Input_Handler_Version_Number           : in  std_logic_vector(63 downto 0);
-       SPI_Output_Handler_Version_Name            : in  std_logic_vector(255 downto 0); 
-       SPI_Output_Handler_Version_Number          : in  std_logic_vector(63 downto 0);
-       SPI_Analog_Driver_Version_Name             : in  std_logic_vector(255 downto 0); 
-       SPI_Analog_Driver_Version_Number           : in  std_logic_vector(63 downto 0);
-       SPI_Analog_Handler_Version_Name            : in  std_logic_vector(255 downto 0); 
-       SPI_Analog_Handler_Version_Number          : in  std_logic_vector(63 downto 0);
-       Main_Demux_Version_Name                    : in  std_logic_vector(255 downto 0); 
-       Main_Demux_Version_Number                  : in  std_logic_vector(63 downto 0);
-       Main_Mux_Version_Name                      : in  std_logic_vector(255 downto 0); 
-       Main_Mux_Version_Number                    : in  std_logic_vector(63 downto 0);
-       Baud_Rate_Generator_Version_Name           : in  std_logic_vector(255 downto 0);
-       Baud_Rate_Generator_Version_Number         : in  std_logic_vector(63 downto 0);
-       APE_Test_System_FPGA_Firmware_Version_Name     : in  std_logic_vector(255 downto 0);
-       APE_Test_System_FPGA_Firmware_Version_Number   : in  std_logic_vector(63 downto 0);
-       Version_Data_Ready                         : out std_logic;
-       Module_Number                              : in  std_logic_vector(7 downto 0);
-       Version_Name                               : out std_logic_vector(255 downto 0); 
-       Version_Number                             : out std_logic_vector(63 downto 0)
+       CLK_I                                           : in  std_logic;
+       RST_I                                           : in  std_logic;
+       SPI_IO_Driver_Version_Ready_1                   : in  std_logic; 
+       SPI_IO_Driver_Version_Ready_2                   : in  std_logic;
+       SPI_Input_Handler_Version_Ready                 : in  std_logic; 
+       SPI_Output_Handler_Version_Ready                : in  std_logic; 
+       SPI_Analog_Driver_Version_Ready_1               : in  std_logic;  
+       SPI_Analog_Handler_Version_Ready_1              : in  std_logic;
+       Main_Demux_Version_Ready                        : in  std_logic; 
+       Main_Mux_Version_Ready                          : in  std_logic; 
+       Baud_Rate_Generator_Version_Ready               : in  std_logic; 
+       APE_Test_System_FPGA_Firmware_Version_Ready     : in  std_logic;
+       Real_Time_Clock_Handler_Version_Ready           : in  std_logic; 
+       SPI_IO_Driver_Version_Name                      : in  std_logic_vector(255 downto 0); 
+       SPI_IO_Driver_Version_Number                    : in  std_logic_vector(63 downto 0);
+       SPI_Input_Handler_Version_Name                  : in  std_logic_vector(255 downto 0); 
+       SPI_Input_Handler_Version_Number                : in  std_logic_vector(63 downto 0);
+       SPI_Output_Handler_Version_Name                 : in  std_logic_vector(255 downto 0); 
+       SPI_Output_Handler_Version_Number               : in  std_logic_vector(63 downto 0);
+       SPI_Analog_Driver_Version_Name                  : in  std_logic_vector(255 downto 0); 
+       SPI_Analog_Driver_Version_Number                : in  std_logic_vector(63 downto 0);
+       SPI_Analog_Handler_Version_Name                 : in  std_logic_vector(255 downto 0); 
+       SPI_Analog_Handler_Version_Number               : in  std_logic_vector(63 downto 0);
+       Main_Demux_Version_Name                         : in  std_logic_vector(255 downto 0); 
+       Main_Demux_Version_Number                       : in  std_logic_vector(63 downto 0);
+       Main_Mux_Version_Name                           : in  std_logic_vector(255 downto 0); 
+       Main_Mux_Version_Number                         : in  std_logic_vector(63 downto 0);
+       Baud_Rate_Generator_Version_Name                : in  std_logic_vector(255 downto 0);
+       Baud_Rate_Generator_Version_Number              : in  std_logic_vector(63 downto 0);
+       APE_Test_System_FPGA_Firmware_Version_Name      : in  std_logic_vector(255 downto 0);
+       APE_Test_System_FPGA_Firmware_Version_Number    : in  std_logic_vector(63 downto 0);
+       Real_Time_Clock_Handler_Version_Name            : in  std_logic_vector(255 downto 0);
+       Real_Time_Clock_Handler_Version_Number          : in  std_logic_vector(63 downto 0);
+       Version_Data_Ready                              : out std_logic;
+       Module_Number                                   : in  std_logic_vector(7 downto 0);
+       Version_Name                                    : out std_logic_vector(255 downto 0); 
+       Version_Number                                  : out std_logic_vector(63 downto 0)
       );
 end Version_Logger;
    
@@ -140,26 +143,33 @@ elsif (CLK_I'event and CLK_I = '1') then
                            Version_Number_i     <= SPI_Analog_Handler_Version_Number;
                         end if;   
 
-                   when X"07" =>
-                        if Main_Demux_Version_Ready = '1' then
+                    when X"07" =>
+                         if Main_Demux_Version_Ready = '1' then
                            Version_Reader_State <= Read_Modules;
                            Version_Name_i       <= Main_Demux_Version_Name;
                            Version_Number_i     <= Main_Demux_Version_Number;
-                        end if;    
+                         end if;    
 
-                   when X"08" =>
-                        if Main_Mux_Version_Ready = '1' then
-                           Version_Reader_State <= Read_Modules;
-                           Version_Name_i       <= Main_Mux_Version_Name;
-                           Version_Number_i     <= Main_Mux_Version_Number;
-                        end if;         
+                    when X"08" =>
+                         if Main_Mux_Version_Ready = '1' then
+                              Version_Reader_State <= Read_Modules;
+                              Version_Name_i       <= Main_Mux_Version_Name;
+                              Version_Number_i     <= Main_Mux_Version_Number;
+                         end if;         
 
-                   when X"0a" =>
-                        if Baud_Rate_Generator_Version_Ready = '1' then
-                           Version_Reader_State <= Read_Modules;
-                           Version_Name_i       <= Baud_Rate_Generator_Version_Name;
-                           Version_Number_i     <= Baud_Rate_Generator_Version_Number;
-                        end if;     
+                    when X"0a" =>
+                         if Baud_Rate_Generator_Version_Ready = '1' then
+                              Version_Reader_State <= Read_Modules;
+                              Version_Name_i       <= Baud_Rate_Generator_Version_Name;
+                              Version_Number_i     <= Baud_Rate_Generator_Version_Number;
+                         end if;    
+                        
+                    when X"09" =>
+                         if Real_Time_Clock_Handler_Version_Ready = '1' then
+                              Version_Reader_State <= Read_Modules;
+                              Version_Name_i       <= Real_Time_Clock_Handler_Version_Name;
+                              Version_Number_i     <= Real_Time_Clock_Handler_Version_Number;
+                         end if;
 
                    when X"0e" =>
                         if APE_Test_System_FPGA_Firmware_Version_Ready = '1' then

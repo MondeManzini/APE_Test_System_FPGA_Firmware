@@ -71,7 +71,7 @@ use work.Version_Ascii.all;
          Main_Mux_Version_Request                        : out std_logic; 
          Baud_Rate_Generator_Version_Request             : out std_logic; 
          APE_Test_System_FPGA_Firmware_Version_Request   : out std_logic; 
-         EndatSniffer_Version_Request                    : out std_logic;
+         Endat_Sniffer_Version_Request                   : out std_logic;
          Main_Demux_Version_Name                         : out std_logic_vector(255 downto 0);
          Main_Demux_Version_Number                       : out std_logic_vector(63 downto 0);
          Main_Demux_Version_Ready                        : out std_logic 
@@ -681,26 +681,29 @@ begin
                               
 -- Mode     
          when get_Mode =>             
-              CRC_reset       <= '0';
-              CRC_out         <= '0';
-              Messag_Length_i <= conv_integer(Message_Length_i); -- Convert Message
-              if got_byte = '1' then
-                 CRC_out        <= '1';
-                 Mode_i         <= byte_received;       -- Mode Byte4
-                 cmd_state      <= branch;
-              end if;
+            CRC_reset       <= '0';
+            CRC_out         <= '0';
+            Messag_Length_i <= conv_integer(Message_Length_i); -- Convert Message
+            if got_byte = '1' then
+               CRC_out        <= '1';
+               Mode_i         <= byte_received;       -- Mode Byte4
+               cmd_state      <= branch;
+            end if;
              
 -- Branch
          when branch => 
       
             CRC_out <= '0'; 
-              case Mode_i  is
+               case Mode_i  is
                                         
                   when X"80" =>                       -- Mode Set RTC Stamp
                      cmd_state           <= get_time_sec;
                         
                   when X"81" =>                       -- Mode Outputs
                      cmd_state           <= Get_Outputs;
+
+                  when X"82" =>                       -- Mode Outputs
+                     cmd_state           <= CRC_check;
 
                   when X"90" =>                       -- Mode Version
                      cmd_state           <= get_version_mod_1;     
@@ -715,12 +718,12 @@ begin
           when get_time_sec =>
                CRC_out <= '0';                           
                if got_byte = '1' then
-                  CRC_out             <= '1';                
+                  CRC_out       <= '1';                
                   Seconds_out_i <= byte_received;   -- Time Stamp Byte 3 
                                                           -- Byte 5
                   cmd_state     <= get_time_min;
-               else -- no data then get time
-                  cmd_state     <= Active;
+               --else -- no data then get time
+               --   cmd_state     <= Active;
                end if;
 
           when get_time_min =>
@@ -729,7 +732,7 @@ begin
                   CRC_out       <= '1';                
                   Minutes_out_i <= byte_received;   -- Time Stamp Byte 2 
                                                           -- Byte 6
-                  cmd_state           <= get_time_hrs;
+                  cmd_state     <= get_time_hrs;
                end if;
 --               
           when get_time_hrs =>
@@ -744,8 +747,8 @@ begin
           when get_time_days =>
                CRC_out <= '0';                           
                if got_byte = '1' then
-                  CRC_out             <= '1';                 
-                  Day_out_i <= byte_received;   -- Time Stamp Byte 0 --
+                  CRC_out     <= '1';                 
+                  Day_out_i   <= byte_received;   -- Time Stamp Byte 0 --
                                                           -- Byte 8
                   cmd_state           <= get_time_date;
                end if;
@@ -841,8 +844,8 @@ begin
 
 -- CRC checker           
          when CRC_check =>
-              got_byte_cnt        := 0;
-              CRC_out        <= '0';
+              got_byte_cnt := 0;
+              CRC_out      <= '0';
               if got_byte = '1' then
                  CRC_byte_i(15 downto 8)       <= byte_received;
                  cmd_state                     <= CRC_check_L;                   
@@ -870,20 +873,16 @@ begin
          when Active =>
       
             if Mode_i = X"80" then         -- Inputs Time Stamp
-                                       
-               Seconds_out                <= Seconds_out_i;                
-               Minutes_out                <= Minutes_out_i;             
-               Hours_out                  <= Hours_out_i;
-               Day_out                    <= Day_out_i;
-               Date_out                   <= Date_out_i;
-               Month_Century_out          <= Month_Century_out_i;
-               Year_out                   <= Year_out_i;
-               SET_Timer                  <= '1';
-               GET_Timer                  <= '1';
-               cmd_state                  <= reset_trigger;
-                    
+               Seconds_out       <= Seconds_out_i;                
+               Minutes_out       <= Minutes_out_i;             
+               Hours_out         <= Hours_out_i;
+               Day_out           <= Day_out_i;
+               Date_out          <= Date_out_i;
+               Month_Century_out <= Month_Century_out_i;
+               Year_out          <= Year_out_i;
+               SET_Timer         <= '1';
+               cmd_state         <= reset_trigger;
             elsif Mode_i = X"81" then
-                                       
                Dig_Card1_1_B0        <= Dig_Card1_1_B0_i;
                Dig_Card1_1_B1        <= Dig_Card1_1_B1_i;
                Dig_Card1_1_B2        <= Dig_Card1_1_B2_i;
@@ -892,19 +891,17 @@ begin
                Dig_Card1_1_B5        <= Dig_Card1_1_B5_i;
                Dig_Card1_1_B6        <= Dig_Card1_1_B6_i;
                Dig_Card1_1_B7        <= Dig_Card1_1_B7_i;
-
                Dig_Outputs_Ready     <= '1';
-
                cmd_state             <= reset_trigger;
-  
+            elsif Mode_i = x"82" then
+               GET_Timer             <= '1';
+               cmd_state             <= reset_trigger;
             elsif Mode_i = X"90" then        
                Module_Number         <= Module_Number_i;
                cmd_state             <= version_loader;
-                                        
             end if;  
 
          when version_loader =>  
-            cmd_state             <= reset_trigger; 
             case Module_Number_i is
                when X"00" =>
                   SPI_IO_Driver_Version_Request                   <= '0';
@@ -918,31 +915,41 @@ begin
                   Baud_Rate_Generator_Version_Request             <= '0';
                   APE_Test_System_FPGA_Firmware_Version_Request   <= '0';                      
                when X"01" =>
-                  SPI_IO_Driver_Version_Request                <= '1';
-                  when X"02" =>
-                     SPI_Input_Handler_Version_Request            <= '1';
-                  when X"03" =>
-                     SPI_Output_Handler_Version_Request           <= '1';
-                  when X"04" =>
-                     SPI_Analog_Driver_Version_Request            <= '1';
-                  when X"05" =>
-                     SPI_Analog_Handler_Version_Request           <= '1';
-                  when X"07" =>
-                     Main_Demux_Version_Request_i                 <= '1';  
-                  when X"08" =>
-                     Main_Mux_Version_Request                     <= '1';    
-                  when X"09" =>
-                     Real_Time_Clock_Handler_Version_Request      <= '1';  
-                  when X"0a" =>
-                     Baud_Rate_Generator_Version_Request          <= '1';
-                  when X"0b" =>       
-                     APE_Test_System_FPGA_Firmware_Version_Request   <= '1';   
-                  when X"0c" =>       
-                     EndatSniffer_Version_Request                    <= '1';                      
-                  when others =>     
+                  SPI_IO_Driver_Version_Request                   <= '1';
+                  cmd_state                                       <= reset_trigger;
+               when X"02" =>
+                  SPI_Input_Handler_Version_Request               <= '1';
+                  cmd_state                                       <= reset_trigger;
+               when X"03" =>
+                  SPI_Output_Handler_Version_Request              <= '1';
+                  cmd_state                                       <= reset_trigger;
+               when X"04" =>
+                  SPI_Analog_Driver_Version_Request               <= '1';
+                  cmd_state                                       <= reset_trigger;
+               when X"05" =>
+                  SPI_Analog_Handler_Version_Request              <= '1';
+                  cmd_state                                       <= reset_trigger;
+               when X"07" =>
+                  Main_Demux_Version_Request_i                    <= '1';
+                  cmd_state                                       <= reset_trigger;  
+               when X"08" =>
+                  Main_Mux_Version_Request                        <= '1';
+                  cmd_state                                       <= reset_trigger;    
+               when X"09" =>
+                  Real_Time_Clock_Handler_Version_Request         <= '1';
+                  cmd_state                                       <= reset_trigger;  
+               when X"0a" =>
+                  Baud_Rate_Generator_Version_Request             <= '1';
+                  cmd_state                                       <= reset_trigger;
+               when X"0e" =>       
+                  APE_Test_System_FPGA_Firmware_Version_Request   <= '1';
+                  cmd_state                                       <= reset_trigger;   
+               when X"0c" =>       
+                  Endat_Sniffer_Version_Request                    <= '1';
+                  cmd_state                                       <= reset_trigger;                      
+               when others =>     
 
-               end case;   
-
+            end case;   
                  
             when reset_trigger =>
                  got_byte_cnt                               := 0;

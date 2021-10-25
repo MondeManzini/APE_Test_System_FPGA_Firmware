@@ -69,18 +69,26 @@ entity Real_Time_Clock_I2C_Handler is
 -- Memory Port
 ----------------------------------------------------------------
 -- Outputs for Mux
-   Seconds_out_mem            : out std_logic_vector(7 downto 0);
-   Minutes_out_mem            : out std_logic_vector(7 downto 0);
-   Hours_out_mem              : out std_logic_vector(7 downto 0);
-   Day_out_mem                : out std_logic_vector(7 downto 0);
-   Date_out_mem               : out std_logic_vector(7 downto 0);
-   Month_Century_out_mem      : out std_logic_vector(7 downto 0);
-   Year_out_mem               : out std_logic_vector(7 downto 0);
-   Ready_mem                  : out std_logic
+   Seconds_out_mem                           : out std_logic_vector(7 downto 0);
+   Minutes_out_mem                           : out std_logic_vector(7 downto 0);
+   Hours_out_mem                             : out std_logic_vector(7 downto 0);
+   Day_out_mem                               : out std_logic_vector(7 downto 0);
+   Date_out_mem                              : out std_logic_vector(7 downto 0);
+   Month_Century_out_mem                     : out std_logic_vector(7 downto 0);
+   Year_out_mem                              : out std_logic_vector(7 downto 0);
+   Ready_mem                                 : out std_logic;
+   Real_Time_Clock_Handler_Version_Request   : in std_logic;
+   Real_Time_Clock_Handler_Version_Name      : out std_logic_vector(255 downto 0);  
+   Real_Time_Clock_Handler_Version_Number    : out std_logic_vector(63 downto 0); 
+   Real_Time_Clock_Handler_Version_Ready     : out std_logic
    );
 end Real_Time_Clock_I2C_Handler;
 
 architecture Arch_DUT of Real_Time_Clock_I2C_Handler is
+
+signal Real_Time_Clock_Handler_Version_Name_i     : std_logic_vector(255 downto 0); 
+signal Real_Time_Clock_Handler_Version_Number_i   : std_logic_vector(63 downto 0);
+signal Module_Number_i                            : std_logic_vector(7 downto 0);
 
 -- Read_Write Time Keeping Registers 
 signal Seconds_register_i              : std_logic_vector(7 downto 0):= X"00"; -- 00H -- Initialize as 00 
@@ -238,6 +246,7 @@ Day_out_mem             <= Day_out_mem_i;
 Date_out_mem            <= Date_out_mem_i;
 Month_Century_out_mem   <= Month_Century_out_mem_i;
 Year_out_mem            <= Year_out_mem_i;
+-- 
 -------------------------------------------------------------------------------
 -- i2C Controller
 -------------------------------------------------------------------------------
@@ -254,28 +263,48 @@ I2C_Control :process (CLK_I,RST_I)
    variable wait_busy         : integer range 0 to 100;
 begin
    if RST_I = '0' then 
-      Count                   := 0;
-      Config_Count            := 0;
-      mem_flash_cnt           := 0;
-      Slave_Address_i         <= "1101000";   -- 0xd0 - RTC Chip Address - 0x68?
-      Slave_Register_i        <= X"00";
-      lockout_i               <= '0';         
-      Enable_i                <= '0';
-      Ready_i                 <= '0';
-      Slave_Data_i            <= X"00";
-      initialation_Status_i   <= '0';
-      i2c_Controller_State    <= Initialization;
-      Seconds_out_i           <= X"00";
-      Minutes_out_i           <= X"00";
-      Hours_out_i             <= X"00";
-      Day_out_i               <= X"00";
-      Date_out_i              <= X"00";
-      Month_Century_out_i     <= X"00";
-      Year_out_i              <= X"00";
-      Write_Count             := 0;
-      Read_Count              := 0;
-      wait_cnt                := 0;
+      Count                                     := 0;
+      Config_Count                              := 0;
+      mem_flash_cnt                             := 0;
+      Slave_Address_i                           <= "1101000";   -- 0xd0 - RTC Chip Address - 0x68?
+      Slave_Register_i                          <= X"00";
+      lockout_i                                 <= '0';         
+      Enable_i                                  <= '0';
+      Ready_i                                   <= '0';
+      Slave_Data_i                              <= X"00";
+      initialation_Status_i                     <= '0';
+      i2c_Controller_State                      <= Initialization;
+      Seconds_out_i                             <= X"00";
+      Minutes_out_i                             <= X"00";
+      Hours_out_i                               <= X"00";
+      Day_out_i                                 <= X"00";
+      Date_out_i                                <= X"00";
+      Month_Century_out_i                       <= X"00";
+      Year_out_i                                <= X"00";
+      Write_Count                               := 0;
+      Read_Count                                := 0;
+      wait_cnt                                  := 0;
+      Real_Time_Clock_Handler_Version_Name      <= (others => '0');
+      Real_Time_Clock_Handler_Version_Name_i    <= (others => '0');
+      Real_Time_Clock_Handler_Version_Number    <= (others => '0'); 
+      Real_Time_Clock_Handler_Version_Number_i  <= (others => '0');
+      Real_Time_Clock_Handler_Version_Ready     <= '0';
+      --Module_Number_i                           <= (others=> '0');
    elsif CLK_I'event and CLK_I = '1' then
+
+      Real_Time_Clock_Handler_Version_Name_i    <= R & E & A & L & Space & T & I & M & E & Space &
+                                       C & L & O & C & K & Space & H & A &
+                                       N & D & L & E & R & Space & Space &
+                                       Space & Space & Space & Space & Space & Space & Space;
+      Real_Time_Clock_Handler_Version_Number_i  <= Zero & Zero & Dot & Zero & One  & Dot & Zero & Five;  
+      
+      if Real_Time_Clock_Handler_Version_Request = '1' then
+            Real_Time_Clock_Handler_Version_Ready  <= '1';
+            Real_Time_Clock_Handler_Version_Name   <= Real_Time_Clock_Handler_Version_Name_i;
+            Real_Time_Clock_Handler_Version_Number <= Real_Time_Clock_Handler_Version_Number_i;  
+      else
+            Real_Time_Clock_Handler_Version_Ready  <= '0';
+      end if;
 
       case i2c_Controller_State is           
          when Initialization =>
@@ -505,7 +534,7 @@ begin
                            i2c_ReadData_State   <= Wait_Read;
 
                         when 7 =>
-                           Year_out_i        <= data_read;
+                           Year_out_i           <= data_read;
                            i2c_ReadData_State   <= Wait_Read;
 
                         when others =>
@@ -536,7 +565,7 @@ begin
                      Slave_Data_i            <= Slave_Register_i;
                      Enable_i                <= '1';
                      Address_Lock_i          <= '0';       
-                     i2c_WriteData_State      <= Wait_Address;
+                     i2c_WriteData_State     <= Wait_Address;
                   end if;
                 
                when Wait_Address =>
@@ -582,14 +611,16 @@ begin
                      Slave_read_nWrite    <= '0';
                      Enable_i             <= '0';
                   elsif Busy_i = '0' and Write_Count = 8 then      
-                     Ready_i              <= '1';
+                     --Ready_i              <= '1';
                      i2c_WriteData_State  <= TestStop;                                                                                       
                   end if;
                      
                when TestStop =>
-                  Ready_i                 <= '0';
+                  --Ready_i                 <= '0';
                   i2c_WriteData_State     <= Idle;
-                  i2c_Controller_State    <= Idle;
+                  --i2c_Controller_State    <= Idle;
+                  i2c_ReadData_State      <= Idle;
+                  i2c_Controller_State    <= ReadData;
                     
             end case;  
       end case;
