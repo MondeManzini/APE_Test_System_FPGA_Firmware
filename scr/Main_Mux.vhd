@@ -469,20 +469,7 @@ begin
                      if i = 0 then
                         Analog_In_Data_Array(0) <= Analog_Card_1;
                      elsif i > 0 then
-                        --Analog_In_Data_Array(i) <= Analog_Data((15+(i * 16)) downto (0+(i * 16)));
                         Analog_In_Data_Array(i-1) <= Analog_Data((7+((i-1) * 8)) downto (0+((i-1) * 8))); 
-                        --Analog_In_Data_Array(24-1) <= Analog_Data((7+((24-1) * 8)) downto (0+((24-1) * 8)));
-                        --Analog_In_Data_Array(24-1) <= Analog_Data((191 downto 184);  
-                        --Analog_In_Data_Array(25-1) <= Analog_Data((7+((25-1) * 8)) downto (0+((25-1) * 8)));
-                        --Analog_In_Data_Array(25-1) <= Analog_Data((199 downto 192);  
-                        --Analog_In_Data_Array(26-1) <= Analog_Data((7+((26-1) * 8)) downto (0+((26-1) * 8)));
-                        --Analog_In_Data_Array(26-1) <= Analog_Data((207 downto 200);  
-
-                        --Analog_In_Data_Array(49-1) <= Analog_Data((7+((49-1) * 8)) downto (0+((49-1) * 8)));
-                        --Analog_In_Data_Array(49-1) <= Analog_Data((391 downto 384);  
-
-                        --Analog_In_Data_Array(96-1) <= Analog_Data((7+((96-1) * 8)) downto (0+((96-1) * 8)));
-                        --Analog_In_Data_Array(96-1) <= Analog_Data((207 downto 200);  
                      end if;  
                   end loop;
                end if;
@@ -772,110 +759,13 @@ begin
 -- Operation
 -----------------------------------------
 
-         if Send_Operation = '1' then
-            Send_100mS_Data  <= '0';
-            Send_Operation   <= '0';
-            send_msg         <= '1';
-         elsif Send_Version_Data = '1' then
-            Send_Version_Data <= '0';
-            send_msg          <= '1';
-  --          data2send(0)      <= Preamble1;
-  --          data2send(1)      <= Preamble2;
-  --          data2send(2)      <= Preamble3;
-  --          data2send(3)      <= X"2f";        -- Length
-  --          data2send(4)      <= X"80";        -- Mode
-
-  ---- Version Data
-  --          data2send(5)      <= Version_Name_i(255 downto 248);
-  --          data2send(6)      <= Version_Name_i(247 downto 240);
-  --          data2send(7)      <= Version_Name_i(239 downto 232);
-  --          data2send(8)      <= Version_Name_i(231 downto 224);
-  --          data2send(9)      <= Version_Name_i(223 downto 216);
-  --          data2send(10)     <= Version_Name_i(215 downto 208);
-  --          data2send(11)     <= Version_Name_i(207 downto 200);
-  --          data2send(12)     <= Version_Name_i(199 downto 192);
-  --          data2send(13)     <= Version_Name_i(191 downto 184);
-  --          data2send(14)     <= Version_Name_i(183 downto 176);
-  --          data2send(15)     <= Version_Name_i(175 downto 168);
-  --          data2send(16)     <= Version_Name_i(167 downto 160);
-  --          data2send(17)     <= Version_Name_i(159 downto 152);
-  --          data2send(18)     <= Version_Name_i(151 downto 144);
-  --          data2send(19)     <= Version_Name_i(143 downto 136);
-  --          data2send(20)     <= Version_Name_i(135 downto 128);
-  --          data2send(21)     <= Version_Name_i(127 downto 120);
-  --          data2send(22)     <= Version_Name_i(119 downto 112);
-  --          data2send(23)     <= Version_Name_i(111 downto 104);
-  --          data2send(24)     <= Version_Name_i(103 downto 96);
-  --          data2send(25)     <= Version_Name_i(95 downto 88);
-  --          data2send(26)     <= Version_Name_i(87 downto 80);
-  --          data2send(27)     <= Version_Name_i(79 downto 72);    
-  --          data2send(28)     <= Version_Name_i(71 downto 64);
-  --          data2send(29)     <= Version_Name_i(63 downto 56);
-  --          data2send(30)     <= Version_Name_i(55 downto 48);
-  --          data2send(31)     <= Version_Name_i(47 downto 40);
-  --          data2send(32)     <= Version_Name_i(39 downto 32);
-  --          data2send(33)     <= Version_Name_i(31 downto 24);
-  --          data2send(34)     <= Version_Name_i(23 downto 16);
-  --          data2send(35)     <= Version_Name_i(15 downto 8);
-  --          data2send(36)     <= Version_Name_i(7 downto 0);
-  --          data2send(37)     <= Version_Number_i(63 downto 56);
-  --          data2send(38)     <= Version_Number_i(55 downto 48);
-  --          data2send(39)     <= Version_Number_i(47 downto 40);
-  --          data2send(40)     <= Version_Number_i(39 downto 32);
-  --          data2send(41)     <= Version_Number_i(31 downto 24);
-  --          data2send(42)     <= Version_Number_i(23 downto 16);
-  --          data2send(43)     <= Version_Number_i(15 downto 8);
-  --          data2send(44)     <= Version_Number_i(7 downto 0);
-                       
-  --          no_of_chars2send  <= 47;         -- alway 3 more then last number
-
-  --          CRC2send(0)       <= reverse_any_bus(Preamble1);
-  --          CRC2send(1)       <= reverse_any_bus(Preamble2);
-  --          CRC2send(2)       <= reverse_any_bus(Preamble3);
-  --          CRC2send(3)       <= reverse_any_bus(X"2f");
-  --          CRC2send(4)       <= reverse_any_bus(X"80");
-        
-  --          CRC2send(5)       <= reverse_any_bus(Version_Name_i(255 downto 248));
-  --          CRC2send(6)       <= reverse_any_bus(Version_Name_i(247 downto 240));
-  --          CRC2send(7)       <= reverse_any_bus(Version_Name_i(239 downto 232));
-  --          CRC2send(8)       <= reverse_any_bus(Version_Name_i(231 downto 224));
-  --          CRC2send(9)       <= reverse_any_bus(Version_Name_i(223 downto 216));
-  --          CRC2send(10)      <= reverse_any_bus(Version_Name_i(215 downto 208));
-  --          CRC2send(11)      <= reverse_any_bus(Version_Name_i(207 downto 200));
-  --          CRC2send(12)      <= reverse_any_bus(Version_Name_i(199 downto 192));
-  --          CRC2send(13)      <= reverse_any_bus(Version_Name_i(191 downto 184));
-  --          CRC2send(14)      <= reverse_any_bus(Version_Name_i(183 downto 176));
-  --          CRC2send(15)      <= reverse_any_bus(Version_Name_i(175 downto 168));
-  --          CRC2send(16)      <= reverse_any_bus(Version_Name_i(167 downto 160));
-  --          CRC2send(17)      <= reverse_any_bus(Version_Name_i(159 downto 152));
-  --          CRC2send(18)      <= reverse_any_bus(Version_Name_i(151 downto 144));
-  --          CRC2send(19)      <= reverse_any_bus(Version_Name_i(143 downto 136));
-  --          CRC2send(20)      <= reverse_any_bus(Version_Name_i(135 downto 128));
-  --          CRC2send(21)      <= reverse_any_bus(Version_Name_i(127 downto 120));
-  --          CRC2send(22)      <= reverse_any_bus(Version_Name_i(119 downto 112));
-  --          CRC2send(23)      <= reverse_any_bus(Version_Name_i(111 downto 104));
-  --          CRC2send(24)      <= reverse_any_bus(Version_Name_i(103 downto 96));
-  --          CRC2send(25)      <= reverse_any_bus(Version_Name_i(95 downto 88));
-  --          CRC2send(26)      <= reverse_any_bus(Version_Name_i(87 downto 80));
-  --          CRC2send(27)      <= reverse_any_bus(Version_Name_i(79 downto 72));    
-  --          CRC2send(28)      <= reverse_any_bus(Version_Name_i(71 downto 64));
-  --          CRC2send(29)      <= reverse_any_bus(Version_Name_i(63 downto 56));
-  --          CRC2send(30)      <= reverse_any_bus(Version_Name_i(55 downto 48));
-  --          CRC2send(31)      <= reverse_any_bus(Version_Name_i(47 downto 40));
-  --          CRC2send(32)      <= reverse_any_bus(Version_Name_i(39 downto 32));
-  --          CRC2send(33)      <= reverse_any_bus(Version_Name_i(31 downto 24));
-  --          CRC2send(34)      <= reverse_any_bus(Version_Name_i(23 downto 16));
-  --          CRC2send(35)      <= reverse_any_bus(Version_Name_i(15 downto 8));
-  --          CRC2send(36)      <= reverse_any_bus(Version_Name_i(7 downto 0));
-  --          CRC2send(37)      <= reverse_any_bus(Version_Number_i(63 downto 56));
-  --          CRC2send(38)      <= reverse_any_bus(Version_Number_i(55 downto 48));
-  --          CRC2send(39)      <= reverse_any_bus(Version_Number_i(47 downto 40));
-  --          CRC2send(40)      <= reverse_any_bus(Version_Number_i(39 downto 32));
-  --          CRC2send(41)      <= reverse_any_bus(Version_Number_i(31 downto 24));
-  --          CRC2send(42)      <= reverse_any_bus(Version_Number_i(23 downto 16));
-  --          CRC2send(43)      <= reverse_any_bus(Version_Number_i(15 downto 8));
-  --          CRC2send(44)      <= reverse_any_bus(Version_Number_i(7 downto 0));
-
+      if Send_Operation = '1' then
+         Send_100mS_Data  <= '0';
+         Send_Operation   <= '0';
+         send_msg         <= '1';
+      elsif Send_Version_Data = '1' then
+         Send_Version_Data <= '0';
+         send_msg          <= '1';
       elsif Send_RTC_Operation = '1' then
          Send_RTC_Data        <= '0';
          Send_RTC_Operation   <= '0';

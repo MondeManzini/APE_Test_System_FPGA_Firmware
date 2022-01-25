@@ -1,6 +1,6 @@
 #import fpyga
 #from fpyga import *
-# from . import scr
+from . import scr
 import tkinter
 # from . import Main_Mux
 
