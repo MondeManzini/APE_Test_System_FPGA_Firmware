@@ -1,31 +1,14 @@
-<<<<<<< HEAD
-Analysis & Synthesis Status : Failed - Fri Jan 28 15:07:41 2022
+Analysis & Synthesis Status : Successful - Fri Jan 28 15:27:13 2022
 Quartus Prime Version : 20.1.1 Build 720 11/11/2020 SJ Lite Edition
 Revision Name : APE_Test_System_FPGA_Firmware
 Top-level Entity Name : APE_Test_System_FPGA_Firmware
 Family : Cyclone IV E
-Total logic elements : N/A until Partition Merge
-    Total combinational functions : N/A until Partition Merge
-    Dedicated logic registers : N/A until Partition Merge
-Total registers : N/A until Partition Merge
-Total pins : N/A until Partition Merge
-Total virtual pins : N/A until Partition Merge
-Total memory bits : N/A until Partition Merge
-Embedded Multiplier 9-bit elements : N/A until Partition Merge
-Total PLLs : N/A until Partition Merge
-=======
-Analysis & Synthesis Status : Failed - Fri Jan 28 14:55:07 2022
-Quartus Prime Version : 21.1.0 Build 842 10/21/2021 SJ Lite Edition
-Revision Name : APE_Test_System_FPGA_Firmware
-Top-level Entity Name : APE_Test_System_FPGA_Firmware
-Family : Cyclone IV E
-Total logic elements : N/A until Partition Merge
-    Total combinational functions : N/A until Partition Merge
-    Dedicated logic registers : N/A until Partition Merge
-Total registers : N/A until Partition Merge
-Total pins : N/A until Partition Merge
-Total virtual pins : N/A until Partition Merge
-Total memory bits : N/A until Partition Merge
-Embedded Multiplier 9-bit elements : N/A until Partition Merge
-Total PLLs : N/A until Partition Merge
->>>>>>> f7aba0397669afca55e6a92639089d9790f6ba32
+Total logic elements : 1,549
+    Total combinational functions : 1,308
+    Dedicated logic registers : 706
+Total registers : 706
+Total pins : 104
+Total virtual pins : 0
+Total memory bits : 0
+Embedded Multiplier 9-bit elements : 0
+Total PLLs : 0

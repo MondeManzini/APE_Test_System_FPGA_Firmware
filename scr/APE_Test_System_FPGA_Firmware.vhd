@@ -449,7 +449,7 @@ signal SPI_IO_Driver_Version_Ready_2_i  : std_logic;
 signal SPI_IO_Driver_Version_Name_3_i   : std_logic_vector(255 downto 0); 
 signal SPI_IO_Driver_Version_Number_3_i : std_logic_vector(63 downto 0);
 signal SPI_IO_Driver_Version_Ready_3_i  : std_logic;
-signal SPI_IO_Driver_Version_Request_3_i : std_logic;
+--signal SPI_IO_Driver_Version_Request_3_i : std_logic;
 
 component SPI_IO_Driver is
     port (
@@ -1532,7 +1532,7 @@ port map (
   Dig_Outputs_Ready                             => Dig_Outputs_Ready_i,
   SPI_IO_Driver_Version_Request                 => SPI_IO_Driver_Version_Request_1_i,   
   SPI_Output_Handler_Version_Request            => SPI_Output_Handler_Version_Request_i,
-  SPI_Input_Handler_Version_Request             => SPI_Input_Handler_Version_Request_i,
+  SPI_Input_Handler_Version_Request             => SPI_Input_Handler_Version_Request_1_i,
   SPI_Analog_Driver_Version_Request             => SPI_Analog_Driver_Version_Request_i,
   SPI_Analog_Handler_Version_Request            => SPI_Analog_Handler_Version_Request_i,
   Real_Time_Clock_Handler_Version_Request       => Real_Time_Clock_Handler_Version_Request_i,
