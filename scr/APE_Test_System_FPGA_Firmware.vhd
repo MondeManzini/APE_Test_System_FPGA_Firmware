@@ -438,6 +438,7 @@ signal SPI_Inport_2_i     : std_logic_vector(15 downto 0);
 
 signal SPI_IO_Driver_Version_Request_1_i  : std_logic;
 signal SPI_IO_Driver_Version_Request_2_i  : std_logic;
+signal SPI_IO_Driver_Version_Request_3_i  : std_logic;
 
 signal SPI_IO_Driver_Version_Name_1_i   : std_logic_vector(255 downto 0); 
 signal SPI_IO_Driver_Version_Number_1_i : std_logic_vector(63 downto 0);
