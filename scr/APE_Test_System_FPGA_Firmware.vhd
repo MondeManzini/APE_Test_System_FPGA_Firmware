@@ -438,6 +438,7 @@ signal SPI_Inport_2_i     : std_logic_vector(15 downto 0);
 
 signal SPI_IO_Driver_Version_Request_1_i  : std_logic;
 signal SPI_IO_Driver_Version_Request_2_i  : std_logic;
+signal SPI_IO_Driver_Version_Request_3_i  : std_logic;
 
 signal SPI_IO_Driver_Version_Name_1_i   : std_logic_vector(255 downto 0); 
 signal SPI_IO_Driver_Version_Number_1_i : std_logic_vector(63 downto 0);
@@ -445,6 +446,9 @@ signal SPI_IO_Driver_Version_Ready_1_i  : std_logic;
 signal SPI_IO_Driver_Version_Name_2_i   : std_logic_vector(255 downto 0); 
 signal SPI_IO_Driver_Version_Number_2_i : std_logic_vector(63 downto 0);
 signal SPI_IO_Driver_Version_Ready_2_i  : std_logic;
+signal SPI_IO_Driver_Version_Name_3_i   : std_logic_vector(255 downto 0); 
+signal SPI_IO_Driver_Version_Number_3_i : std_logic_vector(63 downto 0);
+signal SPI_IO_Driver_Version_Ready_3_i  : std_logic;
 
 component SPI_IO_Driver is
     port (
@@ -584,7 +588,8 @@ signal Dig_Out_Request_i                    : std_logic;
 signal SPI_Output_Handler_Version_Name_i    : std_logic_vector(255 downto 0); 
 signal SPI_Output_Handler_Version_Number_i  : std_logic_vector(63 downto 0);
 signal SPI_Output_Handler_Version_Ready_i   : std_logic; 
-
+signal Data_Out_Ready_i                     : std_logic; 
+ 
 component SPI_Output_Handler is
     port (
       RST_I                                 : in  std_logic;
