@@ -1,5 +1,5 @@
 Analysis & Synthesis report for APE_Test_System_FPGA_Firmware
-Fri Jan 28 14:33:02 2022
+Fri Jan 28 15:06:22 2022
 Quartus Prime Version 20.1.1 Build 720 11/11/2020 SJ Lite Edition
 
 
@@ -37,7 +37,7 @@ https://fpgasoftware.intel.com/eula.
 +----------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                     ;
 +------------------------------------+---------------------------------------------+
-; Analysis & Synthesis Status        ; Failed - Fri Jan 28 14:33:02 2022           ;
+; Analysis & Synthesis Status        ; Failed - Fri Jan 28 15:06:22 2022           ;
 ; Quartus Prime Version              ; 20.1.1 Build 720 11/11/2020 SJ Lite Edition ;
 ; Revision Name                      ; APE_Test_System_FPGA_Firmware               ;
 ; Top-level Entity Name              ; APE_Test_System_FPGA_Firmware               ;
@@ -162,7 +162,7 @@ https://fpgasoftware.intel.com/eula.
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 20.1.1 Build 720 11/11/2020 SJ Lite Edition
-    Info: Processing started: Fri Jan 28 14:32:49 2022
+    Info: Processing started: Fri Jan 28 15:06:05 2022
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off APE_Test_System_FPGA_Firmware -c APE_Test_System_FPGA_Firmware
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (20030): Parallel compilation is enabled and will use 2 of the 2 processors detected
@@ -216,19 +216,14 @@ Info (12021): Found 2 design units, including 1 entities, in source file /home/l
 Info (12021): Found 2 design units, including 1 entities, in source file /home/labuser/Downloads/APE_Test_System_FPGA_Firmware/scr/APE_Test_System_FPGA_Firmware.vhd
     Info (12022): Found design unit 1: APE_Test_System_FPGA_Firmware-Arch_DUT File: /home/labuser/Downloads/APE_Test_System_FPGA_Firmware/scr/APE_Test_System_FPGA_Firmware.vhd Line: 70
     Info (12023): Found entity 1: APE_Test_System_FPGA_Firmware File: /home/labuser/Downloads/APE_Test_System_FPGA_Firmware/scr/APE_Test_System_FPGA_Firmware.vhd Line: 24
-Error (10482): VHDL error at APE_Test_System_FPGA_Firmware.vhd(1407): object "Data_Out_Ready_i" is used but not declared File: /home/labuser/Downloads/APE_Test_System_FPGA_Firmware/scr/APE_Test_System_FPGA_Firmware.vhd Line: 1407
-Error (10558): VHDL error at APE_Test_System_FPGA_Firmware.vhd(1407): cannot associate formal port "Data_Out_Ready" of mode "out" with an expression File: /home/labuser/Downloads/APE_Test_System_FPGA_Firmware/scr/APE_Test_System_FPGA_Firmware.vhd Line: 1407
-Error (10482): VHDL error at APE_Test_System_FPGA_Firmware.vhd(1411): object "SPI_IO_Driver_Version_Request_3_i" is used but not declared File: /home/labuser/Downloads/APE_Test_System_FPGA_Firmware/scr/APE_Test_System_FPGA_Firmware.vhd Line: 1411
-Error (10482): VHDL error at APE_Test_System_FPGA_Firmware.vhd(1412): object "SPI_IO_Driver_Version_Name_3_i" is used but not declared File: /home/labuser/Downloads/APE_Test_System_FPGA_Firmware/scr/APE_Test_System_FPGA_Firmware.vhd Line: 1412
-Error (10558): VHDL error at APE_Test_System_FPGA_Firmware.vhd(1412): cannot associate formal port "SPI_IO_Driver_Version_Name" of mode "out" with an expression File: /home/labuser/Downloads/APE_Test_System_FPGA_Firmware/scr/APE_Test_System_FPGA_Firmware.vhd Line: 1412
-Error (10482): VHDL error at APE_Test_System_FPGA_Firmware.vhd(1413): object "SPI_IO_Driver_Version_Number_3_i" is used but not declared File: /home/labuser/Downloads/APE_Test_System_FPGA_Firmware/scr/APE_Test_System_FPGA_Firmware.vhd Line: 1413
-Error (10558): VHDL error at APE_Test_System_FPGA_Firmware.vhd(1413): cannot associate formal port "SPI_IO_Driver_Version_Number" of mode "out" with an expression File: /home/labuser/Downloads/APE_Test_System_FPGA_Firmware/scr/APE_Test_System_FPGA_Firmware.vhd Line: 1413
-Error (10482): VHDL error at APE_Test_System_FPGA_Firmware.vhd(1414): object "SPI_IO_Driver_Version_Ready_3_i" is used but not declared File: /home/labuser/Downloads/APE_Test_System_FPGA_Firmware/scr/APE_Test_System_FPGA_Firmware.vhd Line: 1414
-Error (10558): VHDL error at APE_Test_System_FPGA_Firmware.vhd(1414): cannot associate formal port "SPI_IO_Driver_Version_Ready" of mode "out" with an expression File: /home/labuser/Downloads/APE_Test_System_FPGA_Firmware/scr/APE_Test_System_FPGA_Firmware.vhd Line: 1414
-Error: Quartus Prime Analysis & Synthesis was unsuccessful. 9 errors, 1 warning
+Error (10482): VHDL error at APE_Test_System_FPGA_Firmware.vhd(1532): object "SPI_IO_Driver_Version_Request_i" is used but not declared File: /home/labuser/Downloads/APE_Test_System_FPGA_Firmware/scr/APE_Test_System_FPGA_Firmware.vhd Line: 1532
+Error (10558): VHDL error at APE_Test_System_FPGA_Firmware.vhd(1532): cannot associate formal port "SPI_IO_Driver_Version_Request" of mode "out" with an expression File: /home/labuser/Downloads/APE_Test_System_FPGA_Firmware/scr/APE_Test_System_FPGA_Firmware.vhd Line: 1532
+Error (10482): VHDL error at APE_Test_System_FPGA_Firmware.vhd(1534): object "SPI_Input_Handler_Version_Request_i" is used but not declared File: /home/labuser/Downloads/APE_Test_System_FPGA_Firmware/scr/APE_Test_System_FPGA_Firmware.vhd Line: 1534
+Error (10558): VHDL error at APE_Test_System_FPGA_Firmware.vhd(1534): cannot associate formal port "SPI_Input_Handler_Version_Request" of mode "out" with an expression File: /home/labuser/Downloads/APE_Test_System_FPGA_Firmware/scr/APE_Test_System_FPGA_Firmware.vhd Line: 1534
+Error: Quartus Prime Analysis & Synthesis was unsuccessful. 4 errors, 1 warning
     Error: Peak virtual memory: 415 megabytes
-    Error: Processing ended: Fri Jan 28 14:33:02 2022
-    Error: Elapsed time: 00:00:13
-    Error: Total CPU time (on all processors): 00:00:31
+    Error: Processing ended: Fri Jan 28 15:06:22 2022
+    Error: Elapsed time: 00:00:17
+    Error: Total CPU time (on all processors): 00:00:32
 
 
