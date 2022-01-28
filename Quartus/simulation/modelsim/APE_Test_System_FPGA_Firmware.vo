@@ -1,4 +1,4 @@
-// Copyright (C) 2020  Intel Corporation. All rights reserved.
+// Copyright (C) 2021  Intel Corporation. All rights reserved.
 // Your use of Intel Corporation's design tools, logic functions 
 // and other software and tools, and any partner logic 
 // functions, and any output files from any of the foregoing 
@@ -15,16 +15,16 @@
 
 // VENDOR "Altera"
 // PROGRAM "Quartus Prime"
-// VERSION "Version 20.1.1 Build 720 11/11/2020 SJ Lite Edition"
+// VERSION "Version 21.1.0 Build 842 10/21/2021 SJ Lite Edition"
 
-// DATE "10/21/2021 14:40:19"
+// DATE "01/28/2022 08:05:15"
 
 // 
 // Device: Altera EP4CE22F17C6 Package FBGA256
 // 
 
 // 
-// This Verilog file should be used for ModelSim-Altera (Verilog) only
+// This Verilog file should be used for Questa Intel FPGA (Verilog) only
 // 
 
 `timescale 1 ps/ 1 ps
@@ -48,13 +48,13 @@ input 	[1:0] KEY;
 input 	[3:0] SW;
 output 	[7:0] LED;
 output 	I2C_SCLK;
-output 	I2C_SDAT;
-output 	[2:0] GPIO_2_UP;
-output 	[8:0] GPIO_2;
+inout 	I2C_SDAT;
+inout 	[2:0] GPIO_2_UP;
+inout 	[8:0] GPIO_2;
 input 	[2:0] GPIO_2_IN;
-output 	[33:0] GPIO_0;
+inout 	[33:0] GPIO_0;
 input 	[1:0] GPIO_0_IN;
-output 	[33:0] GPIO_1;
+inout 	[33:0] GPIO_1;
 input 	[1:0] GPIO_1_IN;
 
 // Design Ports Information
