@@ -1529,7 +1529,7 @@ port map (
   Dig_Card1_1_B7                                => Dig_Card1_1_B7_i,
   SET_Timer                                     => SET_Timer_i,
   Dig_Outputs_Ready                             => Dig_Outputs_Ready_i,
-  SPI_IO_Driver_Version_Request                 => SPI_IO_Driver_Version_Request_i,   
+  SPI_IO_Driver_Version_Request                 => SPI_IO_Driver_Version_Request_1_i,   
   SPI_Output_Handler_Version_Request            => SPI_Output_Handler_Version_Request_i,
   SPI_Input_Handler_Version_Request             => SPI_Input_Handler_Version_Request_i,
   SPI_Analog_Driver_Version_Request             => SPI_Analog_Driver_Version_Request_i,
