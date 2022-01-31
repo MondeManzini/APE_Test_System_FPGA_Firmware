@@ -495,7 +495,7 @@ begin
                   Analog_Input_Ready   <= '1';        -- Latch AI
                else
                   analog_data_load := analog_data_load + 1;
-                  for i in 0 to 95 loop
+                  for i in 0 to 96 loop
                      if i = 0 then
                         Analog_In_Data_Array(0) <= Analog_Card_1;
                      elsif i > 0 then
@@ -623,32 +623,32 @@ begin
             else
                wait_cnt_all      := wait_cnt_all + 1;
                -- Build All Modules Message
-               no_of_chars2send  <= 122;
+               no_of_chars2send  <= 134;
                no_of_chars2snd   <= std_logic_vector(to_unsigned(no_of_chars2send, no_of_chars2snd'length));
                mode_i            <= x"80";
                for i in 0 to 132 loop
-                  if i < 3 THEN
+                  if i < 3 THEN                                               -- 3 Bytes
                      data2send(i)   <= Preamble_Data_Array(i);
                      CRC2send(i)    <= Preamble_Data_Array(i);
-                  elsif (i = 3) then
+                  elsif (i = 3) then                                          -- 1 Byte
                      data2send(i)   <= no_of_chars2snd;
                      CRC2send(i)    <= no_of_chars2snd;
-                  elsif (i = 4) then
+                  elsif (i = 4) then                                          -- 1 Byte
                      data2send(i)   <= mode_i;
                      CRC2send(i)    <= mode_i;
-                  elsif (i > 4) and (i < 15) then
+                  elsif (i > 4) and (i < 15) then                             -- 10 Bytes
                      -- Digital Output Message           
                      data2send(i)   <= Digital_Out_Data_Array(i-5);
                      CRC2send(i)    <= Digital_Out_Data_Array(i-5);
-                  elsif (i > 14) and (i < 25) then
+                  elsif (i > 14) and (i < 25) then                            -- 10 Bytes
                      -- Digital Input 1 Message       
                      data2send(i)   <= Digital_In_Data_Array_1(i-15);
                      CRC2send(i)    <= Digital_In_Data_Array_1(i-15);
-                  elsif (i > 24) and (i < 35) then
+                  elsif (i > 24) and (i < 35) then                            -- 10 Bytes
                      -- Digital Input 2 Message       
                      data2send(i)   <= Digital_In_Data_Array_2(i-25);
                      CRC2send(i)    <= Digital_In_Data_Array_2(i-25);
-                  elsif (i > 34) then
+                  elsif (i > 34) and (i < 133) then                                         -- 96 Bytes
                      -- Analog Input Message
                      data2send(i)   <= Analog_In_Data_Array(i-35);
                      CRC2send(i)    <= Analog_In_Data_Array(i-35);

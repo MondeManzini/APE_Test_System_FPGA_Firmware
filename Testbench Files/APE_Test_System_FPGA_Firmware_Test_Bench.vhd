@@ -275,16 +275,26 @@ signal Year_out_mem_i           : std_logic_vector(7 downto 0) := X"00";
 ----------------------------------------------------------------------
 -- SPI Driver ignals and Component
 ----------------------------------------------------------------------
+signal nCS_Output_1_i                   : std_logic;
+signal nCS_Output_2_i                   : std_logic;
 signal nCS_Output_1_1_i                   : std_logic;
 signal nCS_Output_1_2_i                   : std_logic;
 signal Int_1_1_i                          : std_logic;
+signal Int_1_2_i                          : std_logic;
+
 signal Int_2_1_i                          : std_logic;
 signal Sclk_1_i                           : std_logic;
 signal Mosi_1_i                           : std_logic;
 signal Miso_1_i                           : std_logic;
+signal busy_1_i                           : std_logic;
+signal busy_2_i                           : std_logic;
+signal Sclk_i                           : std_logic;
+signal Mosi_i                           : std_logic;
+signal Miso_i                           : std_logic;
+
 --
-signal nCS_Output_2_1_i                   : std_logic;
-signal nCS_Output_2_2_i                   : std_logic;
+signal nCS_Output_2_1                   : std_logic;
+signal nCS_Output_2_2                   : std_logic;
 signal Int_2_2_i                          : std_logic;
 signal Sclk_2_i                           : std_logic;
 signal Mosi_2_i                           : std_logic;
@@ -292,19 +302,19 @@ signal Miso_2_i                           : std_logic;
 
 signal Card_Select_1_i                    : std_logic;
 signal Data_In_Ready_1_i                  : std_logic;
-signal                      : std_logic_vector(15 downto 0);
-signal Data_Out_Ready_1_i                 : std_logic;
+signal Data_Out_Ready_i                     : std_logic;
+signal SPI_Inport                           : std_logic_vector(15 downto 0);
 signal SPI_Inport_1                       : std_logic_vector(15 downto 0);
-signal SPI_Inport_1_1_i                   : std_logic_vector(15 downto 0);  
-signal SPI_Inport_1_2_i                   : std_logic_vector(15 downto 0);  
-signal SPI_Inport_2_1_i                   : std_logic_vector(15 downto 0);  
-signal SPI_Inport_2_2_i                   : std_logic_vector(15 downto 0);  
+signal SPI_Inport_1_i_1                   : std_logic_vector(15 downto 0);  
+signal SPI_Inport_1_i_2                   : std_logic_vector(15 downto 0);  
+signal SPI_Inport_2_i_1                   : std_logic_vector(15 downto 0);  
+signal SPI_Inport_2_i_2                   : std_logic_vector(15 downto 0);  
 
 signal Card_Select_2_i                    : std_logic;
 signal Data_In_Ready_2_i                  : std_logic;
 signal Data_Out_Ready_2_i                 : std_logic;
 
-signal Version_SPI_IO_Driver_1_i        : std_logic_vector(7 downto 0); 
+signal Version_SPI_IO_Driver_1_i            : std_logic_vector(7 downto 0); 
 signal Version_SPI_IO_Driver_2_i            : std_logic_vector(7 downto 0);
 signal SPI_IO_Driver_Version_Request_1_i    : std_logic;
 signal SPI_IO_Driver_Version_Name_1_i       : std_logic_vector(255 downto 0); 
@@ -383,7 +393,8 @@ signal SPI_Input_Handler_Version_Request_2_i : std_logic;
 signal SPI_Input_Handler_Version_Name_2_i    : std_logic_vector(255 downto 0); 
 signal SPI_Input_Handler_Version_Number_2_i  : std_logic_vector(63 downto 0);
 signal SPI_Input_Handler_Version_Ready_2_i   : std_logic;
-
+signal SPI_IO_Driver_Version_Request_i      : std_logic;
+signal SPI_Input_Handler_Version_Request_i         : std_logic;
 component SPI_Input_Handler is
   port (
     RST_I                             : in  std_logic;
@@ -656,7 +667,8 @@ end component Main_Demux;
 signal Controller_to_Software_UART_TXD_i  : std_logic;
 signal Message_Length_i                   : std_logic_vector(7 downto 0);
 signal Message_ID1_i                      : std_logic_vector(7 downto 0);
-signal Digital_Input_Valid_i              : std_logic;
+signal Digital_Input_Valid_1_i            : std_logic;
+signal Digital_Input_Valid_2_i            : std_logic;
 signal Dig_Card1_2_B0_i                   : std_logic_vector(7 downto 0);
 signal Dig_Card1_2_B1_i                   : std_logic_vector(7 downto 0);
 signal Dig_Card1_2_B2_i                   : std_logic_vector(7 downto 0);
@@ -1304,7 +1316,7 @@ port map (
   Data_In_Ready                 => Input_Data_Ready_1_i,       
   SPI_Outport                   => SPI_Data_out_1_i,           
   Data_Out_Ready                => Data_In_Ready_1_i,
-  SPI_Inport                    => SPI_Inport_1_i,
+  SPI_Inport                    => SPI_Inport_1_i_1,
   Busy                          => Busy_1_i,
   Module_Number                 => Module_Number_i,
   SPI_IO_Driver_Version_Request => SPI_IO_Driver_Version_Request_1_i,
@@ -1335,7 +1347,7 @@ port map (
   SPI_Data_out                      => SPI_Data_out_1_i,
   Input_Data_ready                  => Input_Data_Ready_1_i,
   Input_Card_Select                 => Input_Card_Select_1_i,
-  SPI_Data_in                       => SPI_Inport_1_i,
+  SPI_Data_in                       => SPI_Inport_1_i_1,
   busy                              => busy_1_i,
   Dig_In_Request                    => Dig_In_Request_i,
   Module_Number                     => Module_Number_i,
@@ -1362,7 +1374,7 @@ port map (
     Data_In_Ready                 => Input_Data_Ready_2_i,       
     SPI_Outport                   => SPI_Data_out_2_i,           
     Data_Out_Ready                => Data_In_Ready_2_i,
-    SPI_Inport                    => SPI_Inport_2_i,
+    SPI_Inport                    => SPI_Inport_2_i_1,
     Busy                          => Busy_2_i,
     Module_Number                 => Module_Number_i,
     SPI_IO_Driver_Version_Request => SPI_IO_Driver_Version_Request_2_i,
@@ -1393,7 +1405,7 @@ port map (
     SPI_Data_out                      => SPI_Data_out_2_i,
     Input_Data_ready                  => Input_Data_Ready_2_i,
     Input_Card_Select                 => Input_Card_Select_2_i,
-    SPI_Data_in                       => SPI_Inport_2_i,
+    SPI_Data_in                       => SPI_Inport_2_i_1,
     busy                              => busy_2_i,
     Dig_In_Request                    => Dig_In_Request_i,
     Module_Number                     => Module_Number_i,
@@ -1422,7 +1434,7 @@ port map (
   SPI_Inport                    => SPI_Inport,
   Busy                          => Busy_Out_i,
   Module_Number                 => Module_Number_i,
-  SPI_IO_Driver_Version_Request => SPI_IO_Driver_Version_Request_i,
+  SPI_IO_Driver_Version_Request => SPI_IO_Driver_Version_Request_1_i,
   SPI_IO_Driver_Version_Name    => SPI_IO_Driver_Version_Name_2_i, 
   SPI_IO_Driver_Version_Number  => SPI_IO_Driver_Version_Number_2_i,
   SPI_IO_Driver_Version_Ready   => SPI_IO_Driver_Version_Ready_2_i               
@@ -1544,7 +1556,7 @@ port map (
   SET_Timer                                     => SET_Timer_i,
   GET_Timer                                     => GET_Timer_i,
   Dig_Outputs_Ready                             => Dig_Outputs_Ready_i,
-  SPI_IO_Driver_Version_Request                 => SPI_IO_Driver_Version_Request_i,   
+  SPI_IO_Driver_Version_Request                 => SPI_IO_Driver_Version_Request_1_i,   
   SPI_Output_Handler_Version_Request            => SPI_Output_Handler_Version_Request_i,
   SPI_Input_Handler_Version_Request             => SPI_Input_Handler_Version_Request_i,
   SPI_Analog_Driver_Version_Request             => SPI_Analog_Driver_Version_Request_i,
