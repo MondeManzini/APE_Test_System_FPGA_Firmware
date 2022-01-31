@@ -1,5 +1,5 @@
 Flow report for APE_Test_System_FPGA_Firmware
-Fri Jan 28 15:27:45 2022
+Fri Jan 28 15:27:50 2022
 Quartus Prime Version 20.1.1 Build 720 11/11/2020 SJ Lite Edition
 
 
@@ -98,7 +98,8 @@ https://fpgasoftware.intel.com/eula.
 ; Analysis & Synthesis ; 00:00:55     ; 1.0                     ; 575 MB              ; 00:01:11                           ;
 ; Fitter               ; 00:00:23     ; 1.0                     ; 741 MB              ; 00:00:22                           ;
 ; Assembler            ; 00:00:02     ; 1.0                     ; 356 MB              ; 00:00:02                           ;
-; Total                ; 00:01:20     ; --                      ; --                  ; 00:01:35                           ;
+; Timing Analyzer      ; 00:00:03     ; 1.1                     ; 462 MB              ; 00:00:03                           ;
+; Total                ; 00:01:23     ; --                      ; --                  ; 00:01:38                           ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 
@@ -110,6 +111,7 @@ https://fpgasoftware.intel.com/eula.
 ; Analysis & Synthesis ; labuser-Latitude-E5520 ; Ubuntu 20.04.3 ; 20         ; x86_64         ;
 ; Fitter               ; labuser-Latitude-E5520 ; Ubuntu 20.04.3 ; 20         ; x86_64         ;
 ; Assembler            ; labuser-Latitude-E5520 ; Ubuntu 20.04.3 ; 20         ; x86_64         ;
+; Timing Analyzer      ; labuser-Latitude-E5520 ; Ubuntu 20.04.3 ; 20         ; x86_64         ;
 +----------------------+------------------------+----------------+------------+----------------+
 
 
@@ -119,6 +121,7 @@ https://fpgasoftware.intel.com/eula.
 quartus_map --read_settings_files=on --write_settings_files=off APE_Test_System_FPGA_Firmware -c APE_Test_System_FPGA_Firmware
 quartus_fit --read_settings_files=off --write_settings_files=off APE_Test_System_FPGA_Firmware -c APE_Test_System_FPGA_Firmware
 quartus_asm --read_settings_files=off --write_settings_files=off APE_Test_System_FPGA_Firmware -c APE_Test_System_FPGA_Firmware
+quartus_sta APE_Test_System_FPGA_Firmware -c APE_Test_System_FPGA_Firmware
 
 
 
