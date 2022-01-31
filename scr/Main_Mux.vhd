@@ -65,7 +65,7 @@ entity Main_Mux is
    Dig_Out_1_B5               : in  std_logic_vector(7 downto 0);
    Dig_Out_1_B6               : in  std_logic_vector(7 downto 0);
    Dig_Out_1_B7               : in  std_logic_vector(7 downto 0);
-   Digital_Input_Valid        : in  std_logic;
+   Digital_Output_Valid       : in  std_logic;
    
 -- Digital Input          
    Dig_In_1_B0                : in  std_logic_vector(7 downto 0);
@@ -76,7 +76,16 @@ entity Main_Mux is
    Dig_In_1_B5                : in  std_logic_vector(7 downto 0);        
    Dig_In_1_B6                : in  std_logic_vector(7 downto 0);        
    Dig_In_1_B7                : in  std_logic_vector(7 downto 0); 
-   Digital_Output_Valid       : in  std_logic;
+   Dig_In_2_B0                : in  std_logic_vector(7 downto 0);
+   Dig_In_2_B1                : in  std_logic_vector(7 downto 0);        
+   Dig_In_2_B2                : in  std_logic_vector(7 downto 0);        
+   Dig_In_2_B3                : in  std_logic_vector(7 downto 0);
+   Dig_In_2_B4                : in  std_logic_vector(7 downto 0);
+   Dig_In_2_B5                : in  std_logic_vector(7 downto 0);        
+   Dig_In_2_B6                : in  std_logic_vector(7 downto 0);        
+   Dig_In_2_B7                : in  std_logic_vector(7 downto 0); 
+   Digital_Input_Valid_1       : in  std_logic;
+   Digital_Input_Valid_2       : in  std_logic;
     	 
 -- Analog In        
    -- Analog InS        
@@ -120,6 +129,8 @@ architecture Arch_DUT of Main_Mux is
 
   constant Input_Card_1    : std_logic_vector(7 downto 0) := X"20";
   constant Input_Card_2    : std_logic_vector(7 downto 0) := X"21";
+  constant Input_Card_3    : std_logic_vector(7 downto 0) := X"22";
+  constant Input_Card_4    : std_logic_vector(7 downto 0) := X"23";
 
   constant Analog_Card_1    : std_logic_vector(7 downto 0) := X"30";
   constant Analog_Card_2    : std_logic_vector(7 downto 0) := X"31";
@@ -185,7 +196,8 @@ signal Ready_i                      : std_logic;
 signal Stack_100mS_Data             : std_logic;
 signal Lockout                      : std_logic;
 signal Digital_Output_Ready         : std_logic;
-signal Digital_Input_Ready          : std_logic;
+signal Digital_Input_Ready_1        : std_logic;
+signal Digital_Input_Ready_2        : std_logic;
 signal Analog_Input_Ready           : std_logic;
 signal All_Modules_Ready            : std_logic;
 signal All_Modules_Trig             : std_logic;
@@ -235,8 +247,11 @@ signal Time_Data_Array        : Time_Array;
 type Preamble_Array is array (0 to 255) of std_logic_vector(7 downto 0);
 signal Preamble_Data_Array    : Preamble_Array;
 
-type Digital_In_Array is array (0 to 255) of std_logic_vector(7 downto 0);
-signal Digital_In_Data_Array  : Digital_In_Array;
+type Digital_In_Array_1 is array (0 to 255) of std_logic_vector(7 downto 0);
+signal Digital_In_Data_Array_1  : Digital_In_Array_1;
+
+type Digital_In_Array_2 is array (0 to 255) of std_logic_vector(7 downto 0);
+signal Digital_In_Data_Array_2  : Digital_In_Array_2;
 
 type Digital_Out_Array is array (0 to 255) of std_logic_vector(7 downto 0);
 signal Digital_Out_Data_Array : Digital_Out_Array;
@@ -300,7 +315,8 @@ begin
       Dig_Out_Request_i          <= '0';
       Ana_In_Request_i           <= '0';
       Digital_Output_Ready       <= '0';
-      Digital_Input_Ready        <= '0';
+      Digital_Input_Ready_1      <= '0';
+      Digital_Input_Ready_2      <= '0';
       Analog_Input_Ready         <= '0';
       All_Modules_Ready          <= '0';
       All_Modules_Trig           <= '0';
@@ -439,18 +455,32 @@ begin
             end if;   
             
       -- Digital Input Data Validity Generator       
-            if Digital_Input_Valid = '1' then
-               Digital_Input_Ready        <= '1';       -- Latch DI
-               Digital_In_Data_Array(0)   <= Input_Card_1;
-               Digital_In_Data_Array(1)   <= Dig_In_1_B0;
-               Digital_In_Data_Array(2)   <= Dig_In_1_B1;
-               Digital_In_Data_Array(3)   <= Dig_In_1_B2;
-               Digital_In_Data_Array(4)   <= Dig_In_1_B3;
-               Digital_In_Data_Array(5)   <= Input_Card_2;
-               Digital_In_Data_Array(6)   <= Dig_In_1_B4;
-               Digital_In_Data_Array(7)   <= Dig_In_1_B5;
-               Digital_In_Data_Array(8)   <= Dig_In_1_B6;
-               Digital_In_Data_Array(9)   <= Dig_In_1_B7;
+            if Digital_Input_Valid_1 = '1' then
+               Digital_Input_Ready_1      <= '1';       -- Latch DI 1
+               Digital_In_Data_Array_1(0)   <= Input_Card_1;
+               Digital_In_Data_Array_1(1)   <= Dig_In_1_B0;
+               Digital_In_Data_Array_1(2)   <= Dig_In_1_B1;
+               Digital_In_Data_Array_1(3)   <= Dig_In_1_B2;
+               Digital_In_Data_Array_1(4)   <= Dig_In_1_B3;
+               Digital_In_Data_Array_1(5)   <= Input_Card_2;
+               Digital_In_Data_Array_1(6)   <= Dig_In_1_B4;
+               Digital_In_Data_Array_1(7)   <= Dig_In_1_B5;
+               Digital_In_Data_Array_1(8)   <= Dig_In_1_B6;
+               Digital_In_Data_Array_1(9)   <= Dig_In_1_B7;
+            end if; 
+
+            if Digital_Input_Valid_2 = '1' then
+               Digital_Input_Ready_2      <= '1';       -- Latch DI 2
+               Digital_In_Data_Array_2(0)   <= Input_Card_3;
+               Digital_In_Data_Array_2(1)   <= Dig_In_2_B0;
+               Digital_In_Data_Array_2(2)   <= Dig_In_2_B1;
+               Digital_In_Data_Array_2(3)   <= Dig_In_2_B2;
+               Digital_In_Data_Array_2(4)   <= Dig_In_2_B3;
+               Digital_In_Data_Array_2(5)   <= Input_Card_4;
+               Digital_In_Data_Array_2(6)   <= Dig_In_2_B4;
+               Digital_In_Data_Array_2(7)   <= Dig_In_2_B5;
+               Digital_In_Data_Array_2(8)   <= Dig_In_2_B6;
+               Digital_In_Data_Array_2(9)   <= Dig_In_2_B7;
             end if; 
                
       -- Analog Input Data Validity Generator
@@ -521,14 +551,15 @@ begin
       end if;
   
    -- Main Data Ready Generator          
-         if  (Digital_Output_Ready = '1') and (Digital_Input_Ready  = '1')
-         and (Analog_Input_Ready = '1')
+         if  (Digital_Output_Ready = '1') and (Digital_Input_Ready_1  = '1')
+         and (Digital_Input_Ready_2  = '1') and (Analog_Input_Ready = '1')
          then
-            All_Modules_Ready    <= '1';
-            Digital_Output_Ready <= '0';
-            Digital_Input_Ready  <= '0';
-            Analog_Input_Ready   <= '0';
-            Analog_Input_Load    <= '0';
+            All_Modules_Ready       <= '1';
+            Digital_Output_Ready    <= '0';
+            Digital_Input_Ready_1   <= '0';
+            Digital_Input_Ready_2   <= '0';
+            Analog_Input_Ready      <= '0';
+            Analog_Input_Load       <= '0';
          end if;   
                      
          if (All_Modules_Ready = '1') and (All_Modules_Trig = '1') then              
@@ -595,7 +626,7 @@ begin
                no_of_chars2send  <= 122;
                no_of_chars2snd   <= std_logic_vector(to_unsigned(no_of_chars2send, no_of_chars2snd'length));
                mode_i            <= x"80";
-               for i in 0 to 122 loop
+               for i in 0 to 132 loop
                   if i < 3 THEN
                      data2send(i)   <= Preamble_Data_Array(i);
                      CRC2send(i)    <= Preamble_Data_Array(i);
@@ -610,13 +641,17 @@ begin
                      data2send(i)   <= Digital_Out_Data_Array(i-5);
                      CRC2send(i)    <= Digital_Out_Data_Array(i-5);
                   elsif (i > 14) and (i < 25) then
-                     -- Digital Input Message       
-                     data2send(i)   <= Digital_In_Data_Array(i-15);
-                     CRC2send(i)    <= Digital_In_Data_Array(i-15);
-                  elsif (i > 24) then
+                     -- Digital Input 1 Message       
+                     data2send(i)   <= Digital_In_Data_Array_1(i-15);
+                     CRC2send(i)    <= Digital_In_Data_Array_1(i-15);
+                  elsif (i > 24) and (i < 35) then
+                     -- Digital Input 2 Message       
+                     data2send(i)   <= Digital_In_Data_Array_2(i-25);
+                     CRC2send(i)    <= Digital_In_Data_Array_2(i-25);
+                  elsif (i > 34) then
                      -- Analog Input Message
-                     data2send(i)   <= Analog_In_Data_Array(i-25);
-                     CRC2send(i)    <= Analog_In_Data_Array(i-25);
+                     data2send(i)   <= Analog_In_Data_Array(i-35);
+                     CRC2send(i)    <= Analog_In_Data_Array(i-35);
                   end if;
                end loop;
             end if;

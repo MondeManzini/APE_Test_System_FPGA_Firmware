@@ -510,9 +510,10 @@ signal SPI_Data_in_2_i                       : std_logic_vector(15 downto 0);
 
 signal Input_Data_In_ready_1_i               : std_logic;
 signal Input_Data_In_ready_2_i               : std_logic;
-signal Sample_Rate_i                       : integer range 0 to 1000;
+signal Sample_Rate_i                         : integer range 0 to 1000;
 signal Dig_In_Request_1_i                    : std_logic;
 signal Dig_In_Request_2_i                    : std_logic;
+signal Dig_In_Request_i                      : std_logic;
 
 signal Version_Input_Handler_i             : std_logic_vector(7 downto 0);
 signal SPI_Input_Handler_Version_Request_1_i : std_logic;
@@ -572,6 +573,14 @@ signal Dig_Card1_1_B4_i                     : std_logic_vector(7 downto 0);
 signal Dig_Card1_1_B5_i                     : std_logic_vector(7 downto 0);
 signal Dig_Card1_1_B6_i                     : std_logic_vector(7 downto 0);
 signal Dig_Card1_1_B7_i                     : std_logic_vector(7 downto 0);
+signal Dig_Card1_2_B0_i                     : std_logic_vector(7 downto 0);
+signal Dig_Card1_2_B1_i                     : std_logic_vector(7 downto 0);
+signal Dig_Card1_2_B2_i                     : std_logic_vector(7 downto 0);
+signal Dig_Card1_2_B3_i                     : std_logic_vector(7 downto 0);
+signal Dig_Card1_2_B4_i                     : std_logic_vector(7 downto 0);
+signal Dig_Card1_2_B5_i                     : std_logic_vector(7 downto 0);
+signal Dig_Card1_2_B6_i                     : std_logic_vector(7 downto 0);
+signal Dig_Card1_2_B7_i                     : std_logic_vector(7 downto 0);
 signal Dig_Card1_1_B0_Out_i                 : std_logic_vector(7 downto 0);
 signal Dig_Card1_1_B1_Out_i                 : std_logic_vector(7 downto 0);
 signal Dig_Card1_1_B2_Out_i                 : std_logic_vector(7 downto 0);
@@ -792,17 +801,8 @@ end component Main_Demux;
 signal Controller_to_Software_UART_TXD_i  : std_logic;
 signal Message_Length_i                   : std_logic_vector(7 downto 0);
 signal Message_ID1_i                      : std_logic_vector(7 downto 0);
-signal Digital_Input_Valid_1_i              : std_logic;
-signal Digital_Input_Valid_2_i              : std_logic;
-
-signal Dig_Card1_2_B0_i                   : std_logic_vector(7 downto 0);
-signal Dig_Card1_2_B1_i                   : std_logic_vector(7 downto 0);
-signal Dig_Card1_2_B2_i                   : std_logic_vector(7 downto 0);
-signal Dig_Card1_2_B3_i                   : std_logic_vector(7 downto 0);
-signal Dig_Card1_2_B4_i                   : std_logic_vector(7 downto 0);
-signal Dig_Card1_2_B5_i                   : std_logic_vector(7 downto 0);
-signal Dig_Card1_2_B6_i                   : std_logic_vector(7 downto 0);
-signal Dig_Card1_2_B7_i                   : std_logic_vector(7 downto 0);
+signal Digital_Input_Valid_1_i            : std_logic;
+signal Digital_Input_Valid_2_i            : std_logic;
 signal Digital_Output_Valid_i             : std_logic;
 signal Tx_Rate_i                          : integer range 0 to 255;
 signal Mux_Baud_Rate_Enable_i             : std_logic;
@@ -845,23 +845,32 @@ component Main_Mux is
     Date_out                  : in std_logic_vector(7 downto 0); 
     Month_Century_out         : in std_logic_vector(7 downto 0); 
     Year_out                  : in std_logic_vector(7 downto 0);
-    Dig_Card1_1_B0            : in  std_logic_vector(7 downto 0);
-    Dig_Card1_1_B1            : in  std_logic_vector(7 downto 0);
-    Dig_Card1_1_B2            : in  std_logic_vector(7 downto 0);
-    Dig_Card1_1_B3            : in  std_logic_vector(7 downto 0);
-    Dig_Card1_1_B4            : in  std_logic_vector(7 downto 0);
-    Dig_Card1_1_B5            : in  std_logic_vector(7 downto 0);
-    Dig_Card1_1_B6            : in  std_logic_vector(7 downto 0);
-    Dig_Card1_1_B7            : in  std_logic_vector(7 downto 0);
-    Digital_Input_Valid       : in  std_logic;
-    Dig_Card1_2_B0            : in  std_logic_vector(7 downto 0);
-    Dig_Card1_2_B1            : in  std_logic_vector(7 downto 0);
-    Dig_Card1_2_B2            : in  std_logic_vector(7 downto 0);
-    Dig_Card1_2_B3            : in  std_logic_vector(7 downto 0);
-    Dig_Card1_2_B4            : in  std_logic_vector(7 downto 0);
-    Dig_Card1_2_B5            : in  std_logic_vector(7 downto 0);
-    Dig_Card1_2_B6            : in  std_logic_vector(7 downto 0);
-    Dig_Card1_2_B7            : in  std_logic_vector(7 downto 0);
+    Dig_In_1_B0                : in  std_logic_vector(7 downto 0);
+    Dig_In_1_B1                : in  std_logic_vector(7 downto 0);        
+    Dig_In_1_B2                : in  std_logic_vector(7 downto 0);        
+    Dig_In_1_B3                : in  std_logic_vector(7 downto 0);
+    Dig_In_1_B4                : in  std_logic_vector(7 downto 0);
+    Dig_In_1_B5                : in  std_logic_vector(7 downto 0);        
+    Dig_In_1_B6                : in  std_logic_vector(7 downto 0);        
+    Dig_In_1_B7                : in  std_logic_vector(7 downto 0); 
+    Dig_In_2_B0                : in  std_logic_vector(7 downto 0);
+    Dig_In_2_B1                : in  std_logic_vector(7 downto 0);        
+    Dig_In_2_B2                : in  std_logic_vector(7 downto 0);        
+    Dig_In_2_B3                : in  std_logic_vector(7 downto 0);
+    Dig_In_2_B4                : in  std_logic_vector(7 downto 0);
+    Dig_In_2_B5                : in  std_logic_vector(7 downto 0);        
+    Dig_In_2_B6                : in  std_logic_vector(7 downto 0);        
+    Dig_In_2_B7                : in  std_logic_vector(7 downto 0); 
+    Digital_Input_Valid_1     : in  std_logic;
+    Digital_Input_Valid_2     : in  std_logic;
+    Dig_Out_1_B0               : in  std_logic_vector(7 downto 0);
+    Dig_Out_1_B1               : in  std_logic_vector(7 downto 0);
+    Dig_Out_1_B2               : in  std_logic_vector(7 downto 0);
+    Dig_Out_1_B3               : in  std_logic_vector(7 downto 0);
+    Dig_Out_1_B4               : in  std_logic_vector(7 downto 0);
+    Dig_Out_1_B5               : in  std_logic_vector(7 downto 0);
+    Dig_Out_1_B6               : in  std_logic_vector(7 downto 0);
+    Dig_Out_1_B7               : in  std_logic_vector(7 downto 0);
     Digital_Output_Valid      : in  std_logic;
     Analog_Data               : in  std_logic_vector(767 downto 0);                
     Version_Register          : in  std_logic_vector(167 downto 0);
@@ -1330,7 +1339,7 @@ port map (
   Input_Card_Select                 => Input_Card_Select_1_i,
   SPI_Data_in                       => SPI_Inport_1_i,
   busy                              => Busy_In_1_i,
-  Dig_In_Request                    => Dig_In_Request_1_i,
+  Dig_In_Request                    => Dig_In_Request_i,
   Module_Number                     => Module_Number_i,
   SPI_Input_Handler_Version_Request => SPI_Input_Handler_Version_Request_1_i,
   SPI_Input_Handler_Version_Name    => SPI_Input_Handler_Version_Name_1_i, 
@@ -1388,7 +1397,7 @@ port map (
   Input_Card_Select                 => Input_Card_Select_2_i,
   SPI_Data_in                       => SPI_Inport_2_i,
   busy                              => Busy_In_2_i,
-  Dig_In_Request                    => Dig_In_Request_2_i,
+  Dig_In_Request                    => Dig_In_Request_i,
   Module_Number                     => Module_Number_i,
   SPI_Input_Handler_Version_Request => SPI_Input_Handler_Version_Request_2_i,
   SPI_Input_Handler_Version_Name    => SPI_Input_Handler_Version_Name_2_i, 
@@ -1569,7 +1578,8 @@ port map (
   Dig_Out_1_B5               => Dig_Card1_1_B5_i,
   Dig_Out_1_B6               => Dig_Card1_1_B6_i,
   Dig_Out_1_B7               => Dig_Card1_1_B7_i,
-  Digital_Input_Valid        => Digital_Input_Valid_1_i,
+  Digital_Input_Valid_1      => Digital_Input_Valid_1_i,
+  Digital_Input_Valid_2      => Digital_Input_Valid_2_i,
   Dig_In_1_B0                => SPI_Inport_1_1_i,                
   Dig_In_1_B1                => SPI_Inport_1_2_i,               
   Dig_In_1_B2                => SPI_Inport_1_3_i,                 
@@ -1577,7 +1587,15 @@ port map (
   Dig_In_1_B4                => SPI_Inport_1_5_i,                
   Dig_In_1_B5                => SPI_Inport_1_6_i,                
   Dig_In_1_B6                => SPI_Inport_1_7_i,                
-  Dig_In_1_B7                => b"0000000" & SPI_Inport_1_8_i(0),         
+  Dig_In_1_B7                => b"0000000" & SPI_Inport_1_8_i(0),  
+  Dig_In_2_B0                => SPI_Inport_2_1_i,                
+  Dig_In_2_B1                => SPI_Inport_2_2_i,               
+  Dig_In_2_B2                => SPI_Inport_2_3_i,                 
+  Dig_In_2_B3                => b"0000000" & SPI_Inport_2_4_i(0),               
+  Dig_In_2_B4                => SPI_Inport_2_5_i,                
+  Dig_In_2_B5                => SPI_Inport_2_6_i,                
+  Dig_In_2_B6                => SPI_Inport_2_7_i,                
+  Dig_In_2_B7                => b"0000000" & SPI_Inport_1_8_i(0),        
   Digital_Output_Valid       => Digital_Output_Valid_i,
   Analog_Data                => Analog_Data_i, 
   Analog_Input_Valid         => Analog_Input_Valid_i,
