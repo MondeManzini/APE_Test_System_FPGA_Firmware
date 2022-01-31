@@ -1,12 +1,12 @@
-Fitter Status : Successful - Mon Jan 31 09:39:57 2022
+Fitter Status : Successful - Mon Jan 31 13:43:31 2022
 Quartus Prime Version : 20.1.1 Build 720 11/11/2020 SJ Lite Edition
 Revision Name : APE_Test_System_FPGA_Firmware
 Top-level Entity Name : APE_Test_System_FPGA_Firmware
 Family : Cyclone IV E
 Device : EP4CE22F17C6
 Timing Models : Final
-Total logic elements : 1,142 / 22,320 ( 5 % )
-    Total combinational functions : 1,011 / 22,320 ( 5 % )
+Total logic elements : 1,285 / 22,320 ( 6 % )
+    Total combinational functions : 1,143 / 22,320 ( 5 % )
     Dedicated logic registers : 626 / 22,320 ( 3 % )
 Total registers : 626
 Total pins : 104 / 154 ( 68 % )

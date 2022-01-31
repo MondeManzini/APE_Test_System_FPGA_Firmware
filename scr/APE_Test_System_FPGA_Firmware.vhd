@@ -1600,7 +1600,7 @@ port map (
   Analog_Data                => Analog_Data_i, 
   Analog_Input_Valid         => Analog_Input_Valid_i,
   Ana_In_Request             => Ana_In_Request_i,
-  Dig_In_Request             => Dig_In_Request_1_i,                
+  Dig_In_Request             => Dig_In_Request_i,                
   Dig_Out_Request            => Dig_Out_Request_i,               
   Baud_Rate_Enable           => Mux_Baud_Rate_Enable_i,
   Data_Ready                 => Data_Ready_i,

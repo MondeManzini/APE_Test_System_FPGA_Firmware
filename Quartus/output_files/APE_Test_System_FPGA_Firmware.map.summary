@@ -1,10 +1,10 @@
-Analysis & Synthesis Status : Successful - Mon Jan 31 09:39:25 2022
+Analysis & Synthesis Status : Successful - Mon Jan 31 13:42:49 2022
 Quartus Prime Version : 20.1.1 Build 720 11/11/2020 SJ Lite Edition
 Revision Name : APE_Test_System_FPGA_Firmware
 Top-level Entity Name : APE_Test_System_FPGA_Firmware
 Family : Cyclone IV E
-Total logic elements : 1,239
-    Total combinational functions : 1,007
+Total logic elements : 1,371
+    Total combinational functions : 1,139
     Dedicated logic registers : 626
 Total registers : 626
 Total pins : 104
