@@ -41,7 +41,7 @@ set_global_assignment -name DEVICE EP4CE22F17C6
 set_global_assignment -name TOP_LEVEL_ENTITY APE_Test_System_FPGA_Firmware
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 10.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "20:34:01  FEBRUARY 29, 2012"
-set_global_assignment -name LAST_QUARTUS_VERSION "20.1.1 Lite Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "21.1.0 Lite Edition"
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "2.5 V"
